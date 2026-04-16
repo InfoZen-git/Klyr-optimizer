@@ -1,0 +1,252 @@
+<Application x:Class="InfoZen.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views/SplashScreen.xaml">
+    <Application.Resources>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             PALETTE  –  Dark sobre, accent bleu ardoise
+             Inspiré de VS Code / Windows Settings / Notion dark
+        ═══════════════════════════════════════════════════════════ -->
+
+        <!-- Fonds -->
+        <SolidColorBrush x:Key="BackgroundDeepBrush"   Color="#141414"/>
+        <SolidColorBrush x:Key="BackgroundPanelBrush"  Color="#1C1C1C"/>
+        <SolidColorBrush x:Key="BackgroundCardBrush"   Color="#242424"/>
+        <SolidColorBrush x:Key="BackgroundHoverBrush"  Color="#2A2A2A"/>
+
+        <!-- Accent unique : bleu ardoise discret -->
+        <SolidColorBrush x:Key="AccentBrush"           Color="#4B8BF5"/>
+        <SolidColorBrush x:Key="AccentHoverBrush"      Color="#6BA0F7"/>
+        <SolidColorBrush x:Key="AccentPressedBrush"    Color="#3A72D4"/>
+        <SolidColorBrush x:Key="AccentSubtleBrush"     Color="#1E2E4A"/>
+
+        <!-- Sémantique -->
+        <SolidColorBrush x:Key="SuccessBrush"          Color="#4CAF50"/>
+        <SolidColorBrush x:Key="WarningBrush"          Color="#E8A838"/>
+        <SolidColorBrush x:Key="ErrorBrush"            Color="#E05252"/>
+        <SolidColorBrush x:Key="InfoBrush"             Color="#4B8BF5"/>
+
+        <!-- Texte -->
+        <SolidColorBrush x:Key="TextPrimaryBrush"      Color="#E8E8E8"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush"    Color="#8A8A8A"/>
+        <SolidColorBrush x:Key="TextMutedBrush"        Color="#484848"/>
+
+        <!-- Bordures -->
+        <SolidColorBrush x:Key="BorderBrush"           Color="#2E2E2E"/>
+        <SolidColorBrush x:Key="BorderFocusBrush"      Color="#4B8BF5"/>
+
+        <!-- Terminal -->
+        <SolidColorBrush x:Key="TerminalBgBrush"       Color="#0F0F0F"/>
+        <SolidColorBrush x:Key="TerminalTextBrush"     Color="#A8C878"/>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             SCROLLBAR
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="ScrollBarThumbStyle" TargetType="Thumb">
+            <Setter Property="Background" Value="#383838"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#505050"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent">
+                            <Track Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollBarThumbStyle}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollViewer">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             BOUTON PRINCIPAL
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background"  Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground"  Value="#FFFFFF"/>
+            <Setter Property="FontWeight"  Value="SemiBold"/>
+            <Setter Property="FontSize"    Value="12"/>
+            <Setter Property="Padding"     Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"      Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource AccentPressedBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bd" Property="Background" Value="#2A2A2A"/>
+                                <Setter Property="Foreground" Value="#484848"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             BOUTON SECONDAIRE
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Padding"         Value="16,8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush"     Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background"   Value="{DynamicResource BackgroundHoverBrush}"/>
+                                <Setter TargetName="bd" Property="BorderBrush"  Value="{DynamicResource BorderFocusBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#333333"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             BOUTON NAV SIDEBAR
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background"             Value="Transparent"/>
+            <Setter Property="Foreground"             Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="FontSize"               Value="13"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding"                Value="12,10"/>
+            <Setter Property="BorderThickness"        Value="0"/>
+            <Setter Property="Cursor"                 Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource BackgroundHoverBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#2A2A2A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             CARTE OPTIMISATION
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="OptimizationCardStyle" TargetType="Border">
+            <Setter Property="Background"       Value="{DynamicResource BackgroundCardBrush}"/>
+            <Setter Property="BorderBrush"      Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="CornerRadius"     Value="8"/>
+            <Setter Property="Padding"          Value="16"/>
+            <Setter Property="Margin"           Value="0,0,0,6"/>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TOGGLE SWITCH
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="ToggleStyle" TargetType="CheckBox">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border x:Name="track" Width="40" Height="22"
+                                CornerRadius="11" Background="#2E2E2E"
+                                BorderBrush="#3A3A3A" BorderThickness="1">
+                            <Border x:Name="thumb" Width="16" Height="16"
+                                    CornerRadius="8" Background="#606060"
+                                    HorizontalAlignment="Left"
+                                    Margin="3,0,0,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="track" Property="Background"           Value="#1E2E4A"/>
+                                <Setter TargetName="track" Property="BorderBrush"          Value="#4B8BF5"/>
+                                <Setter TargetName="thumb" Property="Background"           Value="#4B8BF5"/>
+                                <Setter TargetName="thumb" Property="HorizontalAlignment"  Value="Right"/>
+                                <Setter TargetName="thumb" Property="Margin"               Value="0,0,3,0"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="track" Property="BorderBrush" Value="#505050"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TERMINAL
+        ═══════════════════════════════════════════════════════════ -->
+        <Style x:Key="TerminalTextStyle" TargetType="TextBox">
+            <Setter Property="Background"              Value="{DynamicResource TerminalBgBrush}"/>
+            <Setter Property="Foreground"              Value="{DynamicResource TerminalTextBrush}"/>
+            <Setter Property="FontFamily"              Value="Consolas"/>
+            <Setter Property="FontSize"                Value="12"/>
+            <Setter Property="BorderThickness"         Value="0"/>
+            <Setter Property="IsReadOnly"              Value="True"/>
+            <Setter Property="TextWrapping"            Value="Wrap"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding"                 Value="12"/>
+        </Style>
+
+    </Application.Resources>
+</Application>

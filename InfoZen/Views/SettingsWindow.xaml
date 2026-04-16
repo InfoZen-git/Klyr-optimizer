@@ -1,0 +1,251 @@
+<Window x:Class="InfoZen.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Paramètres – InfoZen"
+        Width="460" Height="620"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Border Background="{DynamicResource BackgroundPanelBrush}" CornerRadius="10"
+            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="0" Opacity="0.6"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="56"/>
+            </Grid.RowDefinitions>
+
+            <!-- Titlebar -->
+            <Border Grid.Row="0" Background="{DynamicResource BackgroundPanelBrush}" CornerRadius="10,10,0,0"
+                    MouseDown="TitleBar_MouseDown">
+                <Grid Margin="16,0">
+                    <TextBlock Text="Paramètres" FontSize="13" FontWeight="SemiBold"
+                               Foreground="#E8E8E8" VerticalAlignment="Center"/>
+                    <Button Content="✕" HorizontalAlignment="Right"
+                            Width="28" Height="24" BorderThickness="0"
+                            Background="Transparent" Foreground="#606060"
+                            Cursor="Hand" Click="Close_Click" FontSize="12">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#C0392B"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Contenu -->
+            <ScrollViewer Grid.Row="1" Padding="20,16">
+                <StackPanel>
+
+                    <TextBlock Text="SÉCURITÉ" FontSize="10" FontWeight="Bold"
+                               Foreground="#484848" Margin="0,0,0,10"/>
+
+                    <!-- Confirmation -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Confirmation avant exécution"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Demande confirmation pour chaque optimisation"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleConfirm"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Restore point auto -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Point de restauration automatique"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Crée un point avant chaque action admin"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleAutoRestore"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Reboot warning -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Avertissement redémarrage"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Affiche un message quand un reboot est requis"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleReboot"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Dry-run mode -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Mode simulation (actions critiques)"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="N'applique pas les resets réseau/pare-feu/hosts, affiche seulement un aperçu"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleSimulation"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Advanced tweaks -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Afficher optimisations avancées"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Inclut les tweaks à gain incertain ou à risque de régression"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleAdvanced"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Benchmark mode -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,18">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Benchmark avant/après (optimisations majeures)"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Mesure CPU/RAM/disque/latence pour objectiver le gain"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleBenchmarks"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Text="INTERFACE" FontSize="10" FontWeight="Bold"
+                               Foreground="#484848" Margin="0,0,0,10"/>
+
+                    <!-- Auto scroll -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Scroll automatique du terminal"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Défile vers les derniers logs"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleScroll"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Badge admin -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Afficher le badge Admin"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Indique les optimisations nécessitant des droits élevés"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleAdminBadge"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Theme -->
+                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
+                            BorderBrush="#2E2E2E" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Thème clair"
+                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                <TextBlock Text="Applique immédiatement la palette claire (sinon palette sombre)"
+                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleLightTheme"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Background="#181818" CornerRadius="0,0,10,10"
+                    BorderBrush="#2E2E2E" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Margin="0,0,16,0">
+                    <Button Content="Annuler" Click="Cancel_Click"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Margin="0,0,8,0" Height="32" Width="88"/>
+                    <Button Content="Enregistrer" Click="Save_Click"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Height="32" Width="108"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
