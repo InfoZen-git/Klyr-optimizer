@@ -27,10 +27,17 @@ namespace InfoZen.Services
             get
             {
                 if (TimedOut) return "⏱ Timeout : la commande a dépassé le délai imparti.";
-                if (WasElevated && string.IsNullOrEmpty(Output) && string.IsNullOrEmpty(Error))
-                    return Success ? "✅ Commande admin exécutée (sortie non capturée)." : "⚠ Commande admin lancée (vérifiez manuellement).";
-                if (!string.IsNullOrWhiteSpace(Error))
-                    return $"{Output.Trim()}\n⚠ {Error.Trim()}";
+
+                bool hasOutput = !string.IsNullOrWhiteSpace(Output);
+                bool hasError  = !string.IsNullOrWhiteSpace(Error);
+
+                if (!hasOutput && !hasError)
+                    return Success
+                        ? $"✅ Commande exécutée (code {ExitCode}, aucune sortie)."
+                        : $"❌ Échec (code {ExitCode}, aucune sortie).";
+
+                if (hasError && hasOutput) return $"{Output.Trim()}\n⚠ {Error.Trim()}";
+                if (hasError)              return $"⚠ {Error.Trim()}";
                 return Output.Trim();
             }
         }
@@ -54,70 +61,93 @@ namespace InfoZen.Services
         public static async Task<CommandResult> RunCmdAsync(string command, bool asAdmin = false, TimeSpan? timeout = null)
         {
             timeout ??= DefaultTimeout;
+            string? outFile = null;
+            string? errFile = null;
+            string? batFile = null;
             try
             {
-                var psi = new ProcessStartInfo
+                ProcessStartInfo psi;
+
+                if (asAdmin)
                 {
-                    FileName               = "cmd.exe",
-                    Arguments              = $"/c {command}",
-                    UseShellExecute        = asAdmin,
-                    Verb                   = asAdmin ? "runas" : "",
-                    RedirectStandardOutput = !asAdmin,
-                    RedirectStandardError  = !asAdmin,
-                    CreateNoWindow         = true,
-                    StandardOutputEncoding = !asAdmin ? Encoding.UTF8 : null,
-                    StandardErrorEncoding  = !asAdmin ? Encoding.UTF8 : null
-                };
+                    // FIX P0-04: UseShellExecute=true (requis pour runas) empêche la redirection.
+                    // On écrit un .bat wrapper qui redirige stdout/stderr vers des fichiers temporaires.
+                    outFile = Path.Combine(Path.GetTempPath(), $"iz_cmd_out_{Guid.NewGuid():N}.txt");
+                    errFile = Path.Combine(Path.GetTempPath(), $"iz_cmd_err_{Guid.NewGuid():N}.txt");
+                    batFile = Path.Combine(Path.GetTempPath(), $"iz_cmd_{Guid.NewGuid():N}.bat");
+                    string batContent = $"@echo off\r\nchcp 65001 > nul 2>&1\r\n{command} > \"{outFile}\" 2> \"{errFile}\"\r\nexit /B %ERRORLEVEL%\r\n";
+                    await File.WriteAllTextAsync(batFile, batContent, new UTF8Encoding(false));
+
+                    psi = new ProcessStartInfo
+                    {
+                        FileName        = batFile,
+                        UseShellExecute = true,
+                        Verb            = "runas",
+                        CreateNoWindow  = true,
+                        WindowStyle     = ProcessWindowStyle.Hidden
+                    };
+                }
+                else
+                {
+                    psi = new ProcessStartInfo
+                    {
+                        FileName               = "cmd.exe",
+                        Arguments              = $"/c {command}",
+                        UseShellExecute        = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError  = true,
+                        CreateNoWindow         = true,
+                        StandardOutputEncoding = Encoding.UTF8,
+                        StandardErrorEncoding  = Encoding.UTF8
+                    };
+                }
 
                 using var proc = Process.Start(psi);
                 if (proc == null)
                     return new CommandResult { Success = false, Error = "Impossible de démarrer le processus." };
 
                 string output = "", error = "";
+                using var cts = new CancellationTokenSource(timeout.Value);
+
                 if (!asAdmin)
                 {
                     var outputTask = proc.StandardOutput.ReadToEndAsync();
-                    var errorTask = proc.StandardError.ReadToEndAsync();
-                    
-                    using var cts = new CancellationTokenSource(timeout.Value);
+                    var errorTask  = proc.StandardError.ReadToEndAsync();
                     try
                     {
                         await proc.WaitForExitAsync(cts.Token);
                         output = await outputTask;
-                        error = await errorTask;
+                        error  = await errorTask;
                     }
                     catch (OperationCanceledException)
                     {
-                        try
-                        {
-                            proc.Kill(entireProcessTree: true);
-                        }
-                        catch (Exception killEx)
-                        {
-                            LogService.Instance.Warn($"Impossible de terminer le processus CMD après timeout : {killEx.Message}", "SystemService");
-                        }
-                        return new CommandResult { Success = false, TimedOut = true, WasElevated = asAdmin };
+                        try { proc.Kill(entireProcessTree: true); }
+                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer le processus CMD après timeout : {killEx.Message}", "SystemService"); }
+                        return new CommandResult { Success = false, TimedOut = true, WasElevated = false };
                     }
                 }
                 else
                 {
-                    // Pour les commandes admin, on attend mais sans timeout strict car UAC peut bloquer
-                    using var cts = new CancellationTokenSource(timeout.Value);
                     try
                     {
                         await proc.WaitForExitAsync(cts.Token);
                     }
                     catch (OperationCanceledException)
                     {
-                        try
-                        {
-                            proc.Kill(entireProcessTree: true);
-                        }
-                        catch (Exception killEx)
-                        {
-                            LogService.Instance.Warn($"Impossible de terminer la commande admin après timeout : {killEx.Message}", "SystemService");
-                        }
+                        try { proc.Kill(entireProcessTree: true); }
+                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer la commande admin après timeout : {killEx.Message}", "SystemService"); }
                         return new CommandResult { Success = false, TimedOut = true, WasElevated = true };
+                    }
+
+                    // FIX P0-04: relire la sortie depuis les fichiers temporaires
+                    try
+                    {
+                        if (File.Exists(outFile)) output = await File.ReadAllTextAsync(outFile!, Encoding.UTF8);
+                        if (File.Exists(errFile)) error  = await File.ReadAllTextAsync(errFile!, Encoding.UTF8);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogService.Instance.Warn($"Sortie de la commande admin illisible : {ex.Message}", "SystemService");
                     }
                 }
 
@@ -132,12 +162,17 @@ namespace InfoZen.Services
             }
             catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
             {
-                // L'utilisateur a annulé l'UAC
                 return new CommandResult { Success = false, Error = "❌ Élévation refusée par l'utilisateur (UAC annulé).", WasElevated = true };
             }
             catch (Exception ex)
             {
                 return new CommandResult { Success = false, Error = $"❌ Erreur : {ex.Message}" };
+            }
+            finally
+            {
+                try { if (outFile != null && File.Exists(outFile)) File.Delete(outFile); } catch { }
+                try { if (errFile != null && File.Exists(errFile)) File.Delete(errFile); } catch { }
+                try { if (batFile != null && File.Exists(batFile)) File.Delete(batFile); } catch { }
             }
         }
 
@@ -145,9 +180,39 @@ namespace InfoZen.Services
         public static async Task<CommandResult> RunPowerShellAsync(string script, bool asAdmin = false, TimeSpan? timeout = null)
         {
             timeout ??= DefaultTimeout;
+            string? outFile = null;
+            string? errFile = null;
             try
             {
-                var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+                string finalScript = script;
+
+                if (asAdmin)
+                {
+                    // FIX P0-04: UseShellExecute=true (requis pour runas) empêche la redirection
+                    // stdout/stderr. On encapsule donc le script utilisateur et on redirige ses
+                    // sorties vers des fichiers temporaires, lus après exit du process élevé.
+                    outFile = Path.Combine(Path.GetTempPath(), $"iz_ps_out_{Guid.NewGuid():N}.txt");
+                    errFile = Path.Combine(Path.GetTempPath(), $"iz_ps_err_{Guid.NewGuid():N}.txt");
+                    string innerEncoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+                    string safeOut = outFile.Replace("'", "''");
+                    string safeErr = errFile.Replace("'", "''");
+                    finalScript = $@"
+$ErrorActionPreference = 'Continue'
+$__iz_out = '{safeOut}'
+$__iz_err = '{safeErr}'
+try {{
+    $__iz_bytes = [System.Convert]::FromBase64String('{innerEncoded}')
+    $__iz_src   = [System.Text.Encoding]::Unicode.GetString($__iz_bytes)
+    $__iz_sb    = [ScriptBlock]::Create($__iz_src)
+    & $__iz_sb 3>&1 6>&1 1> $__iz_out 2> $__iz_err
+    if ($null -eq $LASTEXITCODE) {{ exit 0 }} else {{ exit $LASTEXITCODE }}
+}} catch {{
+    $_ | Out-File -FilePath $__iz_err -Encoding UTF8 -Append
+    exit 1
+}}";
+                }
+
+                var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(finalScript));
                 var psi = new ProcessStartInfo
                 {
                     FileName               = "powershell.exe",
@@ -157,6 +222,7 @@ namespace InfoZen.Services
                     RedirectStandardOutput = !asAdmin,
                     RedirectStandardError  = !asAdmin,
                     CreateNoWindow         = true,
+                    WindowStyle            = ProcessWindowStyle.Hidden,
                     StandardOutputEncoding = !asAdmin ? Encoding.UTF8 : null,
                     StandardErrorEncoding  = !asAdmin ? Encoding.UTF8 : null
                 };
@@ -166,49 +232,47 @@ namespace InfoZen.Services
                     return new CommandResult { Success = false, Error = "Impossible de démarrer PowerShell." };
 
                 string output = "", error = "";
+                using var cts = new CancellationTokenSource(timeout.Value);
+
                 if (!asAdmin)
                 {
                     var outputTask = proc.StandardOutput.ReadToEndAsync();
-                    var errorTask = proc.StandardError.ReadToEndAsync();
-                    
-                    using var cts = new CancellationTokenSource(timeout.Value);
+                    var errorTask  = proc.StandardError.ReadToEndAsync();
                     try
                     {
                         await proc.WaitForExitAsync(cts.Token);
                         output = await outputTask;
-                        error = await errorTask;
+                        error  = await errorTask;
                     }
                     catch (OperationCanceledException)
                     {
-                        try
-                        {
-                            proc.Kill(entireProcessTree: true);
-                        }
-                        catch (Exception killEx)
-                        {
-                            LogService.Instance.Warn($"Impossible de terminer PowerShell après timeout : {killEx.Message}", "SystemService");
-                        }
-                        return new CommandResult { Success = false, TimedOut = true, WasElevated = asAdmin };
+                        try { proc.Kill(entireProcessTree: true); }
+                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer PowerShell après timeout : {killEx.Message}", "SystemService"); }
+                        return new CommandResult { Success = false, TimedOut = true, WasElevated = false };
                     }
                 }
                 else
                 {
-                    using var cts = new CancellationTokenSource(timeout.Value);
                     try
                     {
                         await proc.WaitForExitAsync(cts.Token);
                     }
                     catch (OperationCanceledException)
                     {
-                        try
-                        {
-                            proc.Kill(entireProcessTree: true);
-                        }
-                        catch (Exception killEx)
-                        {
-                            LogService.Instance.Warn($"Impossible de terminer PowerShell admin après timeout : {killEx.Message}", "SystemService");
-                        }
+                        try { proc.Kill(entireProcessTree: true); }
+                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer PowerShell admin après timeout : {killEx.Message}", "SystemService"); }
                         return new CommandResult { Success = false, TimedOut = true, WasElevated = true };
+                    }
+
+                    // FIX P0-04: relire la sortie depuis les fichiers temporaires
+                    try
+                    {
+                        if (File.Exists(outFile)) output = await File.ReadAllTextAsync(outFile!, Encoding.UTF8);
+                        if (File.Exists(errFile)) error  = await File.ReadAllTextAsync(errFile!, Encoding.UTF8);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogService.Instance.Warn($"Sortie du process admin illisible : {ex.Message}", "SystemService");
                     }
                 }
 
@@ -228,6 +292,11 @@ namespace InfoZen.Services
             catch (Exception ex)
             {
                 return new CommandResult { Success = false, Error = $"❌ Erreur PowerShell : {ex.Message}" };
+            }
+            finally
+            {
+                try { if (outFile != null && File.Exists(outFile)) File.Delete(outFile); } catch { }
+                try { if (errFile != null && File.Exists(errFile)) File.Delete(errFile); } catch { }
             }
         }
         
@@ -305,7 +374,7 @@ namespace InfoZen.Services
             try
             {
                 // OS
-                info.OsName      = Environment.OSVersion.ToString();
+                info.OsName      = GetFriendlyOsName();
                 info.MachineName = Environment.MachineName;
                 info.Uptime      = FormatUptime(TimeSpan.FromMilliseconds(Environment.TickCount64));
 
@@ -369,6 +438,32 @@ namespace InfoZen.Services
             }
         }
 
+        /// <summary>
+        /// Stats temps réel : RAM + disque C: + uptime. Léger (pas de WMI / registre).
+        /// Utilisé pour le refresh périodique du Dashboard sans surcoût.
+        /// </summary>
+        public static (float RamUsedGb, float RamTotalGb, float RamPercent,
+                       long DiskFreeGb, long DiskTotalGb, string Uptime) GetRealtimeStats()
+        {
+            GetRamInfo(out float used, out float total);
+            float pct = total > 0 ? (used / total) * 100f : 0f;
+
+            long diskFree = 0, diskTotal = 0;
+            try
+            {
+                var drive = new DriveInfo("C");
+                diskFree  = drive.AvailableFreeSpace / (1024L * 1024 * 1024);
+                diskTotal = drive.TotalSize          / (1024L * 1024 * 1024);
+            }
+            catch (Exception ex)
+            {
+                LogService.Instance.Warn($"Lecture disque C: échouée : {ex.Message}", "SystemService");
+            }
+
+            string uptime = FormatUptime(TimeSpan.FromMilliseconds(Environment.TickCount64));
+            return (used, total, pct, diskFree, diskTotal, uptime);
+        }
+
         /// <summary>Libère les ressources du service (appeler à la fermeture de l'app).</summary>
         public static void Cleanup()
         {
@@ -391,6 +486,41 @@ namespace InfoZen.Services
             {
                 LogService.Instance.Warn($"Impossible de lire le nom du CPU : {ex.Message}", "SystemService");
                 return "CPU inconnu";
+            }
+        }
+
+        /// <summary>
+        /// Nom convivial de l'OS, ex. "Windows 11 25H2".
+        /// Détecte Win10/11 via le numéro de build (>= 22000 → Win 11) et lit DisplayVersion
+        /// dans HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion.
+        /// Note : ProductName n'est pas fiable sur Win 11 (Microsoft ne l'a jamais mis à jour).
+        /// </summary>
+        private static string GetFriendlyOsName()
+        {
+            try
+            {
+                int build = Environment.OSVersion.Version.Build;
+                string majorName = build >= 22000 ? "Windows 11" : "Windows 10";
+
+                string? displayVersion = null;
+                try
+                {
+                    using var key = Registry.LocalMachine.OpenSubKey(
+                        @"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                    displayVersion = key?.GetValue("DisplayVersion") as string;
+                }
+                catch (Exception ex)
+                {
+                    LogService.Instance.Warn($"Lecture DisplayVersion échouée : {ex.Message}", "SystemService");
+                }
+
+                return string.IsNullOrWhiteSpace(displayVersion)
+                    ? majorName
+                    : $"{majorName} {displayVersion}";
+            }
+            catch
+            {
+                return Environment.OSVersion.ToString();
             }
         }
 

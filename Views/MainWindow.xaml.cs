@@ -134,8 +134,22 @@ namespace InfoZen.Views
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double percent  = value is float f ? f : (value is double d ? d : 0.0);
-            double maxWidth = parameter is string s && double.TryParse(s, out double w) ? w : 100.0;
+            double percent = value switch
+            {
+                float f        => f,
+                double d       => d,
+                int i          => i,
+                long l         => l,
+                IConvertible c => c.ToDouble(culture),
+                _              => 0.0
+            };
+            double maxWidth = parameter switch
+            {
+                string s when double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double w) => w,
+                double dp => dp,
+                int ip    => ip,
+                _         => 100.0
+            };
             return Math.Max(0, Math.Min(maxWidth, percent / 100.0 * maxWidth));
         }
 

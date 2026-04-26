@@ -27,10 +27,10 @@
                     MouseDown="TitleBar_MouseDown">
                 <Grid Margin="16,0">
                     <TextBlock Text="Paramètres" FontSize="13" FontWeight="SemiBold"
-                               Foreground="#E8E8E8" VerticalAlignment="Center"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     <Button Content="✕" HorizontalAlignment="Right"
                             Width="28" Height="24" BorderThickness="0"
-                            Background="Transparent" Foreground="#606060"
+                            Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                             Cursor="Hand" Click="Close_Click" FontSize="12">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -39,8 +39,8 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="bd" Property="Background" Value="#C0392B"/>
-                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource ErrorBrush}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentBrush}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -54,11 +54,11 @@
                 <StackPanel>
 
                     <TextBlock Text="SÉCURITÉ" FontSize="10" FontWeight="Bold"
-                               Foreground="#484848" Margin="0,0,0,10"/>
+                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,10"/>
 
                     <!-- Confirmation -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -66,9 +66,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Confirmation avant exécution"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Demande confirmation pour chaque optimisation"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleConfirm"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -76,8 +76,8 @@
                     </Border>
 
                     <!-- Restore point auto -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -85,9 +85,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Point de restauration automatique"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Crée un point avant chaque action admin"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleAutoRestore"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -95,8 +95,8 @@
                     </Border>
 
                     <!-- Reboot warning -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -104,9 +104,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Avertissement redémarrage"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Affiche un message quand un reboot est requis"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleReboot"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -114,8 +114,8 @@
                     </Border>
 
                     <!-- Dry-run mode -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -123,9 +123,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Mode simulation (actions critiques)"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="N'applique pas les resets réseau/pare-feu/hosts, affiche seulement un aperçu"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleSimulation"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -133,8 +133,8 @@
                     </Border>
 
                     <!-- Advanced tweaks -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -142,9 +142,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Afficher optimisations avancées"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Inclut les tweaks à gain incertain ou à risque de régression"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleAdvanced"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -152,8 +152,8 @@
                     </Border>
 
                     <!-- Benchmark mode -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,18">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,18">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -161,9 +161,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Benchmark avant/après (optimisations majeures)"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Mesure CPU/RAM/disque/latence pour objectiver le gain"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleBenchmarks"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -171,11 +171,11 @@
                     </Border>
 
                     <TextBlock Text="INTERFACE" FontSize="10" FontWeight="Bold"
-                               Foreground="#484848" Margin="0,0,0,10"/>
+                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,10"/>
 
                     <!-- Auto scroll -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -183,9 +183,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Scroll automatique du terminal"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Défile vers les derniers logs"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleScroll"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -193,8 +193,8 @@
                     </Border>
 
                     <!-- Badge admin -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -202,9 +202,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Afficher le badge Admin"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Indique les optimisations nécessitant des droits élevés"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleAdminBadge"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -212,8 +212,8 @@
                     </Border>
 
                     <!-- Theme -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -221,9 +221,9 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Thème clair"
-                                           FontSize="12" FontWeight="Medium" Foreground="#E8E8E8"/>
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="Applique immédiatement la palette claire (sinon palette sombre)"
-                                           FontSize="11" Foreground="#606060" Margin="0,2,0,0"/>
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleLightTheme"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
@@ -234,8 +234,8 @@
             </ScrollViewer>
 
             <!-- Footer -->
-            <Border Grid.Row="2" Background="#181818" CornerRadius="0,0,10,10"
-                    BorderBrush="#2E2E2E" BorderThickness="0,1,0,0">
+            <Border Grid.Row="2" Background="{DynamicResource BackgroundFooterBrush}" CornerRadius="0,0,10,10"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                             VerticalAlignment="Center" Margin="0,0,16,0">
                     <Button Content="Annuler" Click="Cancel_Click"

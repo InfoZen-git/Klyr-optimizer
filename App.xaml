@@ -10,10 +10,12 @@
         ═══════════════════════════════════════════════════════════ -->
 
         <!-- Fonds -->
-        <SolidColorBrush x:Key="BackgroundDeepBrush"   Color="#141414"/>
-        <SolidColorBrush x:Key="BackgroundPanelBrush"  Color="#1C1C1C"/>
-        <SolidColorBrush x:Key="BackgroundCardBrush"   Color="#242424"/>
-        <SolidColorBrush x:Key="BackgroundHoverBrush"  Color="#2A2A2A"/>
+        <SolidColorBrush x:Key="BackgroundDeepBrush"     Color="#141414"/>
+        <SolidColorBrush x:Key="BackgroundPanelBrush"    Color="#1C1C1C"/>
+        <SolidColorBrush x:Key="BackgroundCardBrush"     Color="#242424"/>
+        <SolidColorBrush x:Key="BackgroundHoverBrush"    Color="#2A2A2A"/>
+        <SolidColorBrush x:Key="BackgroundFooterBrush"   Color="#181818"/>
+        <SolidColorBrush x:Key="BackgroundPressedBrush"  Color="#333333"/>
 
         <!-- Accent unique : bleu ardoise discret -->
         <SolidColorBrush x:Key="AccentBrush"           Color="#4B8BF5"/>
@@ -31,20 +33,48 @@
         <SolidColorBrush x:Key="TextPrimaryBrush"      Color="#E8E8E8"/>
         <SolidColorBrush x:Key="TextSecondaryBrush"    Color="#8A8A8A"/>
         <SolidColorBrush x:Key="TextMutedBrush"        Color="#484848"/>
+        <SolidColorBrush x:Key="TextTertiaryBrush"     Color="#606060"/>
+        <SolidColorBrush x:Key="TextEmphasizedBrush"   Color="#C8C8C8"/>
+        <SolidColorBrush x:Key="TextDescriptionBrush"  Color="#6A6A6A"/>
+        <SolidColorBrush x:Key="TextOnAccentBrush"     Color="#FFFFFF"/>
 
         <!-- Bordures -->
         <SolidColorBrush x:Key="BorderBrush"           Color="#2E2E2E"/>
         <SolidColorBrush x:Key="BorderFocusBrush"      Color="#4B8BF5"/>
+        <SolidColorBrush x:Key="BorderLightBrush"      Color="#3A3A3A"/>
 
         <!-- Terminal -->
         <SolidColorBrush x:Key="TerminalBgBrush"       Color="#0F0F0F"/>
         <SolidColorBrush x:Key="TerminalTextBrush"     Color="#A8C878"/>
 
+        <!-- Sections status (subtles + borders) -->
+        <SolidColorBrush x:Key="StatusSuccessSubtleBgBrush"   Color="#1E241E"/>
+        <SolidColorBrush x:Key="StatusInfoSubtleBgBrush"      Color="#1A1E28"/>
+        <SolidColorBrush x:Key="StatusWarningSubtleBgBrush"   Color="#221E18"/>
+        <SolidColorBrush x:Key="StatusSuccessBorderBrush"     Color="#2E3E2E"/>
+        <SolidColorBrush x:Key="StatusInfoBorderBrush"        Color="#2A3040"/>
+        <SolidColorBrush x:Key="StatusWarningBorderBrush"     Color="#3A3020"/>
+        <SolidColorBrush x:Key="StatusLiveSuccessBgBrush"     Color="#1E2E1E"/>
+        <SolidColorBrush x:Key="StatusLiveSuccessBorderBrush" Color="#2E4A2E"/>
+
+        <!-- Badges (Admin / Reboot / Advanced) -->
+        <SolidColorBrush x:Key="BadgeAdminBgBrush"        Color="#1E2834"/>
+        <SolidColorBrush x:Key="BadgeAdminTextBrush"      Color="#6A9FD8"/>
+        <SolidColorBrush x:Key="BadgeRebootBgBrush"       Color="#2A1E1E"/>
+        <SolidColorBrush x:Key="BadgeRebootTextBrush"     Color="#C06060"/>
+        <SolidColorBrush x:Key="BadgeAdvancedBgBrush"     Color="#3A2A1E"/>
+        <SolidColorBrush x:Key="BadgeAdvancedTextBrush"   Color="#D0A46A"/>
+
+        <!-- Contrôles (scrollbar / toggle) -->
+        <SolidColorBrush x:Key="ScrollBarThumbBrush"      Color="#383838"/>
+        <SolidColorBrush x:Key="ScrollBarThumbHoverBrush" Color="#505050"/>
+        <SolidColorBrush x:Key="ToggleThumbBrush"         Color="#606060"/>
+
         <!-- ═══════════════════════════════════════════════════════════
              SCROLLBAR
         ═══════════════════════════════════════════════════════════ -->
         <Style x:Key="ScrollBarThumbStyle" TargetType="Thumb">
-            <Setter Property="Background" Value="#383838"/>
+            <Setter Property="Background" Value="{DynamicResource ScrollBarThumbBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -55,7 +85,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#505050"/>
+                    <Setter Property="Background" Value="{DynamicResource ScrollBarThumbHoverBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -88,7 +118,7 @@
         ═══════════════════════════════════════════════════════════ -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Background"  Value="{DynamicResource AccentBrush}"/>
-            <Setter Property="Foreground"  Value="#FFFFFF"/>
+            <Setter Property="Foreground"  Value="{DynamicResource TextOnAccentBrush}"/>
             <Setter Property="FontWeight"  Value="SemiBold"/>
             <Setter Property="FontSize"    Value="12"/>
             <Setter Property="Padding"     Value="16,8"/>
@@ -109,8 +139,8 @@
                                 <Setter TargetName="bd" Property="Background" Value="{DynamicResource AccentPressedBrush}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="bd" Property="Background" Value="#2A2A2A"/>
-                                <Setter Property="Foreground" Value="#484848"/>
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource BackgroundHoverBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -146,7 +176,7 @@
                                 <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#333333"/>
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource BackgroundPressedBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -180,7 +210,7 @@
                                 <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#2A2A2A"/>
+                                <Setter TargetName="bd" Property="Background" Value="{DynamicResource BackgroundHoverBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -209,23 +239,26 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
                         <Border x:Name="track" Width="40" Height="22"
-                                CornerRadius="11" Background="#2E2E2E"
-                                BorderBrush="#3A3A3A" BorderThickness="1">
+                                CornerRadius="11"
+                                Background="{DynamicResource BorderBrush}"
+                                BorderBrush="{DynamicResource BorderLightBrush}"
+                                BorderThickness="1">
                             <Border x:Name="thumb" Width="16" Height="16"
-                                    CornerRadius="8" Background="#606060"
+                                    CornerRadius="8"
+                                    Background="{DynamicResource ToggleThumbBrush}"
                                     HorizontalAlignment="Left"
                                     Margin="3,0,0,0"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="track" Property="Background"           Value="#1E2E4A"/>
-                                <Setter TargetName="track" Property="BorderBrush"          Value="#4B8BF5"/>
-                                <Setter TargetName="thumb" Property="Background"           Value="#4B8BF5"/>
+                                <Setter TargetName="track" Property="Background"           Value="{DynamicResource AccentSubtleBrush}"/>
+                                <Setter TargetName="track" Property="BorderBrush"          Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="thumb" Property="Background"           Value="{DynamicResource AccentBrush}"/>
                                 <Setter TargetName="thumb" Property="HorizontalAlignment"  Value="Right"/>
                                 <Setter TargetName="thumb" Property="Margin"               Value="0,0,3,0"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="track" Property="BorderBrush" Value="#505050"/>
+                                <Setter TargetName="track" Property="BorderBrush" Value="{DynamicResource ScrollBarThumbHoverBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

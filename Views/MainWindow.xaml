@@ -44,29 +44,25 @@
 
                     <!-- Logo -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Width="24" Height="24" CornerRadius="6"
-                                Background="#4B8BF5" Margin="0,0,9,0">
-                            <TextBlock Text="IZ" FontSize="10" FontWeight="Bold"
-                                       Foreground="#FFFFFF"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
-                        </Border>
+                        <Image Source="pack://application:,,,/Assets/Icons/icon.ico"
+                               Width="24" Height="24" Margin="0,0,9,0"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
                         <TextBlock Text="InfoZen" FontSize="13" FontWeight="SemiBold"
-                                   Foreground="#E8E8E8" VerticalAlignment="Center"/>
+                                   Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                         <TextBlock Text=" 2.1" FontSize="11"
-                                   Foreground="#484848" VerticalAlignment="Center"/>
+                                   Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <!-- Page title -->
                     <TextBlock Grid.Column="1" Text="{Binding PageTitle}"
-                               FontSize="12" Foreground="#606060"
+                               FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                     <!-- Window controls -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Width="28" Height="24" Margin="0,0,2,0"
                                 Content="—" FontSize="11"
-                                Background="Transparent" Foreground="#606060"
+                                Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
                                 Click="Minimize_Click">
                             <Button.Template>
@@ -77,8 +73,8 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="bd" Property="Background" Value="#2E2E2E"/>
-                                            <Setter Property="Foreground" Value="#C8C8C8"/>
+                                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource BackgroundHoverBrush}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource TextEmphasizedBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -86,7 +82,7 @@
                         </Button>
                         <Button Width="28" Height="24" Margin="0,0,2,0"
                                 Content="□" FontSize="12"
-                                Background="Transparent" Foreground="#606060"
+                                Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
                                 Click="Maximize_Click">
                             <Button.Template>
@@ -97,8 +93,8 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="bd" Property="Background" Value="#2E2E2E"/>
-                                            <Setter Property="Foreground" Value="#C8C8C8"/>
+                                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource BackgroundHoverBrush}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource TextEmphasizedBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -106,7 +102,7 @@
                         </Button>
                         <Button Width="28" Height="24"
                                 Content="✕" FontSize="11"
-                                Background="Transparent" Foreground="#606060"
+                                Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
                                 Click="Close_Click">
                             <Button.Template>
@@ -117,8 +113,8 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="bd" Property="Background" Value="#C0392B"/>
-                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ErrorBrush}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentBrush}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -138,21 +134,21 @@
 
                         <!-- Section : Navigation -->
                         <TextBlock Text="NAVIGATION" FontSize="10" FontWeight="Bold"
-                                   Foreground="#484848" Margin="12,0,0,6"/>
+                                   Foreground="{DynamicResource TextMutedBrush}" Margin="12,0,0,6"/>
 
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⊞" FontSize="13" Foreground="#8A8A8A" Margin="0,0,10,0"/>
+                                <TextBlock Text="⊞" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
                                 <TextBlock Text="Tableau de bord" FontSize="12"/>
                             </StackPanel>
                         </Button>
 
-                        <Separator Background="#2E2E2E" Margin="12,10,12,10" Height="1"/>
+                        <Separator Background="{DynamicResource BorderBrush}" Margin="12,10,12,10" Height="1"/>
 
                         <!-- Section : Modules -->
                         <TextBlock Text="MODULES" FontSize="10" FontWeight="Bold"
-                                   Foreground="#484848" Margin="12,0,0,6"/>
+                                   Foreground="{DynamicResource TextMutedBrush}" Margin="12,0,0,6"/>
 
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Gaming"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
@@ -160,7 +156,7 @@
                                 <TextBlock Text="🎮" FontSize="13" Margin="0,0,10,0"/>
                                 <StackPanel>
                                     <TextBlock Text="Gaming / FPS" FontSize="12"/>
-                                    <TextBlock Text="9 optimisations" FontSize="10" Foreground="#484848"/>
+                                    <TextBlock Text="9 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -171,7 +167,7 @@
                                 <TextBlock Text="💻" FontSize="13" Margin="0,0,10,0"/>
                                 <StackPanel>
                                     <TextBlock Text="Vieux PC" FontSize="12"/>
-                                    <TextBlock Text="8 optimisations" FontSize="10" Foreground="#484848"/>
+                                    <TextBlock Text="8 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -182,7 +178,7 @@
                                 <TextBlock Text="🧹" FontSize="13" Margin="0,0,10,0"/>
                                 <StackPanel>
                                     <TextBlock Text="Nettoyage" FontSize="12"/>
-                                    <TextBlock Text="8 optimisations" FontSize="10" Foreground="#484848"/>
+                                    <TextBlock Text="8 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -193,21 +189,21 @@
                                 <TextBlock Text="🌐" FontSize="13" Margin="0,0,10,0"/>
                                 <StackPanel>
                                     <TextBlock Text="Réseau" FontSize="12"/>
-                                    <TextBlock Text="9 optimisations" FontSize="10" Foreground="#484848"/>
+                                    <TextBlock Text="9 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
 
-                        <Separator Background="#2E2E2E" Margin="12,10,12,10" Height="1"/>
+                        <Separator Background="{DynamicResource BorderBrush}" Margin="12,10,12,10" Height="1"/>
 
                         <!-- Section : Outils -->
                         <TextBlock Text="OUTILS" FontSize="10" FontWeight="Bold"
-                                   Foreground="#484848" Margin="12,0,0,6"/>
+                                   Foreground="{DynamicResource TextMutedBrush}" Margin="12,0,0,6"/>
 
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Terminal"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&gt;_" FontSize="12" Foreground="#8A8A8A" Margin="0,0,10,0"
+                                <TextBlock Text="&gt;_" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"
                                            FontFamily="Consolas"/>
                                 <TextBlock Text="Terminal" FontSize="12"/>
                             </StackPanel>
@@ -216,7 +212,7 @@
                         <Button x:Name="BtnSettings" Style="{StaticResource NavButtonStyle}"
                                 Margin="0,1,0,1" Click="BtnSettings_Click">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚙" FontSize="13" Foreground="#8A8A8A" Margin="0,0,10,0"/>
+                                <TextBlock Text="⚙" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
                                 <TextBlock Text="Paramètres" FontSize="12"/>
                             </StackPanel>
                         </Button>
@@ -224,7 +220,7 @@
                         <Button x:Name="BtnLegal" Style="{StaticResource NavButtonStyle}"
                                 Margin="0,1,0,1" Click="BtnLegal_Click">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚖" FontSize="13" Foreground="#8A8A8A" Margin="0,0,10,0"/>
+                                <TextBlock Text="⚖" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
                                 <TextBlock Text="Mentions légales" FontSize="12"/>
                             </StackPanel>
                         </Button>
@@ -232,7 +228,7 @@
                         <Button x:Name="BtnAbout" Style="{StaticResource NavButtonStyle}"
                                 Margin="0,1,0,1" Click="BtnAbout_Click">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="ℹ" FontSize="13" Foreground="#8A8A8A" Margin="0,0,10,0"/>
+                                <TextBlock Text="ℹ" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
                                 <TextBlock Text="À propos" FontSize="12"/>
                             </StackPanel>
                         </Button>
@@ -241,7 +237,7 @@
 
                     <!-- Boutons bas de sidebar -->
                     <StackPanel DockPanel.Dock="Bottom" Margin="10,0,10,12">
-                        <Separator Background="#2E2E2E" Margin="2,0,2,10" Height="1"/>
+                        <Separator Background="{DynamicResource BorderBrush}" Margin="2,0,2,10" Height="1"/>
 
                         <Button Command="{Binding CreateRestorePointCommand}"
                                 Style="{StaticResource SecondaryButtonStyle}"
@@ -274,12 +270,12 @@
                     <StackPanel>
 
                         <TextBlock Text="Tableau de bord" FontSize="20" FontWeight="SemiBold"
-                                   Foreground="#E8E8E8" Margin="0,0,0,3"/>
-                        <TextBlock Foreground="#606060" FontSize="12" Margin="0,0,0,20">
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,3"/>
+                        <TextBlock Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12" Margin="0,0,0,20">
                             <Run Text="{Binding SystemInfo.MachineName}"/>
                             <Run Text="  ·  "/>
                             <Run Text="Uptime : "/>
-                            <Run Text="{Binding SystemInfo.Uptime}" Foreground="#8A8A8A"/>
+                            <Run Text="{Binding SystemInfo.Uptime}" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </TextBlock>
 
                         <!-- Cartes stats (4 colonnes) -->
@@ -289,16 +285,16 @@
                             <Border Style="{StaticResource OptimizationCardStyle}" Margin="0,0,6,0">
                                 <StackPanel>
                                     <TextBlock Text="CPU" FontSize="10" FontWeight="Bold"
-                                               Foreground="#484848" Margin="0,0,0,6"/>
+                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
                                     <TextBlock Text="{Binding SystemInfo.CpuUsageStr}"
-                                               FontSize="26" FontWeight="Bold" Foreground="#4B8BF5"/>
+                                               FontSize="26" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
                                     <TextBlock Text="{Binding SystemInfo.CpuName}"
-                                               FontSize="10" Foreground="#606060"
+                                               FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}"
                                                TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/>
                                     <Border Height="3" CornerRadius="2"
-                                            Background="#2E2E2E" Margin="0,8,0,0">
+                                            Background="{DynamicResource BorderBrush}" Margin="0,8,0,0">
                                         <Border Height="3" CornerRadius="2"
-                                                Background="#4B8BF5" HorizontalAlignment="Left"
+                                                Background="{DynamicResource AccentBrush}" HorizontalAlignment="Left"
                                                 Width="{Binding SystemInfo.CpuUsage, Converter={StaticResource PercentToWidthConverter}, ConverterParameter=140}"/>
                                     </Border>
                                 </StackPanel>
@@ -308,15 +304,15 @@
                             <Border Style="{StaticResource OptimizationCardStyle}" Margin="0,0,6,0">
                                 <StackPanel>
                                     <TextBlock Text="RAM" FontSize="10" FontWeight="Bold"
-                                               Foreground="#484848" Margin="0,0,0,6"/>
+                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
                                     <TextBlock Text="{Binding SystemInfo.RamPercentStr}"
-                                               FontSize="26" FontWeight="Bold" Foreground="#4CAF50"/>
+                                               FontSize="26" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
                                     <TextBlock Text="{Binding SystemInfo.RamInfoStr}"
-                                               FontSize="10" Foreground="#606060" Margin="0,3,0,0"/>
+                                               FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,3,0,0"/>
                                     <Border Height="3" CornerRadius="2"
-                                            Background="#2E2E2E" Margin="0,8,0,0">
+                                            Background="{DynamicResource BorderBrush}" Margin="0,8,0,0">
                                         <Border Height="3" CornerRadius="2"
-                                                Background="#4CAF50" HorizontalAlignment="Left"
+                                                Background="{DynamicResource SuccessBrush}" HorizontalAlignment="Left"
                                                 Width="{Binding SystemInfo.RamPercent, Converter={StaticResource PercentToWidthConverter}, ConverterParameter=140}"/>
                                     </Border>
                                 </StackPanel>
@@ -326,15 +322,15 @@
                             <Border Style="{StaticResource OptimizationCardStyle}" Margin="0,0,6,0">
                                 <StackPanel>
                                     <TextBlock Text="DISQUE C:" FontSize="10" FontWeight="Bold"
-                                               Foreground="#484848" Margin="0,0,0,6"/>
+                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding SystemInfo.DiskFreeGb}"
-                                                   FontSize="26" FontWeight="Bold" Foreground="#E8A838"/>
-                                        <TextBlock Text=" Go" FontSize="14" Foreground="#E8A838"
+                                                   FontSize="26" FontWeight="Bold" Foreground="{DynamicResource WarningBrush}"/>
+                                        <TextBlock Text=" Go" FontSize="14" Foreground="{DynamicResource WarningBrush}"
                                                    VerticalAlignment="Bottom" Margin="0,0,0,3"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding SystemInfo.DiskInfoStr}"
-                                               FontSize="10" Foreground="#606060" Margin="0,3,0,0"/>
+                                               FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,3,0,0"/>
                                 </StackPanel>
                             </Border>
 
@@ -342,11 +338,11 @@
                             <Border Style="{StaticResource OptimizationCardStyle}">
                                 <StackPanel>
                                     <TextBlock Text="SESSION" FontSize="10" FontWeight="Bold"
-                                               Foreground="#484848" Margin="0,0,0,6"/>
+                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
                                     <TextBlock Text="{Binding OptimizationsRun}"
-                                               FontSize="26" FontWeight="Bold" Foreground="#E8E8E8"/>
+                                               FontSize="26" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     <TextBlock Text="optimisations lancées"
-                                               FontSize="10" Foreground="#606060" Margin="0,3,0,0"/>
+                                               FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,3,0,0"/>
                                 </StackPanel>
                             </Border>
 
@@ -361,9 +357,9 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
                                     <TextBlock Text="SYSTÈME" FontSize="10" FontWeight="Bold"
-                                               Foreground="#484848" Margin="0,0,0,4"/>
+                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,4"/>
                                     <TextBlock Text="{Binding SystemInfo.OsName}"
-                                               FontSize="12" Foreground="#C8C8C8"/>
+                                               FontSize="12" Foreground="{DynamicResource TextEmphasizedBrush}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                                     <Button Command="{Binding NavigateCommand}" CommandParameter="Gaming"
@@ -381,9 +377,9 @@
 
                         <!-- Activité récente -->
                         <TextBlock Text="ACTIVITÉ RÉCENTE" FontSize="10" FontWeight="Bold"
-                                   Foreground="#484848" Margin="0,0,0,6"/>
-                        <Border Background="#0F0F0F" CornerRadius="6" Height="130"
-                                BorderBrush="#2E2E2E" BorderThickness="1">
+                                   Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
+                        <Border Background="{DynamicResource TerminalBgBrush}" CornerRadius="6" Height="130"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                             <TextBox Style="{StaticResource TerminalTextStyle}"
                                      Text="{Binding TerminalOutput, Mode=OneWay}"/>
                         </Border>
@@ -403,8 +399,8 @@
                     <!-- En-tête -->
                     <StackPanel Grid.Row="0" Margin="0,0,0,14">
                         <TextBlock Text="{Binding PageTitle}" FontSize="20" FontWeight="SemiBold"
-                                   Foreground="#E8E8E8" Margin="0,0,0,2"/>
-                        <TextBlock Foreground="#606060" FontSize="12">
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,2"/>
+                        <TextBlock Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12">
                             <Run Text="{Binding CurrentOptimizations.Count, Mode=OneWay}"/>
                             <Run Text=" optimisations disponibles"/>
                         </TextBlock>
@@ -429,10 +425,10 @@
                                 <TextBlock Text="Arrêter" FontSize="12"/>
                             </StackPanel>
                         </Button>
-                        <Border Background="#242424" CornerRadius="5" Padding="10,0"
-                                BorderBrush="#2E2E2E" BorderThickness="1"
+                        <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="5" Padding="10,0"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <TextBlock Text="En cours…" Foreground="#4B8BF5"
+                            <TextBlock Text="En cours…" Foreground="{DynamicResource AccentBrush}"
                                        FontSize="12" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -455,41 +451,41 @@
                                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
                                                     <TextBlock Text="{Binding Name}"
                                                                FontSize="13" FontWeight="SemiBold"
-                                                               Foreground="#E8E8E8" Margin="0,0,8,0"/>
-                                                    <Border Background="#1E2834" CornerRadius="3"
+                                                               Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0"/>
+                                                    <Border Background="{DynamicResource BadgeAdminBgBrush}" CornerRadius="3"
                                                             Padding="5,1" Margin="0,0,5,0"
-                                                            BorderBrush="#2E4060" BorderThickness="1"
+                                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                                             Visibility="{Binding RequiresAdmin, Converter={StaticResource AdminBadgeVisibilityConverter}}">
-                                                        <TextBlock Text="Admin" FontSize="10" Foreground="#6A9FD8"/>
+                                                        <TextBlock Text="Admin" FontSize="10" Foreground="{DynamicResource BadgeAdminTextBrush}"/>
                                                     </Border>
-                                                    <Border Background="#2A1E1E" CornerRadius="3"
+                                                    <Border Background="{DynamicResource BadgeRebootBgBrush}" CornerRadius="3"
                                                             Padding="5,1"
                                                             Margin="0,0,5,0"
-                                                            BorderBrush="#503030" BorderThickness="1"
+                                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                                             Visibility="{Binding RequiresReboot, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                        <TextBlock Text="Reboot" FontSize="10" Foreground="#C06060"/>
+                                                        <TextBlock Text="Reboot" FontSize="10" Foreground="{DynamicResource BadgeRebootTextBrush}"/>
                                                     </Border>
                                                     <Border Background="{Binding PurposeBadgeBackground}" CornerRadius="3"
                                                             Padding="5,1" Margin="0,0,5,0"
-                                                            BorderBrush="#2E2E2E" BorderThickness="1">
+                                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                                                         <TextBlock Text="{Binding PurposeLabel}" FontSize="10" Foreground="{Binding PurposeBadgeForeground}"/>
                                                     </Border>
                                                     <Border Background="{Binding ConfidenceBadgeBackground}" CornerRadius="3"
                                                             Padding="5,1" Margin="0,0,5,0"
-                                                            BorderBrush="#2E2E2E" BorderThickness="1">
+                                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                                                         <TextBlock Text="{Binding ConfidenceLabel}" FontSize="10" Foreground="{Binding ConfidenceBadgeForeground}"/>
                                                     </Border>
-                                                    <Border Background="#3A2A1E" CornerRadius="3"
+                                                    <Border Background="{DynamicResource BadgeAdvancedBgBrush}" CornerRadius="3"
                                                             Padding="5,1"
-                                                            BorderBrush="#6A4A2A" BorderThickness="1"
+                                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                                             Visibility="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                        <TextBlock Text="Avancé" FontSize="10" Foreground="#D0A46A"/>
+                                                        <TextBlock Text="Avancé" FontSize="10" Foreground="{DynamicResource BadgeAdvancedTextBrush}"/>
                                                     </Border>
                                                 </StackPanel>
 
                                                 <!-- Description -->
                                                 <TextBlock Text="{Binding Description}"
-                                                           FontSize="11" Foreground="#6A6A6A"
+                                                           FontSize="11" Foreground="{DynamicResource TextDescriptionBrush}"
                                                            TextWrapping="Wrap" Margin="0,0,0,5"/>
 
                                                 <!-- Barre de progression -->
@@ -500,15 +496,15 @@
                                                         <ColumnDefinition Width="36"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Border Grid.Column="0" Height="4" CornerRadius="2"
-                                                            Background="#2A2A2A" VerticalAlignment="Center">
+                                                            Background="{DynamicResource BackgroundHoverBrush}" VerticalAlignment="Center">
                                                         <Border Height="4" CornerRadius="2"
-                                                                Background="#4B8BF5"
+                                                                Background="{DynamicResource AccentBrush}"
                                                                 HorizontalAlignment="Left"
                                                                 Width="{Binding Progress, Converter={StaticResource PercentToWidthConverter}, ConverterParameter=200}"/>
                                                     </Border>
                                                     <TextBlock Grid.Column="1"
                                                                Text="{Binding ProgressStr}"
-                                                               FontSize="10" Foreground="#4B8BF5"
+                                                               FontSize="10" Foreground="{DynamicResource AccentBrush}"
                                                                HorizontalAlignment="Right"
                                                                VerticalAlignment="Center"
                                                                Margin="4,0,0,0"/>
@@ -518,16 +514,16 @@
                                                 <TextBlock FontSize="11" Margin="0,3,0,0">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
-                                                            <Setter Property="Foreground" Value="#484848"/>
+                                                            <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding Status}" Value="Terminé">
-                                                                    <Setter Property="Foreground" Value="#4CAF50"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Status}" Value="Erreur">
-                                                                    <Setter Property="Foreground" Value="#E05252"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding Status}" Value="En cours…">
-                                                                    <Setter Property="Foreground" Value="#4B8BF5"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -580,16 +576,16 @@
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
                         <TextBlock Text="Terminal" FontSize="20" FontWeight="SemiBold"
-                                   Foreground="#E8E8E8" Margin="0,0,10,0"/>
-                        <Border Background="#1E2E1E" CornerRadius="4" Padding="7,2"
-                                BorderBrush="#2E4A2E" BorderThickness="1"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,10,0"/>
+                        <Border Background="{DynamicResource StatusLiveSuccessBgBrush}" CornerRadius="4" Padding="7,2"
+                                BorderBrush="{DynamicResource StatusLiveSuccessBorderBrush}" BorderThickness="1"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="LIVE" FontSize="10" FontWeight="Bold" Foreground="#4CAF50"/>
+                            <TextBlock Text="LIVE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
                         </Border>
                     </StackPanel>
 
-                    <Border Grid.Row="1" Background="#0F0F0F" CornerRadius="6"
-                            BorderBrush="#2E2E2E" BorderThickness="1">
+                    <Border Grid.Row="1" Background="{DynamicResource TerminalBgBrush}" CornerRadius="6"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                         <TextBox Style="{StaticResource TerminalTextStyle}"
                                  Text="{Binding TerminalOutput, Mode=OneWay}"
                                  x:Name="TerminalTextBox"/>
@@ -622,18 +618,18 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="{Binding StatusMessage}"
-                               Foreground="#606060" FontSize="11" VerticalAlignment="Center"/>
+                               Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" VerticalAlignment="Center"/>
 
                     <TextBlock Grid.Column="1" Margin="0,0,14,0"
-                               Foreground="#484848" FontSize="11" VerticalAlignment="Center">
+                               Foreground="{DynamicResource TextMutedBrush}" FontSize="11" VerticalAlignment="Center">
                         <Run Text="CPU  "/>
-                        <Run Text="{Binding CpuUsageStr, Mode=OneWay}" Foreground="#4B8BF5"/>
+                        <Run Text="{Binding CpuUsageStr, Mode=OneWay}" Foreground="{DynamicResource AccentBrush}"/>
                     </TextBlock>
 
                     <TextBlock Grid.Column="2"
-                               Foreground="#484848" FontSize="11" VerticalAlignment="Center">
+                               Foreground="{DynamicResource TextMutedBrush}" FontSize="11" VerticalAlignment="Center">
                         <Run Text="RAM  "/>
-                        <Run Text="{Binding SystemInfo.RamInfoStr, Mode=OneWay}" Foreground="#8A8A8A"/>
+                        <Run Text="{Binding SystemInfo.RamInfoStr, Mode=OneWay}" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </TextBlock>
                 </Grid>
             </Border>

@@ -9,8 +9,8 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
 
-    <Border Background="#1C1C1C" CornerRadius="10"
-            BorderBrush="#2E2E2E" BorderThickness="1">
+    <Border Background="{DynamicResource BackgroundPanelBrush}" CornerRadius="10"
+            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
         <Border.Effect>
             <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="0" Opacity="0.6"/>
         </Border.Effect>
@@ -23,14 +23,14 @@
             </Grid.RowDefinitions>
 
             <!-- Titlebar -->
-            <Border Grid.Row="0" Background="#1C1C1C" CornerRadius="10,10,0,0"
+            <Border Grid.Row="0" Background="{DynamicResource BackgroundPanelBrush}" CornerRadius="10,10,0,0"
                     MouseDown="TitleBar_MouseDown">
                 <Grid Margin="16,0">
                     <TextBlock Text="Mentions légales" FontSize="13" FontWeight="SemiBold"
-                               Foreground="#E8E8E8" VerticalAlignment="Center"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     <Button Content="✕" HorizontalAlignment="Right"
                             Width="28" Height="24" BorderThickness="0"
-                            Background="Transparent" Foreground="#606060"
+                            Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                             Cursor="Hand" Click="Close_Click" FontSize="12">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -39,8 +39,8 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="bd" Property="Background" Value="#C0392B"/>
-                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource ErrorBrush}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentBrush}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -54,15 +54,15 @@
                 <StackPanel>
 
                     <!-- RGPD -->
-                    <Border Background="#1E241E" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E3E2E" BorderThickness="1" Margin="0,0,0,8">
+                    <Border Background="{DynamicResource StatusSuccessSubtleBgBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource StatusSuccessBorderBrush}" BorderThickness="1" Margin="0,0,0,8">
                         <StackPanel>
                             <TextBlock Text="Confidentialité &amp; RGPD"
                                        FontSize="12" FontWeight="SemiBold"
-                                       Foreground="#4CAF50" Margin="0,0,0,6"/>
+                                       Foreground="{DynamicResource SuccessBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
-                                       Foreground="#A0A0A0" LineHeight="18">
-InfoZen fonctionne <Run FontWeight="Bold" Foreground="#C8C8C8">exclusivement en local</Run> sur votre ordinateur.
+                                       Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
+InfoZen fonctionne <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">exclusivement en local</Run> sur votre ordinateur.
 Aucune donnée personnelle n'est collectée ni envoyée.
 Aucune connexion internet n'est établie (sauf test de vitesse réseau).
 Les logs sont sauvegardés uniquement dans Documents\InfoZen\Logs\
@@ -71,30 +71,30 @@ Les logs sont sauvegardés uniquement dans Documents\InfoZen\Logs\
                     </Border>
 
                     <!-- Restauration -->
-                    <Border Background="#1A1E28" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2A3040" BorderThickness="1" Margin="0,0,0,8">
+                    <Border Background="{DynamicResource StatusInfoSubtleBgBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource StatusInfoBorderBrush}" BorderThickness="1" Margin="0,0,0,8">
                         <StackPanel>
                             <TextBlock Text="Garantie de Restauration"
                                        FontSize="12" FontWeight="SemiBold"
-                                       Foreground="#4B8BF5" Margin="0,0,0,6"/>
+                                       Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
-                                       Foreground="#A0A0A0" LineHeight="18">
-InfoZen propose la création de <Run FontWeight="Bold" Foreground="#C8C8C8">points de restauration système</Run> avant chaque optimisation avancée, pour garantir la réversibilité des changements.
+                                       Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
+InfoZen propose la création de <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">points de restauration système</Run> avant chaque optimisation avancée, pour garantir la réversibilité des changements.
 Activez l'option dans Paramètres → Point de restauration automatique.
                             </TextBlock>
                         </StackPanel>
                     </Border>
 
                     <!-- Disclaimer -->
-                    <Border Background="#221E18" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#3A3020" BorderThickness="1" Margin="0,0,0,8">
+                    <Border Background="{DynamicResource StatusWarningSubtleBgBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource StatusWarningBorderBrush}" BorderThickness="1" Margin="0,0,0,8">
                         <StackPanel>
                             <TextBlock Text="Clause de non-responsabilité"
                                        FontSize="12" FontWeight="SemiBold"
-                                       Foreground="#E8A838" Margin="0,0,0,6"/>
+                                       Foreground="{DynamicResource WarningBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
-                                       Foreground="#A0A0A0" LineHeight="18">
-InfoZen est fourni <Run FontWeight="Bold" Foreground="#C8C8C8">sans garantie</Run>. L'utilisateur est seul responsable de l'utilisation du logiciel.
+                                       Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
+InfoZen est fourni <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">sans garantie</Run>. L'utilisateur est seul responsable de l'utilisation du logiciel.
 Il est fortement recommandé de créer un point de restauration avant toute optimisation avancée et de sauvegarder ses données importantes.
 Le développeur ne pourra être tenu responsable de tout dommage résultant de l'utilisation de ce logiciel.
                             </TextBlock>
@@ -102,29 +102,29 @@ Le développeur ne pourra être tenu responsable de tout dommage résultant de l
                     </Border>
 
                     <!-- Audit -->
-                    <Border Background="#242424" CornerRadius="7" Padding="14,12"
-                            BorderBrush="#2E2E2E" BorderThickness="1" Margin="0,0,0,8">
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,8">
                         <StackPanel>
                             <TextBlock Text="Journal des modifications (Audit)"
                                        FontSize="12" FontWeight="SemiBold"
-                                       Foreground="#8A8A8A" Margin="0,0,0,6"/>
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
-                                       Foreground="#A0A0A0" LineHeight="18">
+                                       Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
 Chaque action est consignée dans le terminal et exportable en .txt.
-Chemin : <Run Foreground="#4B8BF5">Documents\InfoZen\Logs\InfoZen_log_AAAAMMJJ.txt</Run>
+Chemin : <Run Foreground="{DynamicResource AccentBrush}">Documents\InfoZen\Logs\InfoZen_log_AAAAMMJJ.txt</Run>
                             </TextBlock>
                         </StackPanel>
                     </Border>
 
                     <TextBlock Text="InfoZen v2.1 — Développé par Octave — Mars 2026"
-                               FontSize="10" Foreground="#383838"
+                               FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
                                HorizontalAlignment="Center" Margin="0,4,0,0"/>
                 </StackPanel>
             </ScrollViewer>
 
             <!-- Footer -->
-            <Border Grid.Row="2" Background="#181818" CornerRadius="0,0,10,10"
-                    BorderBrush="#2E2E2E" BorderThickness="0,1,0,0">
+            <Border Grid.Row="2" Background="{DynamicResource BackgroundFooterBrush}" CornerRadius="0,0,10,10"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                 <Button Content="Fermer" Click="Close_Click"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Style="{StaticResource PrimaryButtonStyle}"

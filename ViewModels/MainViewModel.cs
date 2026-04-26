@@ -136,7 +136,7 @@ namespace InfoZen.ViewModels
             CurrentPage = NormalizeStartupPage(SettingsService.Current.LastModule);
 
             _refreshTimer = new System.Timers.Timer(2000);
-            _refreshTimer.Elapsed += (_, _) => RefreshCpuUsage();
+            _refreshTimer.Elapsed += (_, _) => RefreshRealtimeStats();
             _refreshTimer.Start();
 
             // FIX P1-05: Garder une référence pour pouvoir désabonner
@@ -152,22 +152,31 @@ namespace InfoZen.ViewModels
         }
 
         // ─────────────────────── NAVIGATION ────────────────────────────────────
+        // FIX: cache des items par page pour préserver l'état (IsRunning, Progress, Status)
+        // quand l'utilisateur navigue entre pages pendant qu'une optimisation tourne.
+        private readonly Dictionary<string, List<OptimizationItem>> _pageOptimizationsCache = new();
+
         private void LoadPageOptimizations()
         {
-            CurrentOptimizations.Clear();
-            var items = CurrentPage switch
+            if (!_pageOptimizationsCache.TryGetValue(CurrentPage, out var items))
             {
-                "Gaming"   => GamingOptimizations.GetOptimizations(),
-                "OldPC"    => OldPcOptimizations.GetOptimizations(),
-                "Cleaning" => CleaningOptimizations.GetOptimizations(),
-                "Network"  => NetworkOptimizations.GetOptimizations(),
-                _          => new List<OptimizationItem>()
-            };
+                items = CurrentPage switch
+                {
+                    "Gaming"   => GamingOptimizations.GetOptimizations(),
+                    "OldPC"    => OldPcOptimizations.GetOptimizations(),
+                    "Cleaning" => CleaningOptimizations.GetOptimizations(),
+                    "Network"  => NetworkOptimizations.GetOptimizations(),
+                    _          => new List<OptimizationItem>()
+                };
+                _pageOptimizationsCache[CurrentPage] = items;
+            }
 
-            if (!SettingsService.Current.ShowAdvancedOptimizations)
-                items = items.Where(i => !i.IsAdvanced).ToList();
+            var filtered = SettingsService.Current.ShowAdvancedOptimizations
+                ? items
+                : items.Where(i => !i.IsAdvanced).ToList();
 
-            foreach (var item in items) CurrentOptimizations.Add(item);
+            CurrentOptimizations.Clear();
+            foreach (var item in filtered) CurrentOptimizations.Add(item);
         }
 
         public void ReloadCurrentOptimizations() => LoadPageOptimizations();
@@ -489,14 +498,33 @@ namespace InfoZen.ViewModels
             });
         }
 
-        private void RefreshCpuUsage()
+        /// <summary>
+        /// Refresh périodique (timer 2s) : CPU + RAM + disque C: + uptime.
+        /// Les infos statiques (CPU name, OS, machine) sont initialisées une fois via RefreshSystemInfo().
+        /// </summary>
+        private void RefreshRealtimeStats()
         {
-            float cpu = SystemService.GetCpuUsage();
-            Application.Current?.Dispatcher.Invoke(() =>
+            try
             {
-                CpuUsage            = cpu;
-                SystemInfo.CpuUsage = cpu;
-            });
+                float cpu = SystemService.GetCpuUsage();
+                var stats = SystemService.GetRealtimeStats();
+
+                Application.Current?.Dispatcher.Invoke(() =>
+                {
+                    CpuUsage              = cpu;
+                    SystemInfo.CpuUsage   = cpu;
+                    SystemInfo.RamUsedGb  = stats.RamUsedGb;
+                    SystemInfo.RamTotalGb = stats.RamTotalGb;
+                    SystemInfo.RamPercent = stats.RamPercent;
+                    SystemInfo.DiskFreeGb = stats.DiskFreeGb;
+                    SystemInfo.DiskTotalGb = stats.DiskTotalGb;
+                    SystemInfo.Uptime     = stats.Uptime;
+                });
+            }
+            catch (Exception ex)
+            {
+                LogService.Instance.Warn($"Refresh stats échoué : {ex.Message}", "MainViewModel");
+            }
         }
 
         // ─────────────────────── DISPOSE (FIX P1-05) ───────────────────────────
