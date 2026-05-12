@@ -1,7 +1,7 @@
-<Window x:Class="InfoZen.Views.LegalWindow"
+<Window x:Class="Klyr.Views.LegalWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Mentions légales – InfoZen"
+        Title="Mentions légales – Klyr"
         Width="520" Height="520"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -28,14 +28,16 @@
                 <Grid Margin="16,0">
                     <TextBlock Text="Mentions légales" FontSize="13" FontWeight="SemiBold"
                                Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                    <Button Content="✕" HorizontalAlignment="Right"
-                            Width="28" Height="24" BorderThickness="0"
+                    <Button HorizontalAlignment="Right"
+                            Width="32" Height="26" BorderThickness="0"
                             Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
-                            Cursor="Hand" Click="Close_Click" FontSize="12">
+                            Cursor="Hand" Click="Close_Click" ToolTip="Fermer">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{StaticResource IconClose}"
+                                               Style="{StaticResource IconWindowControlStyle}"
+                                               Foreground="{TemplateBinding Foreground}"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
@@ -62,10 +64,10 @@
                                        Foreground="{DynamicResource SuccessBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
                                        Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
-InfoZen fonctionne <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">exclusivement en local</Run> sur votre ordinateur.
+Klyr fonctionne <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">exclusivement en local</Run> sur votre ordinateur.
 Aucune donnée personnelle n'est collectée ni envoyée.
 Aucune connexion internet n'est établie (sauf test de vitesse réseau).
-Les logs sont sauvegardés uniquement dans Documents\InfoZen\Logs\
+Les logs sont sauvegardés uniquement dans Documents\Klyr\Logs\
                             </TextBlock>
                         </StackPanel>
                     </Border>
@@ -79,7 +81,7 @@ Les logs sont sauvegardés uniquement dans Documents\InfoZen\Logs\
                                        Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
                                        Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
-InfoZen propose la création de <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">points de restauration système</Run> avant chaque optimisation avancée, pour garantir la réversibilité des changements.
+Klyr propose la création de <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">points de restauration système</Run> avant chaque optimisation avancée, pour garantir la réversibilité des changements.
 Activez l'option dans Paramètres → Point de restauration automatique.
                             </TextBlock>
                         </StackPanel>
@@ -94,7 +96,7 @@ Activez l'option dans Paramètres → Point de restauration automatique.
                                        Foreground="{DynamicResource WarningBrush}" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="11"
                                        Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
-InfoZen est fourni <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">sans garantie</Run>. L'utilisateur est seul responsable de l'utilisation du logiciel.
+Klyr est fourni <Run FontWeight="Bold" Foreground="{DynamicResource TextEmphasizedBrush}">sans garantie</Run>. L'utilisateur est seul responsable de l'utilisation du logiciel.
 Il est fortement recommandé de créer un point de restauration avant toute optimisation avancée et de sauvegarder ses données importantes.
 Le développeur ne pourra être tenu responsable de tout dommage résultant de l'utilisation de ce logiciel.
                             </TextBlock>
@@ -111,12 +113,12 @@ Le développeur ne pourra être tenu responsable de tout dommage résultant de l
                             <TextBlock TextWrapping="Wrap" FontSize="11"
                                        Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="18">
 Chaque action est consignée dans le terminal et exportable en .txt.
-Chemin : <Run Foreground="{DynamicResource AccentBrush}">Documents\InfoZen\Logs\InfoZen_log_AAAAMMJJ.txt</Run>
+Chemin : <Run Foreground="{DynamicResource AccentBrush}">Documents\Klyr\Logs\Klyr_log_AAAAMMJJ.txt</Run>
                             </TextBlock>
                         </StackPanel>
                     </Border>
 
-                    <TextBlock Text="InfoZen v2.1 — Développé par Octave — Mars 2026"
+                    <TextBlock Text="Klyr v2.1 — Développé par InfoZen — Mars 2026"
                                FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
                                HorizontalAlignment="Center" Margin="0,4,0,0"/>
                 </StackPanel>

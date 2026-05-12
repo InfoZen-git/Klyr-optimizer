@@ -4,10 +4,10 @@ using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
-using InfoZen.Models;
+using Klyr.Models;
 using Microsoft.Win32;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Résultat structuré d'une exécution de commande système.
@@ -26,18 +26,18 @@ namespace InfoZen.Services
         {
             get
             {
-                if (TimedOut) return "⏱ Timeout : la commande a dépassé le délai imparti.";
+                if (TimedOut) return "Timeout : la commande a dépassé le délai imparti.";
 
                 bool hasOutput = !string.IsNullOrWhiteSpace(Output);
                 bool hasError  = !string.IsNullOrWhiteSpace(Error);
 
                 if (!hasOutput && !hasError)
                     return Success
-                        ? $"✅ Commande exécutée (code {ExitCode}, aucune sortie)."
-                        : $"❌ Échec (code {ExitCode}, aucune sortie).";
+                        ? $"Commande exécutée (code {ExitCode}, aucune sortie)."
+                        : $"Échec (code {ExitCode}, aucune sortie).";
 
-                if (hasError && hasOutput) return $"{Output.Trim()}\n⚠ {Error.Trim()}";
-                if (hasError)              return $"⚠ {Error.Trim()}";
+                if (hasError && hasOutput) return $"{Output.Trim()}\n{Error.Trim()}";
+                if (hasError)              return $"{Error.Trim()}";
                 return Output.Trim();
             }
         }
@@ -72,9 +72,9 @@ namespace InfoZen.Services
                 {
                     // FIX P0-04: UseShellExecute=true (requis pour runas) empêche la redirection.
                     // On écrit un .bat wrapper qui redirige stdout/stderr vers des fichiers temporaires.
-                    outFile = Path.Combine(Path.GetTempPath(), $"iz_cmd_out_{Guid.NewGuid():N}.txt");
-                    errFile = Path.Combine(Path.GetTempPath(), $"iz_cmd_err_{Guid.NewGuid():N}.txt");
-                    batFile = Path.Combine(Path.GetTempPath(), $"iz_cmd_{Guid.NewGuid():N}.bat");
+                    outFile = Path.Combine(Path.GetTempPath(), $"klyr_cmd_out_{Guid.NewGuid():N}.txt");
+                    errFile = Path.Combine(Path.GetTempPath(), $"klyr_cmd_err_{Guid.NewGuid():N}.txt");
+                    batFile = Path.Combine(Path.GetTempPath(), $"klyr_cmd_{Guid.NewGuid():N}.bat");
                     string batContent = $"@echo off\r\nchcp 65001 > nul 2>&1\r\n{command} > \"{outFile}\" 2> \"{errFile}\"\r\nexit /B %ERRORLEVEL%\r\n";
                     await File.WriteAllTextAsync(batFile, batContent, new UTF8Encoding(false));
 
@@ -162,11 +162,11 @@ namespace InfoZen.Services
             }
             catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
             {
-                return new CommandResult { Success = false, Error = "❌ Élévation refusée par l'utilisateur (UAC annulé).", WasElevated = true };
+                return new CommandResult { Success = false, Error = "Élévation refusée par l'utilisateur (UAC annulé).", WasElevated = true };
             }
             catch (Exception ex)
             {
-                return new CommandResult { Success = false, Error = $"❌ Erreur : {ex.Message}" };
+                return new CommandResult { Success = false, Error = $"Erreur : {ex.Message}" };
             }
             finally
             {
@@ -191,8 +191,8 @@ namespace InfoZen.Services
                     // FIX P0-04: UseShellExecute=true (requis pour runas) empêche la redirection
                     // stdout/stderr. On encapsule donc le script utilisateur et on redirige ses
                     // sorties vers des fichiers temporaires, lus après exit du process élevé.
-                    outFile = Path.Combine(Path.GetTempPath(), $"iz_ps_out_{Guid.NewGuid():N}.txt");
-                    errFile = Path.Combine(Path.GetTempPath(), $"iz_ps_err_{Guid.NewGuid():N}.txt");
+                    outFile = Path.Combine(Path.GetTempPath(), $"klyr_ps_out_{Guid.NewGuid():N}.txt");
+                    errFile = Path.Combine(Path.GetTempPath(), $"klyr_ps_err_{Guid.NewGuid():N}.txt");
                     string innerEncoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
                     string safeOut = outFile.Replace("'", "''");
                     string safeErr = errFile.Replace("'", "''");
@@ -287,11 +287,11 @@ try {{
             }
             catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
             {
-                return new CommandResult { Success = false, Error = "❌ Élévation refusée par l'utilisateur (UAC annulé).", WasElevated = true };
+                return new CommandResult { Success = false, Error = "Élévation refusée par l'utilisateur (UAC annulé).", WasElevated = true };
             }
             catch (Exception ex)
             {
-                return new CommandResult { Success = false, Error = $"❌ Erreur PowerShell : {ex.Message}" };
+                return new CommandResult { Success = false, Error = $"Erreur PowerShell : {ex.Message}" };
             }
             finally
             {
@@ -317,17 +317,17 @@ try {{
             try
             {
                 using var key = Registry.LocalMachine.CreateSubKey(keyPath, writable: true);
-                if (key == null) return $"❌ Impossible d'ouvrir la clé : {keyPath}";
+                if (key == null) return $"Impossible d'ouvrir la clé : {keyPath}";
                 key.SetValue(valueName, value, kind);
-                return $"✅ Registre : {valueName} = {value}";
+                return $"Registre : {valueName} = {value}";
             }
             catch (UnauthorizedAccessException)
             {
-                return "❌ Droits insuffisants. Relancez InfoZen en administrateur.";
+                return "Droits insuffisants. Relancez Klyr en administrateur.";
             }
             catch (Exception ex)
             {
-                return $"❌ Erreur registre : {ex.Message}";
+                return $"Erreur registre : {ex.Message}";
             }
         }
 
@@ -336,13 +336,13 @@ try {{
             try
             {
                 using var key = Registry.CurrentUser.CreateSubKey(keyPath, writable: true);
-                if (key == null) return $"❌ Clé introuvable : {keyPath}";
+                if (key == null) return $"Clé introuvable : {keyPath}";
                 key.SetValue(valueName, value, kind);
-                return $"✅ Registre HKCU : {valueName} = {value}";
+                return $"Registre HKCU : {valueName} = {value}";
             }
             catch (Exception ex)
             {
-                return $"❌ Erreur registre : {ex.Message}";
+                return $"Erreur registre : {ex.Message}";
             }
         }
 
@@ -352,11 +352,11 @@ try {{
             {
                 using var key = Registry.LocalMachine.OpenSubKey(keyPath, writable: true);
                 key?.DeleteValue(valueName, throwOnMissingValue: false);
-                return $"✅ Valeur supprimée : {valueName}";
+                return $"Valeur supprimée : {valueName}";
             }
             catch (Exception ex)
             {
-                return $"❌ Erreur registre : {ex.Message}";
+                return $"Erreur registre : {ex.Message}";
             }
         }
 
@@ -565,7 +565,7 @@ try {{
         /// Crée un point de restauration Windows.
         /// FIX P0-03: Exige admin et valide la création.
         /// </summary>
-        public static async Task<CommandResult> CreateRestorePointAsync(string description = "InfoZen – avant optimisation")
+        public static async Task<CommandResult> CreateRestorePointAsync(string description = "Klyr – avant optimisation")
         {
             // Vérifier d'abord si on est admin
             if (!AdminChecker.IsRunningAsAdmin())
@@ -573,7 +573,7 @@ try {{
                 return new CommandResult
                 {
                     Success = false,
-                    Error = "❌ Droits administrateur requis pour créer un point de restauration. Relancez InfoZen en admin."
+                    Error = "Droits administrateur requis pour créer un point de restauration. Relancez Klyr en admin."
                 };
             }
 
@@ -624,7 +624,7 @@ try {{
                 var parts = marker.Split('|');
                 string sequence = parts.Length > 1 ? parts[1] : "?";
                 string label = parts.Length > 2 ? parts[2] : description;
-                result.Output = $"✅ Point de restauration créé : {label} (ID {sequence}).";
+                result.Output = $"Point de restauration créé : {label} (ID {sequence}).";
                 result.Error = "";
             }
             else if (marker.StartsWith("WARN|", StringComparison.Ordinal))
@@ -632,23 +632,23 @@ try {{
                 result.Success = false;
                 var parts = marker.Split('|');
                 result.Error = parts.Length > 1
-                    ? $"⚠ {parts[1]}"
-                    : "⚠ Point de restauration non confirmé.";
+                    ? $"{parts[1]}"
+                    : "Point de restauration non confirmé.";
                 result.Output = "";
             }
             else if (marker.StartsWith("ERROR|", StringComparison.Ordinal))
             {
                 result.Success = false;
                 var parts = marker.Split('|');
-                result.Error = parts.Length > 1 ? $"❌ {parts[1]}" : "❌ Échec de création du point de restauration.";
+                result.Error = parts.Length > 1 ? $"{parts[1]}" : "Échec de création du point de restauration.";
                 result.Output = "";
             }
             else
             {
                 result.Success = false;
                 result.Error = string.IsNullOrWhiteSpace(marker)
-                    ? "❌ Validation du point de restauration impossible (sortie vide)."
-                    : $"❌ Validation du point de restauration impossible : {marker}";
+                    ? "Validation du point de restauration impossible (sortie vide)."
+                    : $"Validation du point de restauration impossible : {marker}";
                 result.Output = "";
             }
             
@@ -663,15 +663,15 @@ try {{
             try
             {
                 string dir  = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "InfoZen", "Logs");
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Klyr", "Logs");
                 Directory.CreateDirectory(dir);
-                string file = Path.Combine(dir, $"InfoZen_log_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
+                string file = Path.Combine(dir, $"Klyr_log_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
                 File.WriteAllText(file, logContent, Encoding.UTF8);
                 return file;
             }
             catch (Exception ex)
             {
-                return $"❌ Export échoué : {ex.Message}";
+                return $"Export échoué : {ex.Message}";
             }
         }
     }

@@ -3,11 +3,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using InfoZen.Commands;
-using InfoZen.Models;
-using InfoZen.Services;
+using Klyr.Commands;
+using Klyr.Models;
+using Klyr.Services;
 
-namespace InfoZen.ViewModels
+namespace Klyr.ViewModels
 {
     /// <summary>
     /// ViewModel principal de l'application.
@@ -147,14 +147,47 @@ namespace InfoZen.ViewModels
             };
             Log.PropertyChanged += _logPropertyChangedHandler;
 
-            Log.Info("InfoZen v2.1 démarré.", "Système");
-            Log.Info("InfoZen fonctionne exclusivement en local. Aucune donnée personnelle n'est collectée.", "RGPD");
+            Log.Info("Klyr v2.1 démarré.", "Système");
+            Log.Info("Klyr fonctionne exclusivement en local. Aucune donnée personnelle n'est collectée.", "RGPD");
         }
 
         // ─────────────────────── NAVIGATION ────────────────────────────────────
         // FIX: cache des items par page pour préserver l'état (IsRunning, Progress, Status)
         // quand l'utilisateur navigue entre pages pendant qu'une optimisation tourne.
         private readonly Dictionary<string, List<OptimizationItem>> _pageOptimizationsCache = new();
+
+        // ─── Compteurs dynamiques par catégorie (sidebar) ───
+        public int GamingCount   => GetModuleCount("Gaming");
+        public int OldPCCount    => GetModuleCount("OldPC");
+        public int CleaningCount => GetModuleCount("Cleaning");
+        public int NetworkCount  => GetModuleCount("Network");
+
+        private int GetModuleCount(string module)
+        {
+            if (!_pageOptimizationsCache.TryGetValue(module, out var items))
+            {
+                items = module switch
+                {
+                    "Gaming"   => GamingOptimizations.GetOptimizations(),
+                    "OldPC"    => OldPcOptimizations.GetOptimizations(),
+                    "Cleaning" => CleaningOptimizations.GetOptimizations(),
+                    "Network"  => NetworkOptimizations.GetOptimizations(),
+                    _          => new List<OptimizationItem>()
+                };
+                _pageOptimizationsCache[module] = items;
+            }
+            return SettingsService.Current.ShowAdvancedOptimizations
+                ? items.Count
+                : items.Count(i => !i.IsAdvanced);
+        }
+
+        private void NotifyAllCountsChanged()
+        {
+            OnPropertyChanged(nameof(GamingCount));
+            OnPropertyChanged(nameof(OldPCCount));
+            OnPropertyChanged(nameof(CleaningCount));
+            OnPropertyChanged(nameof(NetworkCount));
+        }
 
         private void LoadPageOptimizations()
         {
@@ -179,7 +212,15 @@ namespace InfoZen.ViewModels
             foreach (var item in filtered) CurrentOptimizations.Add(item);
         }
 
-        public void ReloadCurrentOptimizations() => LoadPageOptimizations();
+        /// <summary>
+        /// Recharge la page courante ET notifie les 4 compteurs sidebar
+        /// (appelé après changement de settings, notamment ShowAdvancedOptimizations).
+        /// </summary>
+        public void ReloadCurrentOptimizations()
+        {
+            LoadPageOptimizations();
+            NotifyAllCountsChanged();
+        }
 
         // ─────────────────────── RUN OPTIMISATION ──────────────────────────────
         private async Task RunOptimizationAsync(object? param)
@@ -189,7 +230,7 @@ namespace InfoZen.ViewModels
 
             if (_runAllCts?.IsCancellationRequested == true)
             {
-                Log.Warn($"⚠ {item.Name} ignoré (arrêt global demandé).", item.Category);
+                Log.Warn($"{item.Name} ignoré (arrêt global demandé).", item.Category);
                 return;
             }
 
@@ -207,16 +248,16 @@ namespace InfoZen.ViewModels
                 }
 
                 var criticalConfirm = MessageBox.Show(
-                    $"⚠ L'optimisation « {item.Name} » peut modifier des paramètres système critiques.\n\n" +
-                    "InfoZen créera une sauvegarde dédiée avant exécution.\n\n" +
+                    $"L'optimisation « {item.Name} » peut modifier des paramètres système critiques.\n\n" +
+                    "Klyr créera une sauvegarde dédiée avant exécution.\n\n" +
                     "Confirmez-vous cette action ?",
-                    "Action critique – InfoZen",
+                    "Action critique – Klyr",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
 
                 if (criticalConfirm != MessageBoxResult.Yes)
                 {
-                    Log.Warn($"⚠ {item.Name} annulé (action critique non confirmée).", item.Category);
+                    Log.Warn($"{item.Name} annulé (action critique non confirmée).", item.Category);
                     return;
                 }
             }
@@ -226,8 +267,8 @@ namespace InfoZen.ViewModels
             {
                 var result = MessageBox.Show(
                     $"L'optimisation « {item.Name} » nécessite les droits administrateur.\n\n" +
-                    "Voulez-vous relancer InfoZen en tant qu'administrateur ?",
-                    "Droits insuffisants – InfoZen",
+                    "Voulez-vous relancer Klyr en tant qu'administrateur ?",
+                    "Droits insuffisants – Klyr",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
                 
@@ -237,7 +278,7 @@ namespace InfoZen.ViewModels
                     {
                         var psi = new System.Diagnostics.ProcessStartInfo
                         {
-                            FileName = Environment.ProcessPath ?? "InfoZen.exe",
+                            FileName = Environment.ProcessPath ?? "Klyr.exe",
                             UseShellExecute = true,
                             Verb = "runas"
                         };
@@ -251,7 +292,7 @@ namespace InfoZen.ViewModels
                 }
                 else
                 {
-                    Log.Warn($"⚠ {item.Name} ignoré (droits admin requis).", item.Category);
+                    Log.Warn($"{item.Name} ignoré (droits admin requis).", item.Category);
                 }
                 return;
             }
@@ -261,7 +302,7 @@ namespace InfoZen.ViewModels
             {
                 var confirm = MessageBox.Show(
                     $"Exécuter l'optimisation :\n\n« {item.Name} »\n\n{item.Description}",
-                    "Confirmation – InfoZen",
+                    "Confirmation – Klyr",
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Question);
                 if (confirm != MessageBoxResult.OK) return;
@@ -272,7 +313,7 @@ namespace InfoZen.ViewModels
             {
                 Log.Info("Création d'un point de restauration automatique…", "Système");
                 StatusMessage = "Création du point de restauration…";
-                var restoreResult = await SystemService.CreateRestorePointAsync($"InfoZen – avant : {item.Name}");
+                var restoreResult = await SystemService.CreateRestorePointAsync($"Klyr – avant : {item.Name}");
                 if (!restoreResult.Success)
                 {
                     Log.Warn($"Point de restauration non créé : {restoreResult.DisplayMessage}", "Système");
@@ -285,7 +326,7 @@ namespace InfoZen.ViewModels
             item.Progress  = 0;
             item.Status    = "En cours…";
             StatusMessage  = $"⟳  {item.Name}";
-            Log.Info($"▶ Démarrage : {item.Name}", item.Category);
+            Log.Info($"Démarrage : {item.Name}", item.Category);
 
             OptimizationBenchmarkSnapshot? benchmarkBefore = null;
             bool benchmarkEnabled = SettingsService.Current.EnableOptimizationBenchmarks && item.IsBenchmarkCandidate;
@@ -294,7 +335,7 @@ namespace InfoZen.ViewModels
                 try
                 {
                     benchmarkBefore = await OptimizationBenchmarkService.CaptureAsync(item);
-                    Log.Info($"📏 Baseline capturée pour {item.Name}.", "Benchmark");
+                    Log.Info($"Baseline capturée pour {item.Name}.", "Benchmark");
                 }
                 catch (Exception ex)
                 {
@@ -314,9 +355,10 @@ namespace InfoZen.ViewModels
                 );
 
                 item.Progress = 100;
-                item.Status   = result.StartsWith("❌") || result.Contains("[ERR]") ? "Erreur" : "Terminé";
+                bool isError = IsErrorResult(result);
+                item.Status   = isError ? "Erreur" : "Terminé";
 
-                if (result.StartsWith("❌") || result.StartsWith("[ERR]"))
+                if (isError)
                     Log.Error(result, item.Category);
                 else
                     Log.Success(result, item.Category);
@@ -348,7 +390,7 @@ namespace InfoZen.ViewModels
                     Log.Warn("Redémarrage requis pour appliquer les changements.", item.Category);
                     MessageBox.Show(
                         $"L'optimisation « {item.Name} » nécessite un redémarrage.",
-                        "Redémarrage requis – InfoZen",
+                        "Redémarrage requis – Klyr",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
@@ -392,7 +434,7 @@ namespace InfoZen.ViewModels
                 var batchConfirm = MessageBox.Show(
                     $"Exécuter {CurrentOptimizations.Count} optimisations de « {CurrentPage} » ?\n\n" +
                     "Les optimisations seront priorisées automatiquement.",
-                    "Exécution groupée – InfoZen",
+                    "Exécution groupée – Klyr",
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Question);
 
@@ -419,7 +461,7 @@ namespace InfoZen.ViewModels
                 {
                     if (_runAllCts.IsCancellationRequested)
                     {
-                        Log.Warn("⚠ Exécution groupée interrompue par l'utilisateur.", "Système");
+                        Log.Warn("Exécution groupée interrompue par l'utilisateur.", "Système");
                         break;
                     }
 
@@ -474,11 +516,27 @@ namespace InfoZen.ViewModels
         private void ExportLogs(object? _)
         {
             string path = Log.Export();
-            if (path.StartsWith("❌"))
+            if (IsErrorResult(path))
                 MessageBox.Show(path, "Erreur export", MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 MessageBox.Show($"Logs exportés :\n{path}", "Export réussi", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        /// <summary>
+        /// Détecte si le résultat textuel d'une opération est une erreur.
+        /// Remplace l'ancienne détection par préfixe emoji.
+        /// </summary>
+        private static bool IsErrorResult(string? result) =>
+            !string.IsNullOrEmpty(result) &&
+            (result.Contains("[ERR]")
+             || result.StartsWith("Erreur",          StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Échec",           StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Échoué",          StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Test échoué",     StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Export échoué",   StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Élévation refusée", StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Impossible",      StringComparison.OrdinalIgnoreCase)
+             || result.StartsWith("Droits insuffisants", StringComparison.OrdinalIgnoreCase));
 
         // ─────────────────────── REFRESH ───────────────────────────────────────
         private void RefreshSystemInfo()

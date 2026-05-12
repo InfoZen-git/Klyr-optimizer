@@ -1,6 +1,6 @@
-using InfoZen.Models;
+using Klyr.Models;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Simule une progression visuelle réaliste pendant l'exécution d'une optimisation.

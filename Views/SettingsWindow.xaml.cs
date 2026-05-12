@@ -1,9 +1,9 @@
 using System.Windows;
 using System.Windows.Input;
-using InfoZen.Services;
-using InfoZen.ViewModels;
+using Klyr.Services;
+using Klyr.ViewModels;
 
-namespace InfoZen.Views
+namespace Klyr.Views
 {
     public partial class SettingsWindow : Window
     {

@@ -1,8 +1,8 @@
 using System.Net.NetworkInformation;
 using System.Text;
-using InfoZen.Models;
+using Klyr.Models;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     public sealed class OptimizationBenchmarkSnapshot
     {
@@ -42,7 +42,7 @@ namespace InfoZen.Services
             TimeSpan elapsed)
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"📊 Benchmark: {item.Name}");
+            sb.AppendLine($"Benchmark: {item.Name}");
             sb.AppendLine($"Durée: {elapsed.TotalSeconds:F1}s");
             sb.AppendLine($"CPU: {before.CpuUsage:F0}% -> {after.CpuUsage:F0}% ({FormatDelta(after.CpuUsage - before.CpuUsage, "pp")})");
             sb.AppendLine($"RAM utilisée: {before.RamUsedGb:F2} Go -> {after.RamUsedGb:F2} Go ({FormatDelta(after.RamUsedGb - before.RamUsedGb, "Go")})");

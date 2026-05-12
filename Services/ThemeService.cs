@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Applique les palettes de couleurs globales de l'application.

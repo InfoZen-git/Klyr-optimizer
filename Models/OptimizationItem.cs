@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace InfoZen.Models
+namespace Klyr.Models
 {
     public enum OptimizationPurpose
     {

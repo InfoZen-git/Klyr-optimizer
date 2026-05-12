@@ -1,7 +1,7 @@
 using System.Security.Principal;
 using System.Windows;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Vérifie les droits admin au démarrage et avertit l'utilisateur
@@ -34,14 +34,14 @@ namespace InfoZen.Services
             if (!IsRunningAsAdmin())
             {
                 LogService.Instance.Warn(
-                    "⚠ InfoZen n'est pas lancé en administrateur. " +
+                    "Klyr n'est pas lancé en administrateur. " +
                     "Les optimisations marquées [Admin] seront ignorées ou échoueront. " +
-                    "Relancez InfoZen en tant qu'administrateur pour un accès complet.",
+                    "Relancez Klyr en tant qu'administrateur pour un accès complet.",
                     "Système");
             }
             else
             {
-                LogService.Instance.Info("✓ Droits administrateur confirmés.", "Système");
+                LogService.Instance.Info("Droits administrateur confirmés.", "Système");
             }
         }
     }

@@ -1,6 +1,6 @@
-using InfoZen.Models;
+using Klyr.Models;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Applique les profils OPTIMUS: confiance, type d'optimisation, mode avancé et benchmark.

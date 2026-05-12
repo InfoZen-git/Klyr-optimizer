@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Gestion centralisée des erreurs non gérées.
@@ -13,7 +13,7 @@ namespace InfoZen.Services
     {
         private static readonly string CrashDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            "InfoZen", "CrashLogs");
+            "Klyr", "CrashLogs");
 
         public static void Register()
         {
@@ -55,8 +55,8 @@ namespace InfoZen.Services
                         $"Type : {ex.GetType().Name}\n" +
                         $"Message : {ex.Message}\n\n" +
                         $"Un rapport a été sauvegardé dans :\n{path}\n\n" +
-                        $"Voulez-vous continuer à utiliser InfoZen ?",
-                        "Erreur – InfoZen",
+                        $"Voulez-vous continuer à utiliser Klyr ?",
+                        "Erreur – Klyr",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Error);
 
@@ -66,7 +66,7 @@ namespace InfoZen.Services
             }
             catch (Exception fallbackEx)
             {
-                Debug.WriteLine($"[InfoZen][ErrorHandler] Échec gestion exception: {fallbackEx.Message}");
+                Debug.WriteLine($"[Klyr][ErrorHandler] Échec gestion exception: {fallbackEx.Message}");
             }
         }
 
@@ -74,7 +74,7 @@ namespace InfoZen.Services
         {
             var sb = new StringBuilder();
             sb.AppendLine("════════════════════════════════════════");
-            sb.AppendLine("   InfoZen – Rapport de crash");
+            sb.AppendLine("   Klyr – Rapport de crash");
             sb.AppendLine($"   {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
             sb.AppendLine("════════════════════════════════════════");
             sb.AppendLine();
@@ -116,7 +116,7 @@ namespace InfoZen.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[InfoZen][ErrorHandler] Échec sauvegarde crash log: {ex.Message}");
+                Debug.WriteLine($"[Klyr][ErrorHandler] Échec sauvegarde crash log: {ex.Message}");
                 return "(impossible de sauvegarder)";
             }
         }
@@ -131,7 +131,7 @@ namespace InfoZen.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[InfoZen][ErrorHandler] IsAdmin indisponible: {ex.Message}");
+                Debug.WriteLine($"[Klyr][ErrorHandler] IsAdmin indisponible: {ex.Message}");
                 return false;
             }
         }

@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     public class LogEntry
     {
@@ -14,6 +15,10 @@ namespace InfoZen.Services
 
         public string Formatted =>
             $"[{Timestamp:HH:mm:ss}] [{Level}] {(string.IsNullOrEmpty(Source) ? "" : $"[{Source}] ")}{Message}";
+
+        /// <summary>Variante datée pour fichier (avec date complète).</summary>
+        public string FormattedForFile =>
+            $"[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level}] {(string.IsNullOrEmpty(Source) ? "" : $"[{Source}] ")}{Message}";
     }
 
     /// <summary>
@@ -35,10 +40,23 @@ namespace InfoZen.Services
         private string _cachedTerminalText = "";
         private bool _terminalTextDirty = true;
 
+        // FIX P2-12: chemin du fichier auto-save (un fichier par jour)
+        private static readonly string LogsDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "Klyr", "Logs");
+        private static readonly object _fileLock = new();
+        private static bool _autoSaveDisabled; // désactive après échec persistant pour ne pas spammer
+
+        private static string GetTodaysLogPath() =>
+            Path.Combine(LogsDir, $"Klyr_{DateTime.Now:yyyyMMdd}.log");
+
         public void Log(string message, string level = "INFO", string source = "")
         {
             var entry = new LogEntry { Message = message, Level = level, Source = source };
             var formattedLine = entry.Formatted;
+
+            // FIX P2-12: append fichier hors UI thread (best effort, ne bloque jamais le caller)
+            AppendToFileSafe(entry);
 
             // Dispatch vers UI thread si nécessaire
             System.Windows.Application.Current?.Dispatcher.Invoke(() =>
@@ -62,6 +80,44 @@ namespace InfoZen.Services
 
                 OnPropertyChanged(nameof(TerminalText));
             });
+        }
+
+        /// <summary>
+        /// FIX P2-12 : append silencieux dans le fichier journalier.
+        /// Ne lance jamais d'exception : si l'IO échoue, on désactive l'auto-save pour la session.
+        /// Évite la récursion infinie avec SettingsService.Load() en lisant la propriété de manière protégée.
+        /// </summary>
+        private static void AppendToFileSafe(LogEntry entry)
+        {
+            if (_autoSaveDisabled) return;
+
+            bool enabled;
+            try
+            {
+                enabled = SettingsService.Current.AutoSaveLogs;
+            }
+            catch
+            {
+                // SettingsService pas encore prêt (early init) — on log quand même par défaut
+                enabled = true;
+            }
+            if (!enabled) return;
+
+            try
+            {
+                Directory.CreateDirectory(LogsDir);
+                lock (_fileLock)
+                {
+                    File.AppendAllText(GetTodaysLogPath(),
+                        entry.FormattedForFile + Environment.NewLine,
+                        Encoding.UTF8);
+                }
+            }
+            catch
+            {
+                // IO impossible (disque plein, perms, antivirus). On désactive pour la session.
+                _autoSaveDisabled = true;
+            }
         }
 
         public void Success(string msg, string source = "") => Log(msg, "SUCCESS", source);
@@ -107,7 +163,7 @@ namespace InfoZen.Services
         {
             var header = new StringBuilder();
             header.AppendLine("════════════════════════════════════════════════════════");
-            header.AppendLine($"   InfoZen Optimiseur PC – Journal d'activité");
+            header.AppendLine($"   Klyr Optimiseur PC – Journal d'activité");
             header.AppendLine($"   Exporté le : {DateTime.Now:dd/MM/yyyy à HH:mm:ss}");
             header.AppendLine("════════════════════════════════════════════════════════");
             header.AppendLine();

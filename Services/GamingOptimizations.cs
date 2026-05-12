@@ -1,7 +1,8 @@
-using InfoZen.Models;
+using System.Windows;
+using Klyr.Models;
 using Microsoft.Win32;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Module Gaming / FPS – toutes les optimisations jeu vidéo.
@@ -23,7 +24,7 @@ namespace InfoZen.Services
                 {
                     var result = await SystemService.RunCmdAsync("powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c");
                     return result.Success
-                        ? "✅ Plan Haute Performance activé."
+                        ? "Plan Haute Performance activé."
                         : result.DisplayMessage;
                 }
             },
@@ -121,13 +122,49 @@ namespace InfoZen.Services
                 Category    = "Gaming",
                 Action = async () =>
                 {
-                    string[] processesToKill = {
+                    // FIX P2-06 : preview + confirmation explicite avant kill (évite fermetures non voulues)
+                    string[] candidates = {
                         "OneDrive","Teams","Skype","Discord","Spotify",
                         "EpicGamesLauncher","AdobeUpdateService","CCXProcess"
                     };
-                    var killed = new List<string>();
+
+                    // Étape 1 — scan sans tuer
+                    var running = new List<(string Name, int Count)>();
+                    foreach (var name in candidates)
+                    {
+                        var procs = System.Diagnostics.Process.GetProcessesByName(name);
+                        if (procs.Length > 0)
+                            running.Add((name, procs.Length));
+                        foreach (var p in procs) p.Dispose();
+                    }
+
+                    if (running.Count == 0)
+                    {
+                        await Task.Yield();
+                        return "Aucun processus ciblé en cours. Rien à fermer.";
+                    }
+
+                    // Étape 2 — confirmation avec preview de la liste
+                    string preview = string.Join("\n",
+                        running.Select(p => $"  • {p.Name} ({p.Count} instance{(p.Count > 1 ? "s" : "")})"));
+
+                    MessageBoxResult confirm = await Application.Current.Dispatcher.InvokeAsync(() =>
+                        MessageBox.Show(
+                            $"Les processus suivants vont être fermés :\n\n{preview}\n\n" +
+                            "Sauvegardez votre travail dans ces applications avant de continuer.\n\n" +
+                            "Continuer ?",
+                            "Fermer Processus Inutiles – Klyr",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning,
+                            MessageBoxResult.No));
+
+                    if (confirm != MessageBoxResult.Yes)
+                        return "Action annulée par l'utilisateur.";
+
+                    // Étape 3 — kill
+                    var killed = new HashSet<string>();
                     int skipped = 0;
-                    foreach (var name in processesToKill)
+                    foreach (var (name, _) in running)
                     {
                         var procs = System.Diagnostics.Process.GetProcessesByName(name);
                         foreach (var p in procs)
@@ -149,13 +186,12 @@ namespace InfoZen.Services
                             }
                         }
                     }
-                    await Task.Yield();
-                    if (killed.Count > 0)
-                        return $"✅ Processus fermés : {string.Join(", ", killed)}{(skipped > 0 ? $"\n⚠ {skipped} processus non fermés." : "")}";
 
-                    return skipped > 0
-                        ? $"⚠ {skipped} processus ciblés n'ont pas pu être fermés."
-                        : "ℹ️ Aucun processus ciblé trouvé.";
+                    if (killed.Count > 0)
+                        return $"Processus fermés : {string.Join(", ", killed)}" +
+                               (skipped > 0 ? $"\n{skipped} non fermés (droits insuffisants)." : "");
+
+                    return $"Aucun processus n'a pu être fermé ({skipped} échec{(skipped > 1 ? "s" : "")}).";
                 }
             },
             new OptimizationItem
@@ -170,7 +206,7 @@ namespace InfoZen.Services
                     string r1 = SystemService.SetRegistryCurrentUser(
                         @"SOFTWARE\Microsoft\DirectX", "UserGpuPreferences",
                         "DirectXUserGlobalSettings=SwapEffectUpgradeEnable=1;", RegistryValueKind.String);
-                    return $"{r1}\n✅ Limites FPS supprimées.";
+                    return $"{r1}\nLimites FPS supprimées.";
                 }
             },
             new OptimizationItem

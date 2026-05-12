@@ -1,4 +1,4 @@
-using InfoZen.Models;
+using Klyr.Models;
 using Microsoft.Win32;
 using System.IO;
 using System.Net;
@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Module Réseau – optimisations et diagnostic de la connexion internet.
@@ -32,7 +32,7 @@ namespace InfoZen.Services
                         netsh int tcp set global timestamps=disabled
                         netsh int tcp set global rss=enabled
                         netsh int tcp set global chimney=enabled
-                        Write-Output '✅ Paramètres TCP/IP optimisés.'
+                        Write-Output 'Paramètres TCP/IP optimisés.'
                     ";
                     return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
                 }
@@ -52,7 +52,7 @@ namespace InfoZen.Services
                     var r2 = await SystemService.RunCmdAsync("netsh int ip reset");
                     var r3 = await SystemService.RunCmdAsync("netsh int ipv4 reset");
                     var r4 = await SystemService.RunCmdAsync("netsh int ipv6 reset");
-                    return $"{backup}\n✅ Réseau réinitialisé.\n{r1.DisplayMessage}\n{r2.DisplayMessage}\n{r3.DisplayMessage}\n{r4.DisplayMessage}\n⚠️ Redémarrage requis pour appliquer les changements.";
+                    return $"{backup}\nRéseau réinitialisé.\n{r1.DisplayMessage}\n{r2.DisplayMessage}\n{r3.DisplayMessage}\n{r4.DisplayMessage}\nRedémarrage requis pour appliquer les changements.";
                 }
             },
             new OptimizationItem
@@ -97,14 +97,14 @@ namespace InfoZen.Services
 
                         $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
                         if (-not $adapters) {
-                            Write-Output '❌ Aucun adaptateur réseau actif détecté.'
+                            Write-Output 'Aucun adaptateur réseau actif détecté.'
                             exit 1
                         }
 
                         foreach ($adapter in $adapters) {
                             Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses $best.Servers -ErrorAction Stop
                         }
-                        Write-Output ""✅ DNS auto-optimisés : $($best.Name) [$($best.Servers -join ', ')] — latence DNS moyenne $($best.Avg) ms""
+                        Write-Output ""DNS auto-optimisés : $($best.Name) [$($best.Servers -join ', ')] — latence DNS moyenne $($best.Avg) ms""
                     ";
                     return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
                 }
@@ -126,7 +126,7 @@ namespace InfoZen.Services
                             Set-ItemProperty -Path $_.PSPath -Name 'TCPNoDelay'       -Value 1    -Type DWord -ErrorAction SilentlyContinue
                             Set-ItemProperty -Path $_.PSPath -Name 'TcpDelAckTicks'   -Value 0    -Type DWord -ErrorAction SilentlyContinue
                         }
-                        Write-Output '✅ Latence optimisée : Nagle désactivé, ACK delay = 0'
+                        Write-Output 'Latence optimisée : Nagle désactivé, ACK delay = 0'
                     ";
                     return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
                 }
@@ -151,8 +151,8 @@ namespace InfoZen.Services
                         string backup = BackupHostsFile(hostsPath);
                         string existing = File.ReadAllText(hostsPath);
                         var sb = new StringBuilder(existing);
-                        if (!existing.Contains("# InfoZen Telemetry Block"))
-                            sb.AppendLine("\n# InfoZen Telemetry Block");
+                        if (!existing.Contains("# Klyr Telemetry Block"))
+                            sb.AppendLine("\n# Klyr Telemetry Block");
                         int added = 0;
                         foreach (var d in domains)
                         {
@@ -160,9 +160,9 @@ namespace InfoZen.Services
                             if (!existing.Contains(d)) { sb.AppendLine(entry); added++; }
                         }
                         File.WriteAllText(hostsPath, sb.ToString());
-                        return $"{backup}\n✅ {added} domaines de télémétrie bloqués dans hosts.";
+                        return $"{backup}\n{added} domaines de télémétrie bloqués dans hosts.";
                     }
-                    catch (Exception ex) { return $"❌ Erreur : {ex.Message}"; }
+                    catch (Exception ex) { return $"Erreur : {ex.Message}"; }
                 }
             },
             new OptimizationItem
@@ -184,7 +184,7 @@ namespace InfoZen.Services
                 {
                     string backup = await BackupFirewallRulesAsync();
                     var result = await SystemService.RunCmdAsync("netsh advfirewall reset");
-                    return $"{backup}\n✅ Pare-feu réinitialisé.\n{result.DisplayMessage}";
+                    return $"{backup}\nPare-feu réinitialisé.\n{result.DisplayMessage}";
                 }
             },
             new OptimizationItem
@@ -249,16 +249,16 @@ namespace InfoZen.Services
                 double bestMbps = speedSamples.Max();
 
                 return
-                    "✅ Test terminé\n" +
-                    $"📥 Download médian : {medianMbps:F1} Mbps\n" +
-                    $"📈 Download moyen   : {avgMbps:F1} Mbps (max {bestMbps:F1})\n" +
-                    $"📶 Ping moyen       : {(avgLatency.HasValue ? $"{avgLatency.Value:F1} ms" : "n/a")}\n" +
-                    $"〰️ Jitter           : {(jitter.HasValue ? $"{jitter.Value:F1} ms" : "n/a")}\n" +
-                    $"📉 Perte paquets    : {(loss.HasValue ? $"{loss.Value:F1}%" : "n/a")}";
+                    "Test terminé\n" +
+                    $"Download médian : {medianMbps:F1} Mbps\n" +
+                    $"Download moyen  : {avgMbps:F1} Mbps (max {bestMbps:F1})\n" +
+                    $"Ping moyen      : {(avgLatency.HasValue ? $"{avgLatency.Value:F1} ms" : "n/a")}\n" +
+                    $"Jitter          : {(jitter.HasValue ? $"{jitter.Value:F1} ms" : "n/a")}\n" +
+                    $"Perte paquets   : {(loss.HasValue ? $"{loss.Value:F1}%" : "n/a")}";
             }
             catch (Exception ex)
             {
-                return $"❌ Test échoué : {ex.Message}";
+                return $"Test échoué : {ex.Message}";
             }
         }
 
@@ -307,7 +307,7 @@ namespace InfoZen.Services
         {
             string backupDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "InfoZen",
+                "Klyr",
                 "Backups");
             Directory.CreateDirectory(backupDir);
             return backupDir;
@@ -342,11 +342,11 @@ namespace InfoZen.Services
                 sb.AppendLine(ipconfig.DisplayMessage);
 
                 File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
-                return $"📦 Sauvegarde réseau : {filePath}";
+                return $"Backup : Sauvegarde réseau : {filePath}";
             }
             catch (Exception ex)
             {
-                return $"⚠ Sauvegarde réseau non créée : {ex.Message}";
+                return $"Sauvegarde réseau non créée : {ex.Message}";
             }
         }
 
@@ -359,12 +359,12 @@ namespace InfoZen.Services
                 var exportResult = await SystemService.RunCmdAsync($"netsh advfirewall export \"{filePath}\"");
 
                 return exportResult.Success
-                    ? $"📦 Sauvegarde pare-feu : {filePath}"
-                    : $"⚠ Sauvegarde pare-feu non créée : {exportResult.DisplayMessage}";
+                    ? $"Backup : Sauvegarde pare-feu : {filePath}"
+                    : $"Sauvegarde pare-feu non créée : {exportResult.DisplayMessage}";
             }
             catch (Exception ex)
             {
-                return $"⚠ Sauvegarde pare-feu non créée : {ex.Message}";
+                return $"Sauvegarde pare-feu non créée : {ex.Message}";
             }
         }
 
@@ -375,11 +375,11 @@ namespace InfoZen.Services
                 string backupDir = EnsureBackupDirectory();
                 string backupPath = Path.Combine(backupDir, $"hosts_{DateTime.Now:yyyyMMdd_HHmmss}.bak");
                 File.Copy(hostsPath, backupPath, overwrite: true);
-                return $"📦 Sauvegarde hosts : {backupPath}";
+                return $"Backup : Sauvegarde hosts : {backupPath}";
             }
             catch (Exception ex)
             {
-                return $"⚠ Sauvegarde hosts non créée : {ex.Message}";
+                return $"Sauvegarde hosts non créée : {ex.Message}";
             }
         }
 
@@ -411,7 +411,7 @@ namespace InfoZen.Services
                     sb.AppendLine("└─────────────────────────────");
                 }
             }
-            catch (Exception ex) { sb.AppendLine($"❌ Erreur : {ex.Message}"); }
+            catch (Exception ex) { sb.AppendLine($"Erreur : {ex.Message}"); }
             return sb.ToString();
         }
     }

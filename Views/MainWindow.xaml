@@ -1,8 +1,8 @@
-<Window x:Class="InfoZen.Views.MainWindow"
+<Window x:Class="Klyr.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:InfoZen.ViewModels"
-        Title="InfoZen"
+        xmlns:vm="clr-namespace:Klyr.ViewModels"
+        Title="Klyr"
         Width="1080" Height="700"
         MinWidth="880" MinHeight="580"
         WindowStyle="None"
@@ -47,9 +47,9 @@
                         <Image Source="pack://application:,,,/Assets/Icons/icon.ico"
                                Width="24" Height="24" Margin="0,0,9,0"
                                RenderOptions.BitmapScalingMode="HighQuality"/>
-                        <TextBlock Text="InfoZen" FontSize="13" FontWeight="SemiBold"
+                        <TextBlock Text="Klyr" FontSize="13" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Text=" 2.1" FontSize="11"
+                        <TextBlock x:Name="VersionLabel" Text=" 2.1.0" FontSize="11"
                                    Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                     </StackPanel>
 
@@ -60,16 +60,16 @@
 
                     <!-- Window controls -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Width="28" Height="24" Margin="0,0,2,0"
-                                Content="—" FontSize="11"
+                        <Button Width="32" Height="26" Margin="0,0,2,0"
                                 Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
-                                Click="Minimize_Click">
+                                Click="Minimize_Click" ToolTip="Réduire">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="bd" Background="{TemplateBinding Background}"
-                                            CornerRadius="4">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                                        <TextBlock Text="{StaticResource IconMinimize}"
+                                                   Style="{StaticResource IconWindowControlStyle}"
+                                                   Foreground="{TemplateBinding Foreground}"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
@@ -80,16 +80,16 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-                        <Button Width="28" Height="24" Margin="0,0,2,0"
-                                Content="□" FontSize="12"
+                        <Button Width="32" Height="26" Margin="0,0,2,0"
                                 Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
-                                Click="Maximize_Click">
+                                Click="Maximize_Click" ToolTip="Agrandir">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="bd" Background="{TemplateBinding Background}"
-                                            CornerRadius="4">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                                        <TextBlock Text="{StaticResource IconMaximize}"
+                                                   Style="{StaticResource IconWindowControlStyle}"
+                                                   Foreground="{TemplateBinding Foreground}"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
@@ -100,16 +100,16 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-                        <Button Width="28" Height="24"
-                                Content="✕" FontSize="11"
+                        <Button Width="32" Height="26"
                                 Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
-                                Click="Close_Click">
+                                Click="Close_Click" ToolTip="Fermer">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border x:Name="bd" Background="{TemplateBinding Background}"
-                                            CornerRadius="4">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                                        <TextBlock Text="{StaticResource IconClose}"
+                                                   Style="{StaticResource IconWindowControlStyle}"
+                                                   Foreground="{TemplateBinding Foreground}"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
@@ -139,8 +139,8 @@
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⊞" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
-                                <TextBlock Text="Tableau de bord" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconDashboard}" Style="{StaticResource IconNavStyle}"/>
+                                <TextBlock Text="Tableau de bord" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -153,10 +153,11 @@
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Gaming"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🎮" FontSize="13" Margin="0,0,10,0"/>
-                                <StackPanel>
+                                <TextBlock Text="{StaticResource IconGaming}" Style="{StaticResource IconNavStyle}"/>
+                                <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Gaming / FPS" FontSize="12"/>
-                                    <TextBlock Text="9 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
+                                    <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
+                                               Text="{Binding GamingCount, StringFormat={}{0} optimisations}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -164,10 +165,11 @@
                         <Button Command="{Binding NavigateCommand}" CommandParameter="OldPC"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="💻" FontSize="13" Margin="0,0,10,0"/>
-                                <StackPanel>
+                                <TextBlock Text="{StaticResource IconOldPC}" Style="{StaticResource IconNavStyle}"/>
+                                <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Vieux PC" FontSize="12"/>
-                                    <TextBlock Text="8 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
+                                    <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
+                                               Text="{Binding OldPCCount, StringFormat={}{0} optimisations}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -175,10 +177,11 @@
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Cleaning"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🧹" FontSize="13" Margin="0,0,10,0"/>
-                                <StackPanel>
+                                <TextBlock Text="{StaticResource IconCleaning}" Style="{StaticResource IconNavStyle}"/>
+                                <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Nettoyage" FontSize="12"/>
-                                    <TextBlock Text="8 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
+                                    <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
+                                               Text="{Binding CleaningCount, StringFormat={}{0} optimisations}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -186,10 +189,11 @@
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Network"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🌐" FontSize="13" Margin="0,0,10,0"/>
-                                <StackPanel>
+                                <TextBlock Text="{StaticResource IconNetwork}" Style="{StaticResource IconNavStyle}"/>
+                                <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Réseau" FontSize="12"/>
-                                    <TextBlock Text="9 optimisations" FontSize="10" Foreground="{DynamicResource TextMutedBrush}"/>
+                                    <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
+                                               Text="{Binding NetworkCount, StringFormat={}{0} optimisations}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -203,33 +207,32 @@
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Terminal"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&gt;_" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"
-                                           FontFamily="Consolas"/>
-                                <TextBlock Text="Terminal" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconTerminal}" Style="{StaticResource IconNavStyle}"/>
+                                <TextBlock Text="Terminal" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button x:Name="BtnSettings" Style="{StaticResource NavButtonStyle}"
                                 Margin="0,1,0,1" Click="BtnSettings_Click">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚙" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
-                                <TextBlock Text="Paramètres" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconSettings}" Style="{StaticResource IconNavStyle}"/>
+                                <TextBlock Text="Paramètres" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button x:Name="BtnLegal" Style="{StaticResource NavButtonStyle}"
                                 Margin="0,1,0,1" Click="BtnLegal_Click">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚖" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
-                                <TextBlock Text="Mentions légales" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconLegal}" Style="{StaticResource IconNavStyle}"/>
+                                <TextBlock Text="Mentions légales" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button x:Name="BtnAbout" Style="{StaticResource NavButtonStyle}"
                                 Margin="0,1,0,1" Click="BtnAbout_Click">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="ℹ" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,10,0"/>
-                                <TextBlock Text="À propos" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconAbout}" Style="{StaticResource IconNavStyle}"/>
+                                <TextBlock Text="À propos" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -243,8 +246,8 @@
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Margin="0,0,0,5" Height="32" FontSize="11">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🔒" FontSize="11" Margin="0,0,7,0"/>
-                                <TextBlock Text="Point de restauration" FontSize="11"/>
+                                <TextBlock Text="{StaticResource IconShield}" Style="{StaticResource IconButtonInlineStyle}"/>
+                                <TextBlock Text="Point de restauration" FontSize="11" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -252,8 +255,8 @@
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Height="32" FontSize="11">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="📄" FontSize="11" Margin="0,0,7,0"/>
-                                <TextBlock Text="Exporter les logs" FontSize="11"/>
+                                <TextBlock Text="{StaticResource IconExport}" Style="{StaticResource IconButtonInlineStyle}"/>
+                                <TextBlock Text="Exporter les logs" FontSize="11" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -282,47 +285,68 @@
                         <UniformGrid Columns="4" Margin="0,0,0,16">
 
                             <!-- CPU -->
-                            <Border Style="{StaticResource OptimizationCardStyle}" Margin="0,0,6,0">
+                            <Border Style="{StaticResource InteractiveCardStyle}" Margin="0,0,6,0">
                                 <StackPanel>
-                                    <TextBlock Text="CPU" FontSize="10" FontWeight="Bold"
-                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <TextBlock Text="{StaticResource IconCpu}" Style="{StaticResource IconStatStyle}" Margin="0,0,7,0"/>
+                                        <TextBlock Text="CPU" FontSize="10" FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding SystemInfo.CpuUsageStr}"
                                                FontSize="26" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
                                     <TextBlock Text="{Binding SystemInfo.CpuName}"
                                                FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}"
                                                TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/>
-                                    <Border Height="3" CornerRadius="2"
-                                            Background="{DynamicResource BorderBrush}" Margin="0,8,0,0">
-                                        <Border Height="3" CornerRadius="2"
-                                                Background="{DynamicResource AccentBrush}" HorizontalAlignment="Left"
-                                                Width="{Binding SystemInfo.CpuUsage, Converter={StaticResource PercentToWidthConverter}, ConverterParameter=140}"/>
-                                    </Border>
+                                    <!-- FIX P2-09: barre responsive (Grid star) au lieu de width fixe 140px -->
+                                    <Grid Height="3" Margin="0,8,0,0">
+                                        <Border CornerRadius="2" Background="{DynamicResource BorderBrush}"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding SystemInfo.CpuUsage, Converter={StaticResource PercentToStarConverter}}"/>
+                                                <ColumnDefinition Width="{Binding SystemInfo.CpuUsage, Converter={StaticResource PercentToStarConverter}, ConverterParameter=rest}"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="2" Background="{DynamicResource AccentBrush}"/>
+                                        </Grid>
+                                    </Grid>
                                 </StackPanel>
                             </Border>
 
                             <!-- RAM -->
-                            <Border Style="{StaticResource OptimizationCardStyle}" Margin="0,0,6,0">
+                            <Border Style="{StaticResource InteractiveCardStyle}" Margin="0,0,6,0">
                                 <StackPanel>
-                                    <TextBlock Text="RAM" FontSize="10" FontWeight="Bold"
-                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <TextBlock Text="{StaticResource IconRam}" Style="{StaticResource IconStatStyle}"
+                                                   Foreground="{DynamicResource SuccessBrush}" Margin="0,0,7,0"/>
+                                        <TextBlock Text="RAM" FontSize="10" FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding SystemInfo.RamPercentStr}"
                                                FontSize="26" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
                                     <TextBlock Text="{Binding SystemInfo.RamInfoStr}"
                                                FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,3,0,0"/>
-                                    <Border Height="3" CornerRadius="2"
-                                            Background="{DynamicResource BorderBrush}" Margin="0,8,0,0">
-                                        <Border Height="3" CornerRadius="2"
-                                                Background="{DynamicResource SuccessBrush}" HorizontalAlignment="Left"
-                                                Width="{Binding SystemInfo.RamPercent, Converter={StaticResource PercentToWidthConverter}, ConverterParameter=140}"/>
-                                    </Border>
+                                    <!-- FIX P2-09: barre responsive -->
+                                    <Grid Height="3" Margin="0,8,0,0">
+                                        <Border CornerRadius="2" Background="{DynamicResource BorderBrush}"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding SystemInfo.RamPercent, Converter={StaticResource PercentToStarConverter}}"/>
+                                                <ColumnDefinition Width="{Binding SystemInfo.RamPercent, Converter={StaticResource PercentToStarConverter}, ConverterParameter=rest}"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" CornerRadius="2" Background="{DynamicResource SuccessBrush}"/>
+                                        </Grid>
+                                    </Grid>
                                 </StackPanel>
                             </Border>
 
                             <!-- Disque -->
-                            <Border Style="{StaticResource OptimizationCardStyle}" Margin="0,0,6,0">
+                            <Border Style="{StaticResource InteractiveCardStyle}" Margin="0,0,6,0">
                                 <StackPanel>
-                                    <TextBlock Text="DISQUE C:" FontSize="10" FontWeight="Bold"
-                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <TextBlock Text="{StaticResource IconDisk}" Style="{StaticResource IconStatStyle}"
+                                                   Foreground="{DynamicResource WarningBrush}" Margin="0,0,7,0"/>
+                                        <TextBlock Text="DISQUE C:" FontSize="10" FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding SystemInfo.DiskFreeGb}"
                                                    FontSize="26" FontWeight="Bold" Foreground="{DynamicResource WarningBrush}"/>
@@ -335,10 +359,13 @@
                             </Border>
 
                             <!-- Optimisations -->
-                            <Border Style="{StaticResource OptimizationCardStyle}">
+                            <Border Style="{StaticResource InteractiveCardStyle}">
                                 <StackPanel>
-                                    <TextBlock Text="SESSION" FontSize="10" FontWeight="Bold"
-                                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <TextBlock Text="{StaticResource IconSession}" Style="{StaticResource IconStatStyle}" Margin="0,0,7,0"/>
+                                        <TextBlock Text="SESSION" FontSize="10" FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding OptimizationsRun}"
                                                FontSize="26" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     <TextBlock Text="optimisations lancées"
@@ -412,8 +439,9 @@
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 Height="32" Margin="0,0,8,0">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="▶ " FontSize="11"/>
-                                <TextBlock Text="Tout exécuter" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconPlay}" Style="{StaticResource IconButtonInlineStyle}"
+                                           Foreground="{DynamicResource TextOnAccentBrush}"/>
+                                <TextBlock Text="Tout exécuter" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{Binding StopRunAllCommand}"
@@ -421,8 +449,8 @@
                                 Height="32" Margin="0,0,8,0"
                                 Visibility="{Binding IsRunAllInProgress, Converter={StaticResource BoolToVisibilityConverter}}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="■ " FontSize="11"/>
-                                <TextBlock Text="Arrêter" FontSize="12"/>
+                                <TextBlock Text="{StaticResource IconStop}" Style="{StaticResource IconButtonInlineStyle}"/>
+                                <TextBlock Text="Arrêter" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="5" Padding="10,0"
@@ -470,11 +498,6 @@
                                                             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                                                         <TextBlock Text="{Binding PurposeLabel}" FontSize="10" Foreground="{Binding PurposeBadgeForeground}"/>
                                                     </Border>
-                                                    <Border Background="{Binding ConfidenceBadgeBackground}" CornerRadius="3"
-                                                            Padding="5,1" Margin="0,0,5,0"
-                                                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
-                                                        <TextBlock Text="{Binding ConfidenceLabel}" FontSize="10" Foreground="{Binding ConfidenceBadgeForeground}"/>
-                                                    </Border>
                                                     <Border Background="{DynamicResource BadgeAdvancedBgBrush}" CornerRadius="3"
                                                             Padding="5,1"
                                                             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
@@ -495,13 +518,17 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="36"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Border Grid.Column="0" Height="4" CornerRadius="2"
-                                                            Background="{DynamicResource BackgroundHoverBrush}" VerticalAlignment="Center">
-                                                        <Border Height="4" CornerRadius="2"
-                                                                Background="{DynamicResource AccentBrush}"
-                                                                HorizontalAlignment="Left"
-                                                                Width="{Binding Progress, Converter={StaticResource PercentToWidthConverter}, ConverterParameter=200}"/>
-                                                    </Border>
+                                                    <!-- FIX P2-09: barre responsive (Grid star) -->
+                                                    <Grid Grid.Column="0" Height="4" VerticalAlignment="Center">
+                                                        <Border CornerRadius="2" Background="{DynamicResource BackgroundHoverBrush}"/>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="{Binding Progress, Converter={StaticResource PercentToStarConverter}}"/>
+                                                                <ColumnDefinition Width="{Binding Progress, Converter={StaticResource PercentToStarConverter}, ConverterParameter=rest}"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Border Grid.Column="0" CornerRadius="2" Background="{DynamicResource AccentBrush}"/>
+                                                        </Grid>
+                                                    </Grid>
                                                     <TextBlock Grid.Column="1"
                                                                Text="{Binding ProgressStr}"
                                                                FontSize="10" Foreground="{DynamicResource AccentBrush}"

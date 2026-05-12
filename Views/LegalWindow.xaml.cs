@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace InfoZen.Views
+namespace Klyr.Views
 {
     public partial class LegalWindow : Window
     {

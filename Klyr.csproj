@@ -6,19 +6,20 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <AssemblyName>InfoZen</AssemblyName>
-    <RootNamespace>InfoZen</RootNamespace>
+    <AssemblyName>Klyr</AssemblyName>
+    <RootNamespace>Klyr</RootNamespace>
     <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Version>2.1.0</Version>
     <FileVersion>2.1.0.0</FileVersion>
     <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <Authors>Octave</Authors>
-    <Company>InfoZen</Company>
-    <Product>InfoZen Optimiseur PC</Product>
-    <Description>Optimiseur PC Windows – par Octave</Description>
-    <Copyright>Copyright © 2026 Octave</Copyright>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Authors>InfoZen</Authors>
+    <Company>Klyr</Company>
+    <Product>Klyr Optimiseur PC</Product>
+    <Description>Optimiseur PC Windows – par InfoZen</Description>
+    <Copyright>Copyright © 2026 InfoZen</Copyright>
+    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>x64</Platforms>
     <Prefer32Bit>false</Prefer32Bit>
     <Optimize>true</Optimize>
   </PropertyGroup>

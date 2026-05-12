@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Paramètres utilisateur persistants, sauvegardés en JSON dans AppData.
@@ -18,6 +18,7 @@ namespace InfoZen.Services
         private bool _simulationMode        = false;
         private bool _showAdvancedOptimizations = false;
         private bool _enableOptimizationBenchmarks = true;
+        private bool _autoSaveLogs          = true;
         private string _theme               = "Dark";
         private string _lastModule          = "Dashboard";
 
@@ -83,6 +84,16 @@ namespace InfoZen.Services
             set { _enableOptimizationBenchmarks = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Sauvegarde automatique des logs dans Documents\Klyr\Logs\Klyr_YYYYMMDD.log
+        /// (fichier journalier, append-only, conservé en cas de crash).
+        /// </summary>
+        public bool AutoSaveLogs
+        {
+            get => _autoSaveLogs;
+            set { _autoSaveLogs = value; OnPropertyChanged(); }
+        }
+
         public string Theme
         {
             get => _theme;
@@ -101,14 +112,14 @@ namespace InfoZen.Services
     }
 
     /// <summary>
-    /// Charge et sauvegarde les paramètres dans %AppData%\InfoZen\settings.json
+    /// Charge et sauvegarde les paramètres dans %AppData%\Klyr\settings.json
     /// FIX P2-04: Logging des erreurs au lieu de catches silencieux.
     /// </summary>
     public static class SettingsService
     {
         private static readonly string SettingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "InfoZen", "settings.json");
+            "Klyr", "settings.json");
 
         private static AppSettings? _current;
         public static AppSettings Current => _current ??= Load();

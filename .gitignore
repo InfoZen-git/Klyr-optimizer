@@ -1,0 +1,73 @@
+# ────────────────────────────────────────────────────────────────────────
+# Klyr — .gitignore
+# ────────────────────────────────────────────────────────────────────────
+
+# Build output
+bin/
+obj/
+publish/
+out/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.swp
+
+# Temp files
+*.tmp
+*.bak
+*.cache
+*.log
+*.pdb
+*.exp
+*.lib
+
+# NSIS / installeur (artefacts générés)
+installer/Klyr_Setup_v*.exe
+Klyr_Setup_v*.exe
+publish/
+
+# Données utilisateur (settings de dev, NE PAS commit)
+*.json
+!packages.lock.json
+!global.json
+.config/
+
+# ── Tests / packages ─────────────────────────────────────
+TestResults/
+[Cc]overage/
+*.coverage
+*.coveragexml
+packages/
+.nuget/
+
+# Documents internes (notes IA / brainstorming, hors public)
+infozen-analysis.md
+optimus.md
+problems.md
+MEMORY.md
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Output specific
+*.dll.config
+*.exe.config
+*.mdb
+launchSettings.json

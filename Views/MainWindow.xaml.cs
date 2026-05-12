@@ -3,10 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using InfoZen.Services;
-using InfoZen.ViewModels;
+using Klyr.Services;
+using Klyr.ViewModels;
 
-namespace InfoZen.Views
+namespace Klyr.Views
 {
     public partial class MainWindow : Window
     {
@@ -17,12 +17,17 @@ namespace InfoZen.Views
             Resources.Add("BoolToVisibilityConverter", new BoolToVisibilityConverter());
             Resources.Add("InverseBoolConverter", new InverseBoolConverter());
             Resources.Add("PercentToWidthConverter", new PercentToWidthConverter());
+            Resources.Add("PercentToStarConverter", new PercentToStarConverter());
             Resources.Add("AdminBadgeVisibilityConverter", new AdminBadgeVisibilityConverter());
 
             InitializeComponent();
-            
+
             // FIX P2-01: Auto-scroll du terminal si activé dans les settings
             TerminalTextBox.TextChanged += TerminalTextBox_TextChanged;
+
+            // Version dans la titlebar
+            VersionLabel.Text = $" {DiagnosticService.AppVersion}";
+            Title = $"Klyr {DiagnosticService.AppVersion}";
         }
 
         // FIX P2-01: Auto-scroll du terminal
@@ -130,6 +135,33 @@ namespace InfoZen.Views
     /// Convertit un pourcentage (0–100) en largeur pixel.
     /// ConverterParameter = largeur max en pixels.
     /// </summary>
+    /// <summary>
+    /// FIX P2-09: convertit un pourcentage (0-100) en GridLength * pour des barres responsives.
+    /// Utiliser ConverterParameter="rest" pour obtenir le complément (100 - percent).
+    /// </summary>
+    public class PercentToStarConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double percent = value switch
+            {
+                float f        => f,
+                double d       => d,
+                int i          => i,
+                long l         => l,
+                IConvertible c => c.ToDouble(culture),
+                _              => 0.0
+            };
+            percent = Math.Max(0, Math.Min(100, percent));
+            bool rest = (parameter as string)?.Equals("rest", StringComparison.OrdinalIgnoreCase) == true;
+            double v = rest ? 100 - percent : percent;
+            return new GridLength(v, GridUnitType.Star);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
     public class PercentToWidthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

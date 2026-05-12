@@ -1,8 +1,8 @@
 using System.Windows;
 using System.Windows.Media.Animation;
-using InfoZen.Services;
+using Klyr.Services;
 
-namespace InfoZen.Views
+namespace Klyr.Views
 {
     public partial class SplashScreen : Window
     {
@@ -36,6 +36,11 @@ namespace InfoZen.Views
             await Task.Delay(150);
 
             var main = new MainWindow();
+            // FIX: réassigner Application.MainWindow vers la nouvelle MainWindow,
+            // sinon Application.Current.MainWindow reste pointé sur la SplashScreen
+            // (qui va être fermée), ce qui casse les bindings cross-window
+            // (notamment SettingsWindow.Save_Click → vm.ReloadCurrentOptimizations()).
+            Application.Current.MainWindow = main;
             main.Show();
             Close();
         }

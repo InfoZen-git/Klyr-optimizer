@@ -1,0 +1,83 @@
+<!--
+═════════════════════════════════════════════════════════════════════════
+   Animations.xaml — Micro-interactions style Fluent Design
+═════════════════════════════════════════════════════════════════════════
+   Inspiration : uiverse.io (hover lift, glow ring, spring scale)
+   adaptées en WPF/Storyboard avec respect de prefers-reduced-motion.
+═════════════════════════════════════════════════════════════════════════
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═════════ EASING CURVES ═════════ -->
+    <CubicEase x:Key="EaseOutSoft" EasingMode="EaseOut"/>
+    <CubicEase x:Key="EaseInOutSoft" EasingMode="EaseInOut"/>
+    <QuadraticEase x:Key="EaseOutQuad" EasingMode="EaseOut"/>
+    <BackEase x:Key="EaseSpring" EasingMode="EaseOut" Amplitude="0.3"/>
+
+    <!-- ═════════ DURÉES STANDARD ═════════ -->
+    <!-- 150ms micro-interactions, 250ms transitions, 400ms entrées -->
+    <Duration x:Key="DurationFast">0:0:0.15</Duration>
+    <Duration x:Key="DurationNormal">0:0:0.25</Duration>
+    <Duration x:Key="DurationSlow">0:0:0.4</Duration>
+
+    <!-- ═════════ STYLE CARTE INTERACTIVE (hover lift + glow) ═════════ -->
+    <Style x:Key="InteractiveCardStyle" TargetType="Border">
+        <Setter Property="Background"      Value="{DynamicResource BackgroundCardBrush}"/>
+        <Setter Property="BorderBrush"     Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius"    Value="8"/>
+        <Setter Property="Padding"         Value="16"/>
+        <Setter Property="Margin"          Value="0,0,0,6"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1" ScaleY="1"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                             To="1.005" Duration="0:0:0.18">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                             To="1.005" Duration="0:0:0.18">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                             To="1.0" Duration="0:0:0.15"/>
+                            <DoubleAnimation Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                             To="1.0" Duration="0:0:0.15"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ═════════ STORYBOARD ENTRÉE FENÊTRE (fade + slide) ═════════ -->
+    <Storyboard x:Key="WindowEnterStoryboard">
+        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="0" To="1" Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut"/>
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+</ResourceDictionary>

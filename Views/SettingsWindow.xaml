@@ -1,7 +1,7 @@
-<Window x:Class="InfoZen.Views.SettingsWindow"
+<Window x:Class="Klyr.Views.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Paramètres – InfoZen"
+        Title="Paramètres – Klyr"
         Width="460" Height="620"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -28,14 +28,16 @@
                 <Grid Margin="16,0">
                     <TextBlock Text="Paramètres" FontSize="13" FontWeight="SemiBold"
                                Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                    <Button Content="✕" HorizontalAlignment="Right"
-                            Width="28" Height="24" BorderThickness="0"
+                    <Button HorizontalAlignment="Right"
+                            Width="32" Height="26" BorderThickness="0"
                             Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
-                            Cursor="Hand" Click="Close_Click" FontSize="12">
+                            Cursor="Hand" Click="Close_Click" ToolTip="Fermer">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{StaticResource IconClose}"
+                                               Style="{StaticResource IconWindowControlStyle}"
+                                               Foreground="{TemplateBinding Foreground}"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">

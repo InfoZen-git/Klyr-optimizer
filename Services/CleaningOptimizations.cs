@@ -1,6 +1,6 @@
-using InfoZen.Models;
+using Klyr.Models;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Module Nettoyage.
@@ -58,7 +58,7 @@ namespace InfoZen.Services
                 Action = async () =>
                 {
                     string script = @"
-                        $backupDir = Join-Path $env:USERPROFILE 'Documents\InfoZen\Backups\EventLogs'
+                        $backupDir = Join-Path $env:USERPROFILE 'Documents\Klyr\Backups\EventLogs'
                         New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
                         $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
                         $exported = 0
@@ -228,7 +228,7 @@ namespace InfoZen.Services
                 
                 if (scanResult.TimedOut)
                 {
-                    return "⏱ Scan annulé après 10 minutes. Votre PC est peut-être très chargé. Réessayez via Windows Defender directement.";
+                    return "Timeout : Scan annulé après 10 minutes. Votre PC est peut-être très chargé. Réessayez via Windows Defender directement.";
                 }
 
                 string result = scanResult.Output;
@@ -240,14 +240,14 @@ namespace InfoZen.Services
                     int threatNum   = int.TryParse(threats, out int t) ? t : 0;
 
                     return threatNum > 0
-                        ? $"✅ Scan terminé en {duration}s — ⚠ {threatNum} menace(s) détectée(s) ! Ouvrez Windows Defender pour les traiter."
-                        : $"✅ Scan terminé en {duration}s — Aucune menace détectée.";
+                        ? $"Scan terminé en {duration}s — {threatNum} menace(s) détectée(s) ! Ouvrez Windows Defender pour les traiter."
+                        : $"Scan terminé en {duration}s — Aucune menace détectée.";
                 }
                 return $"Scan terminé.\n{result}";
             }
             catch (Exception ex)
             {
-                return $"❌ Erreur scan : {ex.Message}\nConseils : vérifiez que Windows Defender est actif et que vous avez les droits admin.";
+                return $"Erreur scan : {ex.Message}\nConseils : vérifiez que Windows Defender est actif et que vous avez les droits admin.";
             }
         }
     }

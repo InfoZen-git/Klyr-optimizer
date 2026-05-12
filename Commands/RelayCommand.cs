@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace InfoZen.Commands
+namespace Klyr.Commands
 {
     /// <summary>
     /// Implémentation ICommand générique pour le pattern MVVM.

@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
-using InfoZen.Models;
+using Klyr.Models;
 using Microsoft.Win32;
 
-namespace InfoZen.Services
+namespace Klyr.Services
 {
     /// <summary>
     /// Module Vieux PC – optimisations pour machines anciennes ou peu puissantes.
@@ -239,11 +239,11 @@ namespace InfoZen.Services
                         string detail = sep >= 0 && sep + 1 < diskInfo.Length
                             ? diskInfo[(sep + 1)..]
                             : "erreur inconnue";
-                        return $"❌ Détection du disque système impossible : {detail}";
+                        return $"Détection du disque système impossible : {detail}";
                     }
 
                     if (diskInfo.StartsWith("UNKNOWN|", StringComparison.Ordinal))
-                        return $"⚠ Type de disque non déterminé ({diskInfo}). Défragmentation annulée par sécurité.";
+                        return $"Type de disque non déterminé ({diskInfo}). Défragmentation annulée par sécurité.";
 
                     return (await SystemService.RunCmdAsync("defrag C: /U /V")).DisplayMessage;
                 }

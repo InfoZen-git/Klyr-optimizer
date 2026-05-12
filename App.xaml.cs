@@ -1,7 +1,7 @@
 using System.Windows;
-using InfoZen.Services;
+using Klyr.Services;
 
-namespace InfoZen
+namespace Klyr
 {
     public partial class App : Application
     {
@@ -16,7 +16,7 @@ namespace InfoZen
             _ = SettingsService.Current;
             ThemeService.ApplyTheme(SettingsService.Current.Theme);
 
-            LogService.Instance.Info("InfoZen v2.1 démarré.", "App");
+            LogService.Instance.Info("Klyr v2.1 démarré.", "App");
         }
 
         protected override void OnExit(ExitEventArgs e)

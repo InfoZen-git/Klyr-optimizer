@@ -1,25 +1,25 @@
-InfoZen Optimiseur PC – Licence d'utilisation
+Klyr Optimiseur PC – Licence d'utilisation
 =============================================
 
 Version 2.1.0 – Mars 2026
-Développé par Octave
+Développé par InfoZen
 
 UTILISATION PERSONNELLE GRATUITE
 ---------------------------------
-InfoZen est un logiciel gratuit pour un usage personnel.
+Klyr est un logiciel gratuit pour un usage personnel.
 Vous pouvez l'utiliser, le copier et le partager librement
 dans sa forme originale.
 
 RESTRICTIONS
 ------------
-- Vous ne pouvez pas vendre InfoZen ou l'intégrer dans un
+- Vous ne pouvez pas vendre Klyr ou l'intégrer dans un
   produit commercial sans autorisation écrite.
 - Vous ne pouvez pas modifier et redistribuer le code source
   sans mentionner l'auteur original.
 
 CLAUSE DE NON-RESPONSABILITÉ
 -----------------------------
-InfoZen est fourni "tel quel", sans garantie d'aucune sorte.
+Klyr est fourni "tel quel", sans garantie d'aucune sorte.
 L'auteur ne pourra être tenu responsable de tout dommage
 résultant de l'utilisation de ce logiciel.
 
@@ -28,7 +28,7 @@ système avant d'utiliser des optimisations avancées.
 
 DONNÉES PERSONNELLES (RGPD)
 ----------------------------
-InfoZen ne collecte aucune donnée personnelle.
+Klyr ne collecte aucune donnée personnelle.
 Toutes les opérations sont effectuées localement sur votre
 machine. Aucune information n'est transmise à des serveurs
 externes.

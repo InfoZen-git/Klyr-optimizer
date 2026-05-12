@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace InfoZen.Models
+namespace Klyr.Models
 {
     /// <summary>
     /// Données système affichées en temps réel sur le tableau de bord.

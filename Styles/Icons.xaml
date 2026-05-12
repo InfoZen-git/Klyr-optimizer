@@ -1,0 +1,90 @@
+<!--
+═════════════════════════════════════════════════════════════════════════
+   Icons.xaml — Système d'icônes centralisé (Segoe Fluent Icons)
+═════════════════════════════════════════════════════════════════════════
+   Police vectorielle native sur Windows 10/11.
+   Fallback automatique : "Segoe Fluent Icons, Segoe MDL2 Assets".
+   Source officielle : https://learn.microsoft.com/en-us/windows/apps/design/style/segoe-fluent-icons-font
+═════════════════════════════════════════════════════════════════════════
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <FontFamily x:Key="FluentIconsFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <!-- ═════════ NAVIGATION ═════════ -->
+    <sys:String x:Key="IconDashboard">&#xF246;</sys:String>          <!-- ViewDashboard -->
+    <sys:String x:Key="IconGaming">&#xE7FC;</sys:String>             <!-- XboxOneConsole / Gaming -->
+    <sys:String x:Key="IconOldPC">&#xE977;</sys:String>              <!-- DeviceMonitorRightPic -->
+    <sys:String x:Key="IconCleaning">&#xE74D;</sys:String>           <!-- Delete (broom-ish) -->
+    <sys:String x:Key="IconNetwork">&#xEC05;</sys:String>            <!-- NetworkAdapter -->
+    <sys:String x:Key="IconTerminal">&#xE756;</sys:String>           <!-- CommandPrompt -->
+    <sys:String x:Key="IconSettings">&#xE713;</sys:String>           <!-- Settings -->
+    <sys:String x:Key="IconLegal">&#xE7BE;</sys:String>              <!-- Document -->
+    <sys:String x:Key="IconAbout">&#xE946;</sys:String>              <!-- Info -->
+
+    <!-- ═════════ ACTIONS ═════════ -->
+    <sys:String x:Key="IconPlay">&#xE768;</sys:String>               <!-- Play -->
+    <sys:String x:Key="IconStop">&#xE71A;</sys:String>               <!-- Stop -->
+    <sys:String x:Key="IconRestore">&#xE777;</sys:String>            <!-- HardDrive (restore point) -->
+    <sys:String x:Key="IconExport">&#xE74E;</sys:String>             <!-- Save -->
+    <sys:String x:Key="IconCopy">&#xE8C8;</sys:String>               <!-- Copy -->
+    <sys:String x:Key="IconShare">&#xE72D;</sys:String>              <!-- Share -->
+    <sys:String x:Key="IconRefresh">&#xE72C;</sys:String>            <!-- Refresh -->
+    <sys:String x:Key="IconClose">&#xE894;</sys:String>              <!-- ChromeClose -->
+    <sys:String x:Key="IconMinimize">&#xE921;</sys:String>           <!-- ChromeMinimize -->
+    <sys:String x:Key="IconMaximize">&#xE922;</sys:String>           <!-- ChromeMaximize -->
+
+    <!-- ═════════ STATUTS ═════════ -->
+    <sys:String x:Key="IconCheck">&#xE73E;</sys:String>              <!-- CheckMark -->
+    <sys:String x:Key="IconError">&#xEA39;</sys:String>              <!-- ErrorBadge -->
+    <sys:String x:Key="IconWarning">&#xE7BA;</sys:String>            <!-- Warning -->
+    <sys:String x:Key="IconInfo">&#xE946;</sys:String>               <!-- Info -->
+    <sys:String x:Key="IconShield">&#xEA18;</sys:String>             <!-- ShieldKeyhole -->
+    <sys:String x:Key="IconLock">&#xE72E;</sys:String>               <!-- Lock -->
+    <sys:String x:Key="IconAdmin">&#xE7EF;</sys:String>              <!-- AdminPermission -->
+    <sys:String x:Key="IconReboot">&#xE777;</sys:String>              <!-- Restart -->
+
+    <!-- ═════════ MÉTRIQUES ═════════ -->
+    <sys:String x:Key="IconCpu">&#xE950;</sys:String>                <!-- Processor -->
+    <sys:String x:Key="IconRam">&#xE945;</sys:String>                <!-- DataSense -->
+    <sys:String x:Key="IconDisk">&#xEDA2;</sys:String>               <!-- HardDrive -->
+    <sys:String x:Key="IconSession">&#xE823;</sys:String>            <!-- TimeRunning -->
+    <sys:String x:Key="IconLive">&#xEC4A;</sys:String>               <!-- Pulse / live indicator -->
+
+    <!-- ═════════ FONCTIONS ═════════ -->
+    <sys:String x:Key="IconChevronRight">&#xE76C;</sys:String>
+    <sys:String x:Key="IconChevronDown">&#xE70D;</sys:String>
+
+    <!-- ═════════ STYLE BASE ICÔNE ═════════ -->
+    <Style x:Key="IconStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FluentIconsFont}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+    </Style>
+
+    <Style x:Key="IconNavStyle" TargetType="TextBlock" BasedOn="{StaticResource IconStyle}">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+        <Setter Property="Width" Value="18"/>
+    </Style>
+
+    <Style x:Key="IconStatStyle" TargetType="TextBlock" BasedOn="{StaticResource IconStyle}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+    </Style>
+
+    <Style x:Key="IconWindowControlStyle" TargetType="TextBlock" BasedOn="{StaticResource IconStyle}">
+        <Setter Property="FontSize" Value="10"/>
+    </Style>
+
+    <Style x:Key="IconButtonInlineStyle" TargetType="TextBlock" BasedOn="{StaticResource IconStyle}">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Margin" Value="0,0,8,0"/>
+    </Style>
+
+</ResourceDictionary>
