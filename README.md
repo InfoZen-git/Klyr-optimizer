@@ -20,7 +20,7 @@
 
 Windows accumule au fil des mois des paramètres lourds, des services inutiles, de la télémétrie et des optimisations désactivées par défaut. Klyr regroupe **34 ajustements** validés en 4 modules, sans installer 50 utilitaires séparés et sans envoyer une seule donnée sur internet.
 
-- ⚡ **Mesurable** : +377 points 3DMark mesurés après le module Gaming (Ryzen 5 9600X)
+- ⚡ **Mesurable** : +377 points 3DMark mesurés après le module Gaming
 - 🔒 **100% local** : aucune télémétrie, aucun tracking, aucun compte
 - ↩️ **Réversible** : point de restauration automatique + backups ciblés des fichiers système
 - 📖 **Open-source** : tu peux lire chaque ligne avant d'installer
