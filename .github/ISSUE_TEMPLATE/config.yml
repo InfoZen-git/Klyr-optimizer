@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Vulnérabilité de sécurité
-    url: https://github.com/OWNER/REPO/security/advisories/new
+    url: https://github.com/InfoZen-git/Klyr-optimizer/security/advisories/new
     about: Pour signaler une vulnérabilité — utiliser le canal privé Security Advisory au lieu d'une issue publique
