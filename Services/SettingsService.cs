@@ -21,6 +21,8 @@ namespace Klyr.Services
         private bool _autoSaveLogs          = true;
         private string _theme               = "Dark";
         private string _lastModule          = "Dashboard";
+        /// <summary>v2.2.0 : "auto" (système), "fr" ou "en".</summary>
+        private string _language            = "auto";
 
         /// <summary>Demander confirmation avant d'exécuter une optimisation.</summary>
         public bool ConfirmBeforeRun
@@ -104,6 +106,16 @@ namespace Klyr.Services
         {
             get => _lastModule;
             set { _lastModule = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// Langue d'affichage. Valeurs valides : "auto" (suit le système), "fr", "en".
+        /// Le changement nécessite un redémarrage de l'app pour prendre effet sur toutes les vues.
+        /// </summary>
+        public string Language
+        {
+            get => _language;
+            set { _language = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

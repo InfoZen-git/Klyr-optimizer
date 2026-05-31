@@ -1,5 +1,6 @@
 using System.Windows;
 using Klyr.Models;
+using Klyr.Resources;
 using Microsoft.Win32;
 
 namespace Klyr.Services
@@ -16,25 +17,25 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "gaming_highperf",
-                Name        = "Mode Haute Performance",
-                Description = "Active le plan d'alimentation Haute Performance Windows pour maximiser les ressources CPU/GPU.",
+                Name        = Strings.Optim_gaming_highperf_Name,
+                Description = Strings.Optim_gaming_highperf_Desc,
                 Category    = "Gaming",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     var result = await SystemService.RunCmdAsync("powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c");
                     return result.Success
-                        ? "Plan Haute Performance activé."
+                        ? Strings.Result_HighPerfActive
                         : result.DisplayMessage;
                 }
             },
             new OptimizationItem
             {
                 Id          = "gaming_gamedvr",
-                Name        = "Désactiver Xbox Game DVR",
-                Description = "Supprime l'enregistrement vidéo en arrière-plan Xbox qui consomme CPU, RAM et I/O disque.",
+                Name        = Strings.Optim_gaming_gamedvr_Name,
+                Description = Strings.Optim_gaming_gamedvr_Desc,
                 Category    = "Gaming",
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r1 = SystemService.SetRegistryCurrentUser(
@@ -47,10 +48,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "gaming_fullscreen",
-                Name        = "Désactiver Fullscreen Optimization",
-                Description = "Évite que Windows intercepte le mode plein écran des jeux, réduisant les micro-stutters.",
+                Name        = Strings.Optim_gaming_fullscreen_Name,
+                Description = Strings.Optim_gaming_fullscreen_Desc,
                 Category    = "Gaming",
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     return SystemService.SetRegistryCurrentUser(
@@ -60,11 +61,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "gaming_priority",
-                Name        = "Priorité CPU pour les Jeux",
-                Description = "Configure Windows pour allouer prioritairement les ressources CPU aux applications en premier plan.",
+                Name        = Strings.Optim_gaming_priority_Name,
+                Description = Strings.Optim_gaming_priority_Desc,
                 Category    = "Gaming",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r1 = SystemService.SetRegistryValue(
@@ -76,11 +77,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "gaming_network_latency",
-                Name        = "Réduction Latence Réseau",
-                Description = "Ajuste les paramètres TCP/IP pour réduire le ping en jeu (désactive Nagle, optimise ACK).",
+                Name        = Strings.Optim_gaming_network_latency_Name,
+                Description = Strings.Optim_gaming_network_latency_Desc,
                 Category    = "Gaming",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         # Désactiver l'algorithme de Nagle
@@ -89,19 +90,22 @@ namespace Klyr.Services
                             Set-ItemProperty -Path $adapter.PSPath -Name 'TcpAckFrequency' -Value 1 -Type DWord -ErrorAction SilentlyContinue
                             Set-ItemProperty -Path $adapter.PSPath -Name 'TCPNoDelay'       -Value 1 -Type DWord -ErrorAction SilentlyContinue
                         }
-                        Write-Output 'Latence réseau optimisée (Nagle désactivé, TCPNoDelay activé)'
+                        Write-Output 'OK_LATENCY'
                     ";
-                    return (await SystemService.RunPowerShellAsync(script)).DisplayMessage;
+                    var psResult = await SystemService.RunPowerShellAsync(script);
+                    return psResult.Output.Contains("OK_LATENCY")
+                        ? Strings.Result_LatencyOptimized
+                        : psResult.DisplayMessage;
                 }
             },
             new OptimizationItem
             {
                 Id          = "gaming_directx",
-                Name        = "Tweaks DirectX",
-                Description = "Optimise les paramètres DirectX : désactive DXGI flip model debug et ajuste le scheduler GPU.",
+                Name        = Strings.Optim_gaming_directx_Name,
+                Description = Strings.Optim_gaming_directx_Desc,
                 Category    = "Gaming",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r1 = SystemService.SetRegistryValue(
@@ -117,10 +121,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "gaming_kill_processes",
-                Name        = "Fermer Processus Inutiles",
-                Description = "Arrête les processus non essentiels pour libérer RAM et CPU avant de lancer un jeu.",
+                Name        = Strings.Optim_gaming_kill_processes_Name,
+                Description = Strings.Optim_gaming_kill_processes_Desc,
                 Category    = "Gaming",
-                Action = async () =>
+                Action = async ct =>
                 {
                     // FIX P2-06 : preview + confirmation explicite avant kill (évite fermetures non voulues)
                     string[] candidates = {
@@ -141,7 +145,7 @@ namespace Klyr.Services
                     if (running.Count == 0)
                     {
                         await Task.Yield();
-                        return "Aucun processus ciblé en cours. Rien à fermer.";
+                        return Strings.Result_NoTargetProcesses;
                     }
 
                     // Étape 2 — confirmation avec preview de la liste
@@ -150,16 +154,14 @@ namespace Klyr.Services
 
                     MessageBoxResult confirm = await Application.Current.Dispatcher.InvokeAsync(() =>
                         MessageBox.Show(
-                            $"Les processus suivants vont être fermés :\n\n{preview}\n\n" +
-                            "Sauvegardez votre travail dans ces applications avant de continuer.\n\n" +
-                            "Continuer ?",
-                            "Fermer Processus Inutiles – Klyr",
+                            string.Format(Strings.Result_KillDialogMessage, preview),
+                            Strings.Result_KillDialogTitle,
                             MessageBoxButton.YesNo,
                             MessageBoxImage.Warning,
                             MessageBoxResult.No));
 
                     if (confirm != MessageBoxResult.Yes)
-                        return "Action annulée par l'utilisateur.";
+                        return Strings.Result_KillCancelled;
 
                     // Étape 3 — kill
                     var killed = new HashSet<string>();
@@ -188,35 +190,35 @@ namespace Klyr.Services
                     }
 
                     if (killed.Count > 0)
-                        return $"Processus fermés : {string.Join(", ", killed)}" +
-                               (skipped > 0 ? $"\n{skipped} non fermés (droits insuffisants)." : "");
+                        return string.Format(Strings.Result_ProcessesKilled, string.Join(", ", killed)) +
+                               (skipped > 0 ? "\n" + string.Format(Strings.Result_ProcessesNotKilled, skipped) : "");
 
-                    return $"Aucun processus n'a pu être fermé ({skipped} échec{(skipped > 1 ? "s" : "")}).";
+                    return string.Format(Strings.Result_NoProcessKilled, skipped);
                 }
             },
             new OptimizationItem
             {
                 Id          = "gaming_fps_unlock",
-                Name        = "Déblocage des FPS",
-                Description = "Désactive la limite de fréquence d'images artificielle et le V-Sync forcé de Windows.",
+                Name        = Strings.Optim_gaming_fps_unlock_Name,
+                Description = Strings.Optim_gaming_fps_unlock_Desc,
                 Category    = "Gaming",
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r1 = SystemService.SetRegistryCurrentUser(
                         @"SOFTWARE\Microsoft\DirectX", "UserGpuPreferences",
                         "DirectXUserGlobalSettings=SwapEffectUpgradeEnable=1;", RegistryValueKind.String);
-                    return $"{r1}\nLimites FPS supprimées.";
+                    return $"{r1}\n{Strings.Result_FpsUnlocked}";
                 }
             },
             new OptimizationItem
             {
                 Id          = "gaming_gpu_schedule",
-                Name        = "Optimisation GPU",
-                Description = "Active le Hardware-Accelerated GPU Scheduling (HAGS) pour réduire la latence graphique.",
+                Name        = Strings.Optim_gaming_gpu_schedule_Name,
+                Description = Strings.Optim_gaming_gpu_schedule_Desc,
                 Category    = "Gaming",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     return SystemService.SetRegistryValue(

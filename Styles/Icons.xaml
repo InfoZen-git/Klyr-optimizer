@@ -19,6 +19,7 @@
     <sys:String x:Key="IconOldPC">&#xE977;</sys:String>              <!-- DeviceMonitorRightPic -->
     <sys:String x:Key="IconCleaning">&#xE74D;</sys:String>           <!-- Delete (broom-ish) -->
     <sys:String x:Key="IconNetwork">&#xEC05;</sys:String>            <!-- NetworkAdapter -->
+    <sys:String x:Key="IconStreaming">&#xE714;</sys:String>          <!-- Microphone (Streaming / Création) -->
     <sys:String x:Key="IconTerminal">&#xE756;</sys:String>           <!-- CommandPrompt -->
     <sys:String x:Key="IconSettings">&#xE713;</sys:String>           <!-- Settings -->
     <sys:String x:Key="IconLegal">&#xE7BE;</sys:String>              <!-- Document -->

@@ -1,5 +1,6 @@
 using System.Security.Principal;
 using System.Windows;
+using Klyr.Resources;
 
 namespace Klyr.Services
 {
@@ -33,15 +34,11 @@ namespace Klyr.Services
         {
             if (!IsRunningAsAdmin())
             {
-                LogService.Instance.Warn(
-                    "Klyr n'est pas lancé en administrateur. " +
-                    "Les optimisations marquées [Admin] seront ignorées ou échoueront. " +
-                    "Relancez Klyr en tant qu'administrateur pour un accès complet.",
-                    "Système");
+                LogService.Instance.Warn(Strings.Log_AdminWarning, "Système");
             }
             else
             {
-                LogService.Instance.Info("Droits administrateur confirmés.", "Système");
+                LogService.Instance.Info(Strings.Log_AdminConfirmed, "Système");
             }
         }
     }

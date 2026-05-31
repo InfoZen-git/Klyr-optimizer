@@ -56,6 +56,14 @@ namespace Klyr.Services
             ["net_reset_firewall"] = new(OptimizationPurpose.Troubleshooting, 50),
             ["net_speed_test"] = new(OptimizationPurpose.Maintenance, 0),
             ["net_info"] = new(OptimizationPurpose.Maintenance, 0),
+
+            // Streaming / Création (v2.2.0)
+            ["stream_perf_mode"]     = new(OptimizationPurpose.Performance,     70, IsBenchmarkCandidate: true),
+            ["stream_cpu_prio"]      = new(OptimizationPurpose.Performance,     75),
+            ["stream_game_mode_off"] = new(OptimizationPurpose.Troubleshooting, 40, IsAdvanced: true),
+            ["stream_hags_off"]      = new(OptimizationPurpose.Troubleshooting, 30, IsAdvanced: true),
+            ["stream_killer"]        = new(OptimizationPurpose.Performance,     65),
+            ["stream_clean_cache"]   = new(OptimizationPurpose.Maintenance,     70),
         };
 
         public static void ApplyMetadata(IEnumerable<OptimizationItem> items)

@@ -25,6 +25,14 @@ namespace Klyr.Views
             ToggleScroll.IsChecked     = s.AutoScrollTerminal;
             ToggleAdminBadge.IsChecked = s.ShowAdminBadge;
             ToggleLightTheme.IsChecked = string.Equals(s.Theme, "Light", StringComparison.OrdinalIgnoreCase);
+
+            // v2.2.0 — Langue
+            switch ((s.Language ?? "auto").ToLowerInvariant())
+            {
+                case "fr": LangFr.IsChecked   = true; break;
+                case "en": LangEn.IsChecked   = true; break;
+                default:   LangAuto.IsChecked = true; break;
+            }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -39,11 +47,28 @@ namespace Klyr.Views
             s.AutoScrollTerminal = ToggleScroll.IsChecked     == true;
             s.ShowAdminBadge    = ToggleAdminBadge.IsChecked  == true;
             s.Theme             = ToggleLightTheme.IsChecked  == true ? "Light" : "Dark";
+
+            // v2.2.0 — Persistence langue (prend effet au prochain démarrage)
+            string newLanguage =
+                LangFr.IsChecked == true ? "fr" :
+                LangEn.IsChecked == true ? "en" :
+                "auto";
+            bool languageChanged = !string.Equals(s.Language, newLanguage, StringComparison.OrdinalIgnoreCase);
+            s.Language = newLanguage;
+
             ThemeService.ApplyTheme(s.Theme);
             SettingsService.Save();
 
             if (Application.Current.MainWindow?.DataContext is MainViewModel vm)
                 vm.ReloadCurrentOptimizations();
+
+            if (languageChanged)
+            {
+                MessageBox.Show(
+                    Klyr.Resources.Strings.Settings_LanguageRestartHint,
+                    Klyr.Resources.Strings.Settings_Title,
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
 
             Close();
         }

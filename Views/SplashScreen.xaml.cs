@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Media.Animation;
+using Klyr.Resources;
 using Klyr.Services;
 
 namespace Klyr.Views
@@ -14,13 +15,14 @@ namespace Klyr.Views
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
+            // v2.2.0 — Messages localisés
             var steps = new (string message, double width)[]
             {
-                ("Vérification des droits…",              56),
-                ("Chargement des modules…",               112),
-                ("Chargement des paramètres…",            168),
-                ("Analyse du système…",                   224),
-                ("Prêt !",                                280),
+                (Strings.Splash_CheckAdmin,    56),
+                (Strings.Splash_LoadModules,   112),
+                (Strings.Splash_LoadSettings,  168),
+                (Strings.Splash_AnalyzeSystem, 224),
+                (Strings.Splash_Ready,         280),
             };
 
             foreach (var (message, width) in steps)

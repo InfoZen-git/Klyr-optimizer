@@ -1,10 +1,13 @@
+using System.Windows;
 using Klyr.Models;
+using Klyr.Resources;
 
 namespace Klyr.Services
 {
     /// <summary>
     /// Module Nettoyage.
     /// FIX : Antivirus timeout augmenté à 5min + progression détaillée des fichiers scannés.
+    /// v2.2.0 : scan antivirus propose maintenant la mise en quarantaine après détection.
     /// </summary>
     public static class CleaningOptimizations
     {
@@ -15,11 +18,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "clean_disk",
-                Name        = "Nettoyage Disque Système",
-                Description = "Lance l'outil Disk Cleanup (cleanmgr) pour supprimer fichiers inutiles et caches.",
+                Name        = Strings.Optim_clean_disk_Name,
+                Description = Strings.Optim_clean_disk_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $regPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches'
@@ -36,10 +39,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "clean_recycle",
-                Name        = "Vider la Corbeille",
-                Description = "Supprime définitivement tous les fichiers de la corbeille Windows.",
+                Name        = Strings.Optim_clean_recycle_Name,
+                Description = Strings.Optim_clean_recycle_Desc,
                 Category    = "Nettoyage",
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         Clear-RecycleBin -Force -ErrorAction SilentlyContinue
@@ -51,11 +54,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "clean_logs",
-                Name        = "Suppression Logs Windows",
-                Description = "Exporte puis efface les journaux d'événements Windows (mode avancé dépannage).",
+                Name        = Strings.Optim_clean_logs_Name,
+                Description = Strings.Optim_clean_logs_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $backupDir = Join-Path $env:USERPROFILE 'Documents\Klyr\Backups\EventLogs'
@@ -82,11 +85,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "clean_prefetch",
-                Name        = "Nettoyage Prefetch",
-                Description = "Supprime les fichiers Prefetch (action avancée dépannage; peut ralentir temporairement les premiers lancements).",
+                Name        = Strings.Optim_clean_prefetch_Name,
+                Description = Strings.Optim_clean_prefetch_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $path = 'C:\Windows\Prefetch'
@@ -105,11 +108,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "clean_bloatware",
-                Name        = "Supprimer Applications Inutiles",
-                Description = "Désinstalle les bloatwares Windows courants (Candy Crush, Solitaire…).",
+                Name        = Strings.Optim_clean_bloatware_Name,
+                Description = Strings.Optim_clean_bloatware_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $bloatware = @(
@@ -140,37 +143,39 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "clean_repair",
-                Name        = "Réparation Windows (SFC + DISM)",
-                Description = "Lance sfc /scannow puis DISM pour réparer les fichiers système corrompus.",
+                Name        = Strings.Optim_clean_repair_Name,
+                Description = Strings.Optim_clean_repair_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
                 RequiresReboot = true,
-                Action = async () =>
+                Action = async ct =>
                 {
-                    var sfcResult  = await SystemService.RunCmdAsync("sfc /scannow");
-                    var dismResult = await SystemService.RunCmdAsync("DISM /Online /Cleanup-Image /RestoreHealth");
+                    // v2.2.0 : ct propagé — l'utilisateur peut killer SFC/DISM mid-run
+                    var sfcResult  = await SystemService.RunCmdAsync("sfc /scannow", cancellationToken: ct);
+                    if (sfcResult.WasCancelled) return "── SFC ──\nAnnulé par l'utilisateur.";
+                    var dismResult = await SystemService.RunCmdAsync("DISM /Online /Cleanup-Image /RestoreHealth", cancellationToken: ct);
                     return $"── SFC ──\n{sfcResult.DisplayMessage}\n\n── DISM ──\n{dismResult.DisplayMessage}";
                 }
             },
             new OptimizationItem
             {
                 Id          = "clean_dns_cache",
-                Name        = "Nettoyage Cache DNS",
-                Description = "Vide le cache DNS local pour corriger des problèmes de navigation.",
+                Name        = Strings.Optim_clean_dns_cache_Name,
+                Description = Strings.Optim_clean_dns_cache_Desc,
                 Category    = "Nettoyage",
-                Action = async () => (await SystemService.RunCmdAsync("ipconfig /flushdns")).DisplayMessage
+                Action = async ct => (await SystemService.RunCmdAsync("ipconfig /flushdns")).DisplayMessage
             },
             // ── NOUVEAU : Scan antivirus avec progression réelle ──────────────────
             new OptimizationItem
             {
                 Id          = "clean_antivirus",
-                Name        = "Scan Antivirus (Windows Defender)",
-                Description = "Lance un QuickScan Windows Defender avec affichage du nombre de fichiers analysés. Timeout étendu à 10 minutes.",
+                Name        = Strings.Optim_clean_antivirus_Name,
+                Description = Strings.Optim_clean_antivirus_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
-                    return await RunAntivirusScanAsync();
+                    return await RunAntivirusScanAsync(ct);
                 }
             }
             };
@@ -184,7 +189,7 @@ namespace Klyr.Services
         /// FIX P1-01: Timeout qui kill réellement le process.
         /// FIX bug communauté : timeout 30s → 10 minutes.
         /// </summary>
-        private static async Task<string> RunAntivirusScanAsync()
+        private static async Task<string> RunAntivirusScanAsync(CancellationToken ct = default)
         {
             try
             {
@@ -197,9 +202,9 @@ namespace Klyr.Services
                         Write-Output 'UNAVAILABLE'
                     }
                 ";
-                var checkResult = await SystemService.RunPowerShellAsync(checkScript);
+                var checkResult = await SystemService.RunPowerShellAsync(checkScript, cancellationToken: ct);
                 if (checkResult.Output.Contains("UNAVAILABLE"))
-                    return "Windows Defender introuvable. Il a peut-être été désactivé par le 'Killer Processus'. Redémarre le service MsMpEng.";
+                    return Strings.Result_DefenderUnavailable;
 
                 // Lance le scan avec timeout étendu à 10 minutes
                 string scanScript = @"
@@ -219,16 +224,19 @@ namespace Klyr.Services
                     Write-Output ""SCAN_END|${duration}|${threatCount}""
                 ";
 
-                // FIX P1-01: Utiliser le timeout intégré à RunPowerShellAsync qui kill le process
+                // FIX P1-01 + v2.2.0 : timeout interne 10 min + ct utilisateur pour cancel mid-scan
                 var scanResult = await SystemService.RunPowerShellAsync(
-                    scanScript, 
-                    asAdmin: false, 
-                    timeout: TimeSpan.FromMinutes(10)
+                    scanScript,
+                    asAdmin: false,
+                    timeout: TimeSpan.FromMinutes(10),
+                    cancellationToken: ct
                 );
-                
+
+                if (scanResult.WasCancelled)
+                    return Strings.Result_ScanCancelled;
                 if (scanResult.TimedOut)
                 {
-                    return "Timeout : Scan annulé après 10 minutes. Votre PC est peut-être très chargé. Réessayez via Windows Defender directement.";
+                    return Strings.Result_ScanTimeout;
                 }
 
                 string result = scanResult.Output;
@@ -239,15 +247,67 @@ namespace Klyr.Services
                     string threats  = parts.Length > 2 ? parts[2] : "0";
                     int threatNum   = int.TryParse(threats, out int t) ? t : 0;
 
-                    return threatNum > 0
-                        ? $"Scan terminé en {duration}s — {threatNum} menace(s) détectée(s) ! Ouvrez Windows Defender pour les traiter."
-                        : $"Scan terminé en {duration}s — Aucune menace détectée.";
+                    if (threatNum == 0)
+                        return string.Format(Strings.Result_ScanNoThreats, duration);
+
+                    // v2.2.0 — Mise en quarantaine optionnelle (dialog localisé)
+                    bool userConfirmed = await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        var dialog = MessageBox.Show(
+                            string.Format(Strings.Dialog_Quarantine_Message, threatNum),
+                            Strings.Dialog_Quarantine_Title,
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+                        return dialog == MessageBoxResult.Yes;
+                    });
+
+                    if (!userConfirmed)
+                        return string.Format(Strings.Result_QuarantineRefused, duration, threatNum);
+
+                    // Lancer la quarantaine via Remove-MpThreat (nécessite admin — OK car RequiresAdmin=true)
+                    string quarantineScript = @"
+                        $threats = Get-MpThreatDetection -ErrorAction SilentlyContinue
+                        $removed = 0
+                        $failed  = 0
+                        if ($threats) {
+                            foreach ($entry in $threats) {
+                                try {
+                                    Remove-MpThreat -ThreatID $entry.ThreatID -ErrorAction Stop
+                                    $removed++
+                                } catch {
+                                    $failed++
+                                }
+                            }
+                        }
+                        Write-Output ""QUARANTINE|${removed}|${failed}""
+                    ";
+
+                    var quarantineResult = await SystemService.RunPowerShellAsync(
+                        quarantineScript,
+                        asAdmin: false,
+                        timeout: TimeSpan.FromMinutes(2)
+                    );
+
+                    if (quarantineResult.TimedOut)
+                        return string.Format(Strings.Result_QuarantineTimeout, duration, threatNum);
+
+                    if (quarantineResult.Output.Contains("QUARANTINE|"))
+                    {
+                        var qParts = quarantineResult.Output.Split('|');
+                        int removed = qParts.Length > 1 && int.TryParse(qParts[1].Trim(), out int r) ? r : 0;
+                        int failed  = qParts.Length > 2 && int.TryParse(qParts[2].Trim(), out int f) ? f : 0;
+
+                        return failed == 0
+                            ? string.Format(Strings.Result_QuarantineSuccess, duration, threatNum, removed)
+                            : string.Format(Strings.Result_QuarantinePartial, duration, threatNum, removed, failed);
+                    }
+                    return string.Format(Strings.Result_QuarantineLaunched, duration, threatNum);
                 }
                 return $"Scan terminé.\n{result}";
             }
             catch (Exception ex)
             {
-                return $"Erreur scan : {ex.Message}\nConseils : vérifiez que Windows Defender est actif et que vous avez les droits admin.";
+                return string.Format(Strings.Result_ScanError, ex.Message);
             }
         }
     }

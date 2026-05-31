@@ -1,4 +1,5 @@
 using Klyr.Models;
+using Klyr.Resources;
 using Microsoft.Win32;
 using System.IO;
 using System.Net;
@@ -20,11 +21,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "net_tcpip",
-                Name        = "Optimisation TCP/IP",
-                Description = "Ajuste les paramètres de la pile réseau Windows : autotuning, ECN, timestamps pour meilleures performances.",
+                Name        = Strings.Optim_net_tcpip_Name,
+                Description = Strings.Optim_net_tcpip_Desc,
                 Category    = "Réseau",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         netsh int tcp set global autotuninglevel=normal
@@ -32,37 +33,40 @@ namespace Klyr.Services
                         netsh int tcp set global timestamps=disabled
                         netsh int tcp set global rss=enabled
                         netsh int tcp set global chimney=enabled
-                        Write-Output 'Paramètres TCP/IP optimisés.'
+                        Write-Output 'OK_TCP'
                     ";
-                    return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
+                    var psResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    return psResult.Output.Contains("OK_TCP")
+                        ? Strings.Result_TcpOptimized
+                        : psResult.DisplayMessage;
                 }
             },
             new OptimizationItem
             {
                 Id          = "net_reset",
-                Name        = "Réinitialisation Réseau",
-                Description = "Remet à zéro tous les paramètres réseau (netsh winsock reset + int ip reset). Redémarrage requis.",
+                Name        = Strings.Optim_net_reset_Name,
+                Description = Strings.Optim_net_reset_Desc,
                 Category    = "Réseau",
                 RequiresAdmin = true,
                 RequiresReboot = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string backup = await BackupNetworkStateAsync();
                     var r1 = await SystemService.RunCmdAsync("netsh winsock reset");
                     var r2 = await SystemService.RunCmdAsync("netsh int ip reset");
                     var r3 = await SystemService.RunCmdAsync("netsh int ipv4 reset");
                     var r4 = await SystemService.RunCmdAsync("netsh int ipv6 reset");
-                    return $"{backup}\nRéseau réinitialisé.\n{r1.DisplayMessage}\n{r2.DisplayMessage}\n{r3.DisplayMessage}\n{r4.DisplayMessage}\nRedémarrage requis pour appliquer les changements.";
+                    return $"{backup}\n{Strings.Result_NetReset}\n{r1.DisplayMessage}\n{r2.DisplayMessage}\n{r3.DisplayMessage}\n{r4.DisplayMessage}";
                 }
             },
             new OptimizationItem
             {
                 Id          = "net_dns_fast",
-                Name        = "DNS Rapides (Cloudflare / Google)",
-                Description = "Benchmarke plusieurs profils DNS puis applique automatiquement le plus rapide.",
+                Name        = Strings.Optim_net_dns_fast_Name,
+                Description = Strings.Optim_net_dns_fast_Desc,
                 Category    = "Réseau",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $profiles = @(
@@ -97,7 +101,7 @@ namespace Klyr.Services
 
                         $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
                         if (-not $adapters) {
-                            Write-Output 'Aucun adaptateur réseau actif détecté.'
+                            Write-Output 'NO_ADAPTER'
                             exit 1
                         }
 
@@ -106,17 +110,20 @@ namespace Klyr.Services
                         }
                         Write-Output ""DNS auto-optimisés : $($best.Name) [$($best.Servers -join ', ')] — latence DNS moyenne $($best.Avg) ms""
                     ";
-                    return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
+                    var dnsResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    return dnsResult.Output.Contains("NO_ADAPTER")
+                        ? Strings.Result_NoActiveAdapter
+                        : dnsResult.DisplayMessage;
                 }
             },
             new OptimizationItem
             {
                 Id          = "net_ping",
-                Name        = "Optimisation Ping",
-                Description = "Réduit la latence réseau en ajustant les timers TCP et désactivant les délais d'ACK.",
+                Name        = Strings.Optim_net_ping_Name,
+                Description = Strings.Optim_net_ping_Desc,
                 Category    = "Réseau",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         # Désactiver Nagle + ACK delay sur toutes les interfaces
@@ -126,19 +133,22 @@ namespace Klyr.Services
                             Set-ItemProperty -Path $_.PSPath -Name 'TCPNoDelay'       -Value 1    -Type DWord -ErrorAction SilentlyContinue
                             Set-ItemProperty -Path $_.PSPath -Name 'TcpDelAckTicks'   -Value 0    -Type DWord -ErrorAction SilentlyContinue
                         }
-                        Write-Output 'Latence optimisée : Nagle désactivé, ACK delay = 0'
+                        Write-Output 'OK_PING'
                     ";
-                    return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
+                    var pingResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    return pingResult.Output.Contains("OK_PING")
+                        ? Strings.Result_PingOptimized
+                        : pingResult.DisplayMessage;
                 }
             },
             new OptimizationItem
             {
                 Id          = "net_telemetry_block",
-                Name        = "Blocage Télémétrie Microsoft",
-                Description = "Bloque les connexions aux serveurs de tracking et télémétrie Microsoft via le fichier hosts.",
+                Name        = Strings.Optim_net_telemetry_block_Name,
+                Description = Strings.Optim_net_telemetry_block_Desc,
                 Category    = "Réseau",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string[] domains = {
                         "telemetry.microsoft.com", "vortex.data.microsoft.com",
@@ -160,7 +170,7 @@ namespace Klyr.Services
                             if (!existing.Contains(d)) { sb.AppendLine(entry); added++; }
                         }
                         File.WriteAllText(hostsPath, sb.ToString());
-                        return $"{backup}\n{added} domaines de télémétrie bloqués dans hosts.";
+                        return $"{backup}\n{string.Format(Strings.Result_TelemetryBlocked, added)}";
                     }
                     catch (Exception ex) { return $"Erreur : {ex.Message}"; }
                 }
@@ -168,32 +178,32 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "net_flush_dns",
-                Name        = "Flush DNS",
-                Description = "Vide le cache DNS local (ipconfig /flushdns) pour résoudre des problèmes de navigation.",
+                Name        = Strings.Optim_net_flush_dns_Name,
+                Description = Strings.Optim_net_flush_dns_Desc,
                 Category    = "Réseau",
-                Action = async () => (await SystemService.RunCmdAsync("ipconfig /flushdns")).DisplayMessage
+                Action = async ct => (await SystemService.RunCmdAsync("ipconfig /flushdns")).DisplayMessage
             },
             new OptimizationItem
             {
                 Id          = "net_reset_firewall",
-                Name        = "Reset Pare-feu Windows",
-                Description = "Restaure la configuration par défaut du pare-feu Windows (toutes les règles personnalisées seront supprimées).",
+                Name        = Strings.Optim_net_reset_firewall_Name,
+                Description = Strings.Optim_net_reset_firewall_Desc,
                 Category    = "Réseau",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string backup = await BackupFirewallRulesAsync();
                     var result = await SystemService.RunCmdAsync("netsh advfirewall reset");
-                    return $"{backup}\nPare-feu réinitialisé.\n{result.DisplayMessage}";
+                    return $"{backup}\n{Strings.Result_FirewallReset}\n{result.DisplayMessage}";
                 }
             },
             new OptimizationItem
             {
                 Id          = "net_speed_test",
-                Name        = "Test Vitesse Internet",
-                Description = "Mesure la vitesse download (multi-runs) + ping, jitter et perte de paquets.",
+                Name        = Strings.Optim_net_speed_test_Name,
+                Description = Strings.Optim_net_speed_test_Desc,
                 Category    = "Réseau",
-                Action = async () =>
+                Action = async ct =>
                 {
                     return await MeasureDownloadSpeedAsync();
                 }
@@ -201,10 +211,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "net_info",
-                Name        = "Informations Réseau",
-                Description = "Affiche IP locale, DNS, passerelle, adresse MAC et état des interfaces réseau actives.",
+                Name        = Strings.Optim_net_info_Name,
+                Description = Strings.Optim_net_info_Desc,
                 Category    = "Réseau",
-                Action = async () =>
+                Action = async ct =>
                 {
                     return await GetNetworkInfoAsync();
                 }

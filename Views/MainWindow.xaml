@@ -1,20 +1,37 @@
 <Window x:Class="Klyr.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         xmlns:vm="clr-namespace:Klyr.ViewModels"
+        xmlns:loc="clr-namespace:Klyr.Resources"
         Title="Klyr"
         Width="1080" Height="700"
         MinWidth="880" MinHeight="580"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen">
+
+    <!-- v2.2.0 — WindowChrome : 8 px de bordure pour grab/resize sur les 4 côtés et les coins.
+         CaptionHeight=44 matches la titlebar custom → drag native + double-clic = maximize.
+         Les boutons Min/Max/Close ont IsHitTestVisibleInChrome="True" pour rester cliquables. -->
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="44"
+                            ResizeBorderThickness="8"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
 
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
 
-    <Border Background="{DynamicResource BackgroundDeepBrush}" CornerRadius="10"
+    <!-- v2.2.0 — OuterBorder : coins arrondis + shadow quand normal,
+         plat + sans shadow quand maximisé (géré dans MainWindow.xaml.cs OnStateChanged). -->
+    <Border x:Name="OuterBorder"
+            Background="{DynamicResource BackgroundDeepBrush}" CornerRadius="10"
             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
         <Border.Effect>
             <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="0" Opacity="0.6"/>
@@ -49,7 +66,7 @@
                                RenderOptions.BitmapScalingMode="HighQuality"/>
                         <TextBlock Text="Klyr" FontSize="13" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="VersionLabel" Text=" 2.1.0" FontSize="11"
+                        <TextBlock x:Name="VersionLabel" Text=" 2.2.0" FontSize="11"
                                    Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                     </StackPanel>
 
@@ -58,12 +75,13 @@
                                FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <!-- Window controls -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Window controls (cliquables via WindowChrome) -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                                shell:WindowChrome.IsHitTestVisibleInChrome="True">
                         <Button Width="32" Height="26" Margin="0,0,2,0"
                                 Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
-                                Click="Minimize_Click" ToolTip="Réduire">
+                                Click="Minimize_Click" ToolTip="{x:Static loc:Strings.Tooltip_Minimize}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
@@ -83,7 +101,7 @@
                         <Button Width="32" Height="26" Margin="0,0,2,0"
                                 Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
-                                Click="Maximize_Click" ToolTip="Agrandir">
+                                Click="Maximize_Click" ToolTip="{x:Static loc:Strings.Tooltip_Maximize}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
@@ -103,7 +121,7 @@
                         <Button Width="32" Height="26"
                                 Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
                                 BorderThickness="0" Cursor="Hand"
-                                Click="Close_Click" ToolTip="Fermer">
+                                Click="Close_Click" ToolTip="{x:Static loc:Strings.Tooltip_Close}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
@@ -133,21 +151,21 @@
                     <StackPanel DockPanel.Dock="Top" Margin="10,14,10,0">
 
                         <!-- Section : Navigation -->
-                        <TextBlock Text="NAVIGATION" FontSize="10" FontWeight="Bold"
+                        <TextBlock Text="{x:Static loc:Strings.Dashboard_NavTitle}" FontSize="10" FontWeight="Bold"
                                    Foreground="{DynamicResource TextMutedBrush}" Margin="12,0,0,6"/>
 
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconDashboard}" Style="{StaticResource IconNavStyle}"/>
-                                <TextBlock Text="Tableau de bord" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.PageTitle_Dashboard}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Separator Background="{DynamicResource BorderBrush}" Margin="12,10,12,10" Height="1"/>
 
                         <!-- Section : Modules -->
-                        <TextBlock Text="MODULES" FontSize="10" FontWeight="Bold"
+                        <TextBlock Text="{x:Static loc:Strings.Nav_Modules}" FontSize="10" FontWeight="Bold"
                                    Foreground="{DynamicResource TextMutedBrush}" Margin="12,0,0,6"/>
 
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Gaming"
@@ -155,9 +173,9 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconGaming}" Style="{StaticResource IconNavStyle}"/>
                                 <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="Gaming / FPS" FontSize="12"/>
+                                    <TextBlock Text="{x:Static loc:Strings.Nav_NavigateGaming}" FontSize="12"/>
                                     <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
-                                               Text="{Binding GamingCount, StringFormat={}{0} optimisations}"/>
+                                               Text="{Binding GamingCountText}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -167,9 +185,9 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconOldPC}" Style="{StaticResource IconNavStyle}"/>
                                 <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="Vieux PC" FontSize="12"/>
+                                    <TextBlock Text="{x:Static loc:Strings.Nav_NavigateOldPC}" FontSize="12"/>
                                     <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
-                                               Text="{Binding OldPCCount, StringFormat={}{0} optimisations}"/>
+                                               Text="{Binding OldPCCountText}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -179,9 +197,9 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconCleaning}" Style="{StaticResource IconNavStyle}"/>
                                 <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="Nettoyage" FontSize="12"/>
+                                    <TextBlock Text="{x:Static loc:Strings.Nav_NavigateCleaning}" FontSize="12"/>
                                     <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
-                                               Text="{Binding CleaningCount, StringFormat={}{0} optimisations}"/>
+                                               Text="{Binding CleaningCountText}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -191,9 +209,21 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconNetwork}" Style="{StaticResource IconNavStyle}"/>
                                 <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="Réseau" FontSize="12"/>
+                                    <TextBlock Text="{x:Static loc:Strings.Nav_NavigateNetwork}" FontSize="12"/>
                                     <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
-                                               Text="{Binding NetworkCount, StringFormat={}{0} optimisations}"/>
+                                               Text="{Binding NetworkCountText}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding NavigateCommand}" CommandParameter="Streaming"
+                                Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{StaticResource IconStreaming}" Style="{StaticResource IconNavStyle}"/>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{x:Static loc:Strings.Nav_NavigateStreaming}" FontSize="12"/>
+                                    <TextBlock FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
+                                               Text="{Binding StreamingCountText}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -201,14 +231,14 @@
                         <Separator Background="{DynamicResource BorderBrush}" Margin="12,10,12,10" Height="1"/>
 
                         <!-- Section : Outils -->
-                        <TextBlock Text="OUTILS" FontSize="10" FontWeight="Bold"
+                        <TextBlock Text="{x:Static loc:Strings.Nav_Tools}" FontSize="10" FontWeight="Bold"
                                    Foreground="{DynamicResource TextMutedBrush}" Margin="12,0,0,6"/>
 
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Terminal"
                                 Style="{StaticResource NavButtonStyle}" Margin="0,1,0,1">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconTerminal}" Style="{StaticResource IconNavStyle}"/>
-                                <TextBlock Text="Terminal" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Nav_NavigateTerminal}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -216,7 +246,7 @@
                                 Margin="0,1,0,1" Click="BtnSettings_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconSettings}" Style="{StaticResource IconNavStyle}"/>
-                                <TextBlock Text="Paramètres" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Nav_Settings}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -224,7 +254,7 @@
                                 Margin="0,1,0,1" Click="BtnLegal_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconLegal}" Style="{StaticResource IconNavStyle}"/>
-                                <TextBlock Text="Mentions légales" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Nav_Legal}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -232,7 +262,7 @@
                                 Margin="0,1,0,1" Click="BtnAbout_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconAbout}" Style="{StaticResource IconNavStyle}"/>
-                                <TextBlock Text="À propos" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Nav_About}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -247,7 +277,7 @@
                                 Margin="0,0,0,5" Height="32" FontSize="11">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconShield}" Style="{StaticResource IconButtonInlineStyle}"/>
-                                <TextBlock Text="Point de restauration" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Nav_RestorePoint}" FontSize="11" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -256,7 +286,7 @@
                                 Height="32" FontSize="11">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconExport}" Style="{StaticResource IconButtonInlineStyle}"/>
-                                <TextBlock Text="Exporter les logs" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Nav_ExportLogs}" FontSize="11" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -272,12 +302,12 @@
                               Visibility="{Binding CurrentPage, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Dashboard}">
                     <StackPanel>
 
-                        <TextBlock Text="Tableau de bord" FontSize="20" FontWeight="SemiBold"
+                        <TextBlock Text="{x:Static loc:Strings.PageTitle_Dashboard}" FontSize="20" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,3"/>
                         <TextBlock Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12" Margin="0,0,0,20">
                             <Run Text="{Binding SystemInfo.MachineName}"/>
                             <Run Text="  ·  "/>
-                            <Run Text="Uptime : "/>
+                            <Run Text="{x:Static loc:Strings.Dashboard_UptimePrefix}"/>
                             <Run Text="{Binding SystemInfo.Uptime}" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </TextBlock>
 
@@ -289,7 +319,7 @@
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <TextBlock Text="{StaticResource IconCpu}" Style="{StaticResource IconStatStyle}" Margin="0,0,7,0"/>
-                                        <TextBlock Text="CPU" FontSize="10" FontWeight="Bold"
+                                        <TextBlock Text="{x:Static loc:Strings.Dashboard_CardCPU}" FontSize="10" FontWeight="Bold"
                                                    Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding SystemInfo.CpuUsageStr}"
@@ -317,7 +347,7 @@
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <TextBlock Text="{StaticResource IconRam}" Style="{StaticResource IconStatStyle}"
                                                    Foreground="{DynamicResource SuccessBrush}" Margin="0,0,7,0"/>
-                                        <TextBlock Text="RAM" FontSize="10" FontWeight="Bold"
+                                        <TextBlock Text="{x:Static loc:Strings.Dashboard_CardRAM}" FontSize="10" FontWeight="Bold"
                                                    Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding SystemInfo.RamPercentStr}"
@@ -344,13 +374,13 @@
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <TextBlock Text="{StaticResource IconDisk}" Style="{StaticResource IconStatStyle}"
                                                    Foreground="{DynamicResource WarningBrush}" Margin="0,0,7,0"/>
-                                        <TextBlock Text="DISQUE C:" FontSize="10" FontWeight="Bold"
+                                        <TextBlock Text="{x:Static loc:Strings.Dashboard_CardDisk}" FontSize="10" FontWeight="Bold"
                                                    Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding SystemInfo.DiskFreeGb}"
                                                    FontSize="26" FontWeight="Bold" Foreground="{DynamicResource WarningBrush}"/>
-                                        <TextBlock Text=" Go" FontSize="14" Foreground="{DynamicResource WarningBrush}"
+                                        <TextBlock Text="{x:Static loc:Strings.Dashboard_DiskUnitGo}" FontSize="14" Foreground="{DynamicResource WarningBrush}"
                                                    VerticalAlignment="Bottom" Margin="0,0,0,3"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding SystemInfo.DiskInfoStr}"
@@ -363,12 +393,12 @@
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <TextBlock Text="{StaticResource IconSession}" Style="{StaticResource IconStatStyle}" Margin="0,0,7,0"/>
-                                        <TextBlock Text="SESSION" FontSize="10" FontWeight="Bold"
+                                        <TextBlock Text="{x:Static loc:Strings.Dashboard_CardSession}" FontSize="10" FontWeight="Bold"
                                                    Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding OptimizationsRun}"
                                                FontSize="26" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                    <TextBlock Text="optimisations lancées"
+                                    <TextBlock Text="{x:Static loc:Strings.Dashboard_OptimizationsRunSuffix}"
                                                FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,3,0,0"/>
                                 </StackPanel>
                             </Border>
@@ -383,7 +413,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="SYSTÈME" FontSize="10" FontWeight="Bold"
+                                    <TextBlock Text="{x:Static loc:Strings.Dashboard_CardSystem}" FontSize="10" FontWeight="Bold"
                                                Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,4"/>
                                     <TextBlock Text="{Binding SystemInfo.OsName}"
                                                FontSize="12" Foreground="{DynamicResource TextEmphasizedBrush}"/>
@@ -391,19 +421,19 @@
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                                     <Button Command="{Binding NavigateCommand}" CommandParameter="Gaming"
                                             Style="{StaticResource PrimaryButtonStyle}"
-                                            Content="Gaming" Margin="0,0,6,0" Height="30" FontSize="12"/>
+                                            Content="{x:Static loc:Strings.Nav_NavigateGaming}" Margin="0,0,6,0" Height="30" FontSize="12"/>
                                     <Button Command="{Binding NavigateCommand}" CommandParameter="Cleaning"
                                             Style="{StaticResource SecondaryButtonStyle}"
-                                            Content="Nettoyage" Margin="0,0,6,0" Height="30" FontSize="12"/>
+                                            Content="{x:Static loc:Strings.Nav_NavigateCleaning}" Margin="0,0,6,0" Height="30" FontSize="12"/>
                                     <Button Command="{Binding NavigateCommand}" CommandParameter="Network"
                                             Style="{StaticResource SecondaryButtonStyle}"
-                                            Content="Réseau" Height="30" FontSize="12"/>
+                                            Content="{x:Static loc:Strings.Nav_NavigateNetwork}" Height="30" FontSize="12"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
 
                         <!-- Activité récente -->
-                        <TextBlock Text="ACTIVITÉ RÉCENTE" FontSize="10" FontWeight="Bold"
+                        <TextBlock Text="{x:Static loc:Strings.Dashboard_RecentActivity}" FontSize="10" FontWeight="Bold"
                                    Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,6"/>
                         <Border Background="{DynamicResource TerminalBgBrush}" CornerRadius="6" Height="130"
                                 BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
@@ -441,7 +471,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconPlay}" Style="{StaticResource IconButtonInlineStyle}"
                                            Foreground="{DynamicResource TextOnAccentBrush}"/>
-                                <TextBlock Text="Tout exécuter" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Button_RunAll}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{Binding StopRunAllCommand}"
@@ -450,13 +480,13 @@
                                 Visibility="{Binding IsRunAllInProgress, Converter={StaticResource BoolToVisibilityConverter}}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{StaticResource IconStop}" Style="{StaticResource IconButtonInlineStyle}"/>
-                                <TextBlock Text="Arrêter" FontSize="12" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static loc:Strings.Button_Stop}" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="5" Padding="10,0"
                                 BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <TextBlock Text="En cours…" Foreground="{DynamicResource AccentBrush}"
+                            <TextBlock Text="{x:Static loc:Strings.Status_Running}" Foreground="{DynamicResource AccentBrush}"
                                        FontSize="12" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -484,14 +514,14 @@
                                                             Padding="5,1" Margin="0,0,5,0"
                                                             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                                             Visibility="{Binding RequiresAdmin, Converter={StaticResource AdminBadgeVisibilityConverter}}">
-                                                        <TextBlock Text="Admin" FontSize="10" Foreground="{DynamicResource BadgeAdminTextBrush}"/>
+                                                        <TextBlock Text="{x:Static loc:Strings.Badge_Admin}" FontSize="10" Foreground="{DynamicResource BadgeAdminTextBrush}"/>
                                                     </Border>
                                                     <Border Background="{DynamicResource BadgeRebootBgBrush}" CornerRadius="3"
                                                             Padding="5,1"
                                                             Margin="0,0,5,0"
                                                             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                                             Visibility="{Binding RequiresReboot, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                        <TextBlock Text="Reboot" FontSize="10" Foreground="{DynamicResource BadgeRebootTextBrush}"/>
+                                                        <TextBlock Text="{x:Static loc:Strings.Badge_Reboot}" FontSize="10" Foreground="{DynamicResource BadgeRebootTextBrush}"/>
                                                     </Border>
                                                     <Border Background="{Binding PurposeBadgeBackground}" CornerRadius="3"
                                                             Padding="5,1" Margin="0,0,5,0"
@@ -502,7 +532,7 @@
                                                             Padding="5,1"
                                                             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                                             Visibility="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                        <TextBlock Text="Avancé" FontSize="10" Foreground="{DynamicResource BadgeAdvancedTextBrush}"/>
+                                                        <TextBlock Text="{x:Static loc:Strings.Badge_Advanced}" FontSize="10" Foreground="{DynamicResource BadgeAdvancedTextBrush}"/>
                                                     </Border>
                                                 </StackPanel>
 
@@ -556,32 +586,48 @@
                                                         </Style>
                                                     </TextBlock.Style>
                                                     <Run Text="● "/>
-                                                    <Run Text="{Binding Status, Mode=OneWay}"/>
+                                                    <Run Text="{Binding StatusDisplay, Mode=OneWay}"/>
                                                 </TextBlock>
 
                                             </StackPanel>
 
-                                            <!-- Bouton Exécuter -->
-                                            <Button Grid.Column="1"
-                                                    Command="{Binding DataContext.RunOptimizationCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                    CommandParameter="{Binding}"
-                                                    Style="{StaticResource PrimaryButtonStyle}"
-                                                    Height="32" Padding="14,0"
-                                                    IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"
-                                                    VerticalAlignment="Center">
-                                                <TextBlock FontSize="12">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Text" Value="Exécuter"/>
+                                            <!-- Boutons Exécuter / Annuler (v2.2.0 — cancel par item) -->
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+
+                                                <!-- Exécuter (visible quand pas en cours) -->
+                                                <Button Command="{Binding DataContext.RunOptimizationCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Height="32" Padding="14,0"
+                                                        Content="{x:Static loc:Strings.Button_Run}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsRunning}" Value="True">
-                                                                    <Setter Property="Text" Value="En cours…"/>
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </Button>
+                                                    </Button.Style>
+                                                </Button>
+
+                                                <!-- Annuler (visible quand en cours) -->
+                                                <Button Command="{Binding CancelCommand}"
+                                                        Height="32" Padding="14,0"
+                                                        Content="{x:Static loc:Strings.Button_Cancel}"
+                                                        ToolTip="{x:Static loc:Strings.Button_Cancel_OptTooltip}">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+
+                                            </StackPanel>
 
                                         </Grid>
                                     </Border>
@@ -602,12 +648,12 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
-                        <TextBlock Text="Terminal" FontSize="20" FontWeight="SemiBold"
+                        <TextBlock Text="{x:Static loc:Strings.PageTitle_Terminal}" FontSize="20" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,10,0"/>
                         <Border Background="{DynamicResource StatusLiveSuccessBgBrush}" CornerRadius="4" Padding="7,2"
                                 BorderBrush="{DynamicResource StatusLiveSuccessBorderBrush}" BorderThickness="1"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="LIVE" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
+                            <TextBlock Text="{x:Static loc:Strings.Terminal_Live}" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
                         </Border>
                     </StackPanel>
 
@@ -621,11 +667,11 @@
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,10">
                         <Button Command="{Binding ClearLogsCommand}"
                                 Style="{StaticResource SecondaryButtonStyle}"
-                                Content="Effacer" Height="30" FontSize="12"
+                                Content="{x:Static loc:Strings.Terminal_Clear}" Height="30" FontSize="12"
                                 Margin="0,0,8,0"/>
                         <Button Command="{Binding ExportLogsCommand}"
                                 Style="{StaticResource PrimaryButtonStyle}"
-                                Content="Exporter en .txt" Height="30" FontSize="12"/>
+                                Content="{x:Static loc:Strings.Terminal_ExportTxt}" Height="30" FontSize="12"/>
                     </StackPanel>
 
                 </Grid>

@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Klyr.Models;
+using Klyr.Resources;
 using Microsoft.Win32;
 
 namespace Klyr.Services
@@ -21,10 +22,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_startup",
-                Name        = "Réduire le Démarrage",
-                Description = "Désactive les programmes inutiles au démarrage Windows.",
+                Name        = Strings.Optim_oldpc_startup_Name,
+                Description = Strings.Optim_oldpc_startup_Desc,
                 Category    = "VieuxPC",
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $startupPaths = @(
@@ -54,10 +55,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_animations",
-                Name        = "Désactiver les Animations",
-                Description = "Supprime les effets visuels gourmands pour fluidifier l'interface.",
+                Name        = Strings.Optim_oldpc_animations_Name,
+                Description = Strings.Optim_oldpc_animations_Desc,
                 Category    = "VieuxPC",
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r = SystemService.SetRegistryCurrentUser(
@@ -75,11 +76,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_registry",
-                Name        = "Nettoyage du Registre",
-                Description = "Supprime les entrées MRU et clés orphelines du registre Windows.",
+                Name        = Strings.Optim_oldpc_registry_Name,
+                Description = Strings.Optim_oldpc_registry_Desc,
                 Category    = "VieuxPC",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $paths = @(
@@ -103,11 +104,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_ram",
-                Name        = "Libération de RAM",
-                Description = "Vide les Working Sets de tous les processus via l'API Win32 EmptyWorkingSet (méthode réelle et efficace).",
+                Name        = Strings.Optim_oldpc_ram_Name,
+                Description = Strings.Optim_oldpc_ram_Desc,
                 Category    = "VieuxPC",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     return await Task.Run(() =>
                     {
@@ -179,10 +180,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_temp",
-                Name        = "Suppression Fichiers Temporaires",
-                Description = "Efface les dossiers %TEMP%, C:\\Windows\\Temp et fichiers inutiles.",
+                Name        = Strings.Optim_oldpc_temp_Name,
+                Description = Strings.Optim_oldpc_temp_Desc,
                 Category    = "VieuxPC",
-                Action = async () =>
+                Action = async ct =>
                 {
                     string script = @"
                         $paths = @($env:TEMP, 'C:\Windows\Temp')
@@ -205,11 +206,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_defrag",
-                Name        = "Défragmentation HDD",
-                Description = "Lance la défragmentation du disque C: (HDD uniquement – ignoré sur SSD).",
+                Name        = Strings.Optim_oldpc_defrag_Name,
+                Description = Strings.Optim_oldpc_defrag_Desc,
                 Category    = "VieuxPC",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     string checkScript = @"
                         try {
@@ -251,10 +252,10 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_theme",
-                Name        = "Activer Thème Léger",
-                Description = "Désactive la transparence et les effets Aero pour économiser le GPU.",
+                Name        = Strings.Optim_oldpc_theme_Name,
+                Description = Strings.Optim_oldpc_theme_Desc,
                 Category    = "VieuxPC",
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r1 = SystemService.SetRegistryCurrentUser(
@@ -269,11 +270,11 @@ namespace Klyr.Services
             new OptimizationItem
             {
                 Id          = "oldpc_telemetry",
-                Name        = "Désactiver la Télémétrie",
-                Description = "Réduit les envois de données à Microsoft (DiagTrack, CEIP).",
+                Name        = Strings.Optim_oldpc_telemetry_Name,
+                Description = Strings.Optim_oldpc_telemetry_Desc,
                 Category    = "VieuxPC",
                 RequiresAdmin = true,
-                Action = async () =>
+                Action = async ct =>
                 {
                     await Task.Yield();
                     string r1 = SystemService.SetRegistryValue(

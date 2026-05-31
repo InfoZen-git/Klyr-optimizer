@@ -7,6 +7,38 @@ utilise un versionnement semantique [SemVer](https://semver.org/lang/fr/).
 
 ---
 
+## [2.2.0] — En préparation
+
+### Added
+- **Module Streaming / Création** (6 optimisations) :
+  - Mode Streamer (Plan d'alimentation Hautes performances + désactivation C-States CPU)
+  - Priorité CPU encoder auto (détection OBS / Streamlabs / Davinci / Premiere / Vegas / AE)
+  - Game Mode OFF (encodeurs matériel NVENC/QSV/AMF libérés) — Avancé
+  - HAGS OFF (Hardware-accelerated GPU scheduling) — Avancé, reboot requis
+  - Killer processus Creator (Adobe Updater, Edge, Spotify, Discord, Teams, OneDrive)
+  - Cleanup cache OBS / Streamlabs browser sources
+- **Cancellation par optimisation** (P1-02) :
+  - Bouton « Annuler » par item, visible pendant l'exécution
+  - `Func<CancellationToken, Task<string>>` propagé jusqu'à `SystemService.RunCmdAsync` / `RunPowerShellAsync`
+  - Le clic sur Annuler tue réellement le processus en cours (SFC, DISM, antivirus, etc.)
+  - Nouveau statut « Annulé » (orange) + `CommandResult.WasCancelled`
+- **Quarantaine antivirus** : après détection, dialog Yes/No qui propose `Remove-MpThreat` sur chaque menace
+- **Localisation FR + EN complète** :
+  - Infra `Resources/Strings.resx` (FR neutre) + `Strings.en.resx` (satellite EN auto-extrait en `en/Klyr.resources.dll`)
+  - Setting `Language` (auto / fr / en) avec sélecteur dans Settings + message « redémarrage requis »
+  - Init de culture au démarrage dans `App.xaml.cs` (avant chargement UI)
+  - **Tout** est traduit : sidebar nav, page titles, boutons (Run, Cancel, Run All, Stop, Save, Close…), status des optims, splash screen, dialogs (Confirm, Run All, Critical, Admin Required, Reboot, Quarantine, Process Killer), Settings (titre, toggles + descriptions, sélecteur de langue), Dashboard (cards CPU / RAM / Disk / Session / System, Recent Activity, Uptime), badges (Admin / Reboot / Advanced), Terminal (LIVE, Clear, Export as .txt), About (Version / Developer / Compatibility / Framework / Diagnostic / Copy / Export), Legal (Privacy & GDPR, Restoration Guarantee, Disclaimer, Audit log, Footer), les **40 noms d'optimisations**, les **40 descriptions d'optimisations**, et les principaux **messages de résultat des lambdas** (~35 entrées).
+
+### Changed
+- `OptimizationItem.Action` : signature passée de `Func<Task<string>>` à `Func<CancellationToken, Task<string>>`
+- `SystemService.RunCmdAsync` / `RunPowerShellAsync` : nouveau paramètre optionnel `cancellationToken` qui kill le process via CTS lié au timeout interne
+- `ProgressHelper.RunWithProgressAsync` : reçoit et propage `CancellationToken`
+- Status interne reste FR pour préserver les DataTriggers XAML ; nouveau `StatusDisplay` traduit utilisé pour l'affichage
+- Version assembly bumpée à 2.2.0.0
+- `Legal_*` content : les Runs en gras inline ont été remplacés par des TextBlocks simples (compromis pour permettre la localisation propre via x:Static)
+
+---
+
 ## [2.1.0] — Mai 2026
 
 ### Added

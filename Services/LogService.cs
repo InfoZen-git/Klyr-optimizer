@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Klyr.Resources;
 
 namespace Klyr.Services
 {
@@ -50,9 +51,28 @@ namespace Klyr.Services
         private static string GetTodaysLogPath() =>
             Path.Combine(LogsDir, $"Klyr_{DateTime.Now:yyyyMMdd}.log");
 
+        /// <summary>
+        /// v2.2.0 — Traduit les catégories canoniques (FR par défaut) vers la culture courante.
+        /// Garde une catégorie inconnue telle quelle (catégories techniques type "SystemService").
+        /// </summary>
+        private static string TranslateSource(string source) => source switch
+        {
+            "Système"   => Strings.Category_System,
+            "RGPD"      => Strings.Category_Privacy,
+            "App"       => Strings.Category_App,
+            "Nettoyage" => Strings.Category_Cleaning,
+            "Réseau"    => Strings.Category_Network,
+            "Gaming"    => Strings.Category_Gaming,
+            "Vieux PC"  => Strings.Category_OldPC,
+            "Streaming" => Strings.Category_Streaming,
+            "Benchmark" => Strings.Category_Benchmark,
+            "Settings"  => Strings.Category_Settings,
+            _           => source
+        };
+
         public void Log(string message, string level = "INFO", string source = "")
         {
-            var entry = new LogEntry { Message = message, Level = level, Source = source };
+            var entry = new LogEntry { Message = message, Level = level, Source = TranslateSource(source) };
             var formattedLine = entry.Formatted;
 
             // FIX P2-12: append fichier hors UI thread (best effort, ne bloque jamais le caller)

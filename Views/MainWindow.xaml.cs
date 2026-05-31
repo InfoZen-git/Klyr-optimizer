@@ -28,6 +28,38 @@ namespace Klyr.Views
             // Version dans la titlebar
             VersionLabel.Text = $" {DiagnosticService.AppVersion}";
             Title = $"Klyr {DiagnosticService.AppVersion}";
+
+            // v2.2.0 — Adapter le Border aux changements d'état (maximize vs normal)
+            StateChanged += OnWindowStateChanged;
+        }
+
+        /// <summary>
+        /// v2.2.0 — Quand la fenêtre est maximisée, on retire les coins arrondis et la dropshadow
+        /// (sinon coins triangulaires invisibles + shadow off-screen). Margin=7 compense le surdimensionnement
+        /// que WindowChrome applique en mode Maximized avec AllowsTransparency=True.
+        /// </summary>
+        private void OnWindowStateChanged(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                OuterBorder.CornerRadius   = new CornerRadius(0);
+                OuterBorder.BorderThickness = new Thickness(0);
+                OuterBorder.Margin         = new Thickness(7);
+                OuterBorder.Effect         = null;
+            }
+            else
+            {
+                OuterBorder.CornerRadius    = new CornerRadius(10);
+                OuterBorder.BorderThickness = new Thickness(1);
+                OuterBorder.Margin          = new Thickness(0);
+                OuterBorder.Effect = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color       = System.Windows.Media.Colors.Black,
+                    BlurRadius  = 24,
+                    ShadowDepth = 0,
+                    Opacity     = 0.6
+                };
+            }
         }
 
         // FIX P2-01: Auto-scroll du terminal
@@ -91,7 +123,7 @@ namespace Klyr.Views
     public class PageVisibilityConverter : IValueConverter
     {
         private static readonly HashSet<string> ModulePages =
-            new() { "Gaming", "OldPC", "Cleaning", "Network" };
+            new() { "Gaming", "OldPC", "Cleaning", "Network", "Streaming" };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

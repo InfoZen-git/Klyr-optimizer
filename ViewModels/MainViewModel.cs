@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using Klyr.Commands;
 using Klyr.Models;
+using Klyr.Resources;
 using Klyr.Services;
 
 namespace Klyr.ViewModels
@@ -37,13 +38,14 @@ namespace Klyr.ViewModels
 
         public string PageTitle => CurrentPage switch
         {
-            "Dashboard" => "Tableau de bord",
-            "Gaming"    => "Gaming / FPS",
-            "OldPC"     => "Vieux PC",
-            "Cleaning"  => "Nettoyage",
-            "Network"   => "Réseau",
-            "Terminal"  => "Terminal",
-            "Legal"     => "Mentions légales",
+            "Dashboard" => Strings.PageTitle_Dashboard,
+            "Gaming"    => Strings.PageTitle_Gaming,
+            "OldPC"     => Strings.PageTitle_OldPC,
+            "Cleaning"  => Strings.PageTitle_Cleaning,
+            "Network"   => Strings.PageTitle_Network,
+            "Streaming" => Strings.PageTitle_Streaming,
+            "Terminal"  => Strings.PageTitle_Terminal,
+            "Legal"     => Strings.PageTitle_Legal,
             _           => CurrentPage
         };
 
@@ -147,8 +149,8 @@ namespace Klyr.ViewModels
             };
             Log.PropertyChanged += _logPropertyChangedHandler;
 
-            Log.Info("Klyr v2.1 démarré.", "Système");
-            Log.Info("Klyr fonctionne exclusivement en local. Aucune donnée personnelle n'est collectée.", "RGPD");
+            Log.Info(Strings.Log_AppStarted, "Système");
+            Log.Info(Strings.Log_PrivacyNotice, "RGPD");
         }
 
         // ─────────────────────── NAVIGATION ────────────────────────────────────
@@ -157,10 +159,18 @@ namespace Klyr.ViewModels
         private readonly Dictionary<string, List<OptimizationItem>> _pageOptimizationsCache = new();
 
         // ─── Compteurs dynamiques par catégorie (sidebar) ───
-        public int GamingCount   => GetModuleCount("Gaming");
-        public int OldPCCount    => GetModuleCount("OldPC");
-        public int CleaningCount => GetModuleCount("Cleaning");
-        public int NetworkCount  => GetModuleCount("Network");
+        public int GamingCount    => GetModuleCount("Gaming");
+        public int OldPCCount     => GetModuleCount("OldPC");
+        public int CleaningCount  => GetModuleCount("Cleaning");
+        public int NetworkCount   => GetModuleCount("Network");
+        public int StreamingCount => GetModuleCount("Streaming");
+
+        // v2.2.0 — Versions formatées localisées pour le sidebar ("{0} optimisations" / "{0} optimizations")
+        public string GamingCountText    => string.Format(Strings.Nav_OptimizationsCount, GamingCount);
+        public string OldPCCountText     => string.Format(Strings.Nav_OptimizationsCount, OldPCCount);
+        public string CleaningCountText  => string.Format(Strings.Nav_OptimizationsCount, CleaningCount);
+        public string NetworkCountText   => string.Format(Strings.Nav_OptimizationsCount, NetworkCount);
+        public string StreamingCountText => string.Format(Strings.Nav_OptimizationsCount, StreamingCount);
 
         private int GetModuleCount(string module)
         {
@@ -168,11 +178,12 @@ namespace Klyr.ViewModels
             {
                 items = module switch
                 {
-                    "Gaming"   => GamingOptimizations.GetOptimizations(),
-                    "OldPC"    => OldPcOptimizations.GetOptimizations(),
-                    "Cleaning" => CleaningOptimizations.GetOptimizations(),
-                    "Network"  => NetworkOptimizations.GetOptimizations(),
-                    _          => new List<OptimizationItem>()
+                    "Gaming"    => GamingOptimizations.GetOptimizations(),
+                    "OldPC"     => OldPcOptimizations.GetOptimizations(),
+                    "Cleaning"  => CleaningOptimizations.GetOptimizations(),
+                    "Network"   => NetworkOptimizations.GetOptimizations(),
+                    "Streaming" => StreamingOptimizations.GetOptimizations(),
+                    _           => new List<OptimizationItem>()
                 };
                 _pageOptimizationsCache[module] = items;
             }
@@ -187,6 +198,12 @@ namespace Klyr.ViewModels
             OnPropertyChanged(nameof(OldPCCount));
             OnPropertyChanged(nameof(CleaningCount));
             OnPropertyChanged(nameof(NetworkCount));
+            OnPropertyChanged(nameof(StreamingCount));
+            OnPropertyChanged(nameof(GamingCountText));
+            OnPropertyChanged(nameof(OldPCCountText));
+            OnPropertyChanged(nameof(CleaningCountText));
+            OnPropertyChanged(nameof(NetworkCountText));
+            OnPropertyChanged(nameof(StreamingCountText));
         }
 
         private void LoadPageOptimizations()
@@ -195,11 +212,12 @@ namespace Klyr.ViewModels
             {
                 items = CurrentPage switch
                 {
-                    "Gaming"   => GamingOptimizations.GetOptimizations(),
-                    "OldPC"    => OldPcOptimizations.GetOptimizations(),
-                    "Cleaning" => CleaningOptimizations.GetOptimizations(),
-                    "Network"  => NetworkOptimizations.GetOptimizations(),
-                    _          => new List<OptimizationItem>()
+                    "Gaming"    => GamingOptimizations.GetOptimizations(),
+                    "OldPC"     => OldPcOptimizations.GetOptimizations(),
+                    "Cleaning"  => CleaningOptimizations.GetOptimizations(),
+                    "Network"   => NetworkOptimizations.GetOptimizations(),
+                    "Streaming" => StreamingOptimizations.GetOptimizations(),
+                    _           => new List<OptimizationItem>()
                 };
                 _pageOptimizationsCache[CurrentPage] = items;
             }
@@ -248,10 +266,8 @@ namespace Klyr.ViewModels
                 }
 
                 var criticalConfirm = MessageBox.Show(
-                    $"L'optimisation « {item.Name} » peut modifier des paramètres système critiques.\n\n" +
-                    "Klyr créera une sauvegarde dédiée avant exécution.\n\n" +
-                    "Confirmez-vous cette action ?",
-                    "Action critique – Klyr",
+                    string.Format(Strings.Dialog_Critical_Message, item.Name),
+                    Strings.Dialog_Critical_Title,
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
 
@@ -266,9 +282,8 @@ namespace Klyr.ViewModels
             if (item.RequiresAdmin && !AdminChecker.IsRunningAsAdmin())
             {
                 var result = MessageBox.Show(
-                    $"L'optimisation « {item.Name} » nécessite les droits administrateur.\n\n" +
-                    "Voulez-vous relancer Klyr en tant qu'administrateur ?",
-                    "Droits insuffisants – Klyr",
+                    string.Format(Strings.Dialog_AdminRequired_Message, item.Name),
+                    Strings.Dialog_AdminRequired_Title,
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
                 
@@ -301,8 +316,8 @@ namespace Klyr.ViewModels
             if (SettingsService.Current.ConfirmBeforeRun && !_suppressPerItemConfirmation)
             {
                 var confirm = MessageBox.Show(
-                    $"Exécuter l'optimisation :\n\n« {item.Name} »\n\n{item.Description}",
-                    "Confirmation – Klyr",
+                    string.Format(Strings.Dialog_RunOpt_Message, item.Name, item.Description),
+                    Strings.Dialog_Confirm_Title,
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Question);
                 if (confirm != MessageBoxResult.OK) return;
@@ -345,20 +360,34 @@ namespace Klyr.ViewModels
             }
 
             var benchmarkWatch = System.Diagnostics.Stopwatch.StartNew();
+
+            // v2.2.0 — CTS par item, lié au _runAllCts si une exécution groupée est en cours.
+            // Le bouton cancel de l'item annule perItemCts → kill du process via SystemService.
+            CancellationTokenSource perItemCts;
+            if (_runAllCts != null)
+                perItemCts = CancellationTokenSource.CreateLinkedTokenSource(_runAllCts.Token);
+            else
+                perItemCts = new CancellationTokenSource();
+            item.CancellationTokenSource = perItemCts;
+
             try
             {
-                // Lance l'action AVEC progression animée (suggestion communauté)
+                // Lance l'action AVEC progression animée + cancellation propagée
                 string result = await ProgressHelper.RunWithProgressAsync(
                     item,
                     item.Action,
+                    perItemCts.Token,
                     estimatedMs: EstimateMs(item.Id)
                 );
 
                 item.Progress = 100;
-                bool isError = IsErrorResult(result);
-                item.Status   = isError ? "Erreur" : "Terminé";
+                bool isCancelled = perItemCts.IsCancellationRequested;
+                bool isError = !isCancelled && IsErrorResult(result);
+                item.Status = isCancelled ? "Annulé" : (isError ? "Erreur" : "Terminé");
 
-                if (isError)
+                if (isCancelled)
+                    Log.Warn($"{item.Name} : annulé par l'utilisateur.", item.Category);
+                else if (isError)
                     Log.Error(result, item.Category);
                 else
                     Log.Success(result, item.Category);
@@ -389,10 +418,17 @@ namespace Klyr.ViewModels
                 {
                     Log.Warn("Redémarrage requis pour appliquer les changements.", item.Category);
                     MessageBox.Show(
-                        $"L'optimisation « {item.Name} » nécessite un redémarrage.",
-                        "Redémarrage requis – Klyr",
+                        string.Format(Strings.Dialog_Reboot_Message, item.Name),
+                        Strings.Dialog_Reboot_Title,
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                benchmarkWatch.Stop();
+                item.Status = "Annulé";
+                item.Progress = 0;
+                Log.Warn($"{item.Name} : annulé par l'utilisateur.", item.Category);
             }
             catch (Exception ex)
             {
@@ -404,6 +440,10 @@ namespace Klyr.ViewModels
             finally
             {
                 item.IsRunning = false;
+                // v2.2.0 — Cleanup CTS de l'item
+                item.CancellationTokenSource = null;
+                try { perItemCts.Dispose(); } catch { /* déjà disposed */ }
+
                 if (!IsRunAllInProgress)
                 {
                     IsBusy = false;
@@ -432,9 +472,8 @@ namespace Klyr.ViewModels
             if (SettingsService.Current.ConfirmBeforeRun)
             {
                 var batchConfirm = MessageBox.Show(
-                    $"Exécuter {CurrentOptimizations.Count} optimisations de « {CurrentPage} » ?\n\n" +
-                    "Les optimisations seront priorisées automatiquement.",
-                    "Exécution groupée – Klyr",
+                    string.Format(Strings.Dialog_RunAll_Message, CurrentOptimizations.Count, PageTitle),
+                    Strings.Dialog_RunAll_Title,
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Question);
 
@@ -640,12 +679,13 @@ namespace Klyr.ViewModels
             return page switch
             {
                 "Dashboard" => "Dashboard",
-                "Gaming" => "Gaming",
-                "OldPC" => "OldPC",
-                "Cleaning" => "Cleaning",
-                "Network" => "Network",
-                "Terminal" => "Terminal",
-                _ => "Dashboard"
+                "Gaming"    => "Gaming",
+                "OldPC"     => "OldPC",
+                "Cleaning"  => "Cleaning",
+                "Network"   => "Network",
+                "Streaming" => "Streaming",
+                "Terminal"  => "Terminal",
+                _           => "Dashboard"
             };
         }
 

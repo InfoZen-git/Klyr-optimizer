@@ -1,5 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Klyr.Commands;
+using Klyr.Resources;
 
 namespace Klyr.Models
 {
@@ -13,6 +16,7 @@ namespace Klyr.Models
 
     /// <summary>
     /// Représente une optimisation individuelle dans un module.
+    /// v2.2.0 — Supporte la cancellation par item via CancellationTokenSource.
     /// </summary>
     public class OptimizationItem : INotifyPropertyChanged
     {
@@ -21,6 +25,8 @@ namespace Klyr.Models
         private string _status   = "Prêt";
         private int    _progress = 0;   // 0–100 pour la barre de progression fictive
         private int    _confidenceScore = 60;
+        private CancellationTokenSource? _cts;
+        private RelayCommand? _cancelCommand;
 
         public string Id             { get; set; } = string.Empty;
         public string Name           { get; set; } = string.Empty;
@@ -32,8 +38,36 @@ namespace Klyr.Models
         public bool   IsBenchmarkCandidate { get; set; } = false;
         public OptimizationPurpose Purpose { get; set; } = OptimizationPurpose.Performance;
 
-        /// <summary>Action à exécuter – retourne le message de résultat.</summary>
-        public Func<Task<string>>? Action { get; set; }
+        /// <summary>
+        /// Action à exécuter – retourne le message de résultat.
+        /// v2.2.0 : reçoit un CancellationToken — la lambda peut le propager à SystemService
+        /// pour killer le process si l'utilisateur clique sur le bouton cancel de l'item.
+        /// </summary>
+        public Func<CancellationToken, Task<string>>? Action { get; set; }
+
+        /// <summary>
+        /// CTS lié à l'exécution courante. Setté par MainViewModel avant Action().
+        /// Le bouton CancelCommand l'utilise pour demander l'arrêt.
+        /// </summary>
+        public CancellationTokenSource? CancellationTokenSource
+        {
+            get => _cts;
+            set { _cts = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>Commande déclenchée par le bouton "annuler" affiché pendant l'exécution.</summary>
+        public ICommand CancelCommand => _cancelCommand ??= new RelayCommand(_ =>
+        {
+            try
+            {
+                if (_cts != null && !_cts.IsCancellationRequested)
+                {
+                    _cts.Cancel();
+                    Status = "Annulation…";
+                }
+            }
+            catch { /* CTS déjà disposed */ }
+        }, _ => _isRunning && _cts != null && !_cts.IsCancellationRequested);
 
         public bool IsEnabled
         {
@@ -44,14 +78,42 @@ namespace Klyr.Models
         public bool IsRunning
         {
             get => _isRunning;
-            set { _isRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(ProgressVisible)); }
+            set
+            {
+                _isRunning = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ProgressVisible));
+                System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+            }
         }
 
         public string Status
         {
             get => _status;
-            set { _status = value; OnPropertyChanged(); OnPropertyChanged(nameof(StatusColor)); }
+            set
+            {
+                _status = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(StatusColor));
+                OnPropertyChanged(nameof(StatusDisplay));
+            }
         }
+
+        /// <summary>
+        /// v2.2.0 — Version traduite du status pour affichage UI.
+        /// La valeur interne <see cref="Status"/> reste en FR pour compat des DataTriggers XAML.
+        /// </summary>
+        public string StatusDisplay => _status switch
+        {
+            "Prêt"        => Strings.Status_Ready,
+            "En cours…"   => Strings.Status_Running,
+            "Terminé"     => Strings.Status_Done,
+            "Erreur"      => Strings.Status_Error,
+            "Annulé"      => Strings.Status_Cancelled,
+            "Annulation…" => Strings.Status_Cancelling,
+            "Simulé"      => Strings.Status_Simulated,
+            _             => _status
+        };
 
         /// <summary>Progression fictive 0–100 affichée pendant l'exécution.</summary>
         public int Progress
@@ -123,10 +185,12 @@ namespace Klyr.Models
 
         public string StatusColor => _status switch
         {
-            "Terminé"   => "#00FF88",
-            "Erreur"    => "#FF3B3B",
-            "En cours…" => "#00D4FF",
-            _           => "#3D4459"
+            "Terminé"      => "#00FF88",
+            "Erreur"       => "#FF3B3B",
+            "En cours…"    => "#00D4FF",
+            "Annulé"       => "#D0A46A",
+            "Annulation…"  => "#D0A46A",
+            _              => "#3D4459"
         };
 
         public event PropertyChangedEventHandler? PropertyChanged;

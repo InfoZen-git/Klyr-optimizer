@@ -10,9 +10,9 @@
     <RootNamespace>Klyr</RootNamespace>
     <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.1.0</Version>
-    <FileVersion>2.1.0.0</FileVersion>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <Version>2.2.0</Version>
+    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
     <Authors>InfoZen</Authors>
     <Company>Klyr</Company>
     <Product>Klyr Optimiseur PC</Product>
@@ -22,6 +22,7 @@
     <Platforms>x64</Platforms>
     <Prefer32Bit>false</Prefer32Bit>
     <Optimize>true</Optimize>
+    <NeutralLanguage>fr</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,20 @@
   <!-- Icône incluse dans le build -->
   <ItemGroup>
     <Resource Include="Assets\Icons\icon.ico"/>
+  </ItemGroup>
+
+  <!-- v2.2.0 : Localisation FR/EN via ResourceManager + satellite assemblies -->
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Strings.en.resx" />
+    <Compile Update="Resources\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

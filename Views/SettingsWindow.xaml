@@ -1,6 +1,7 @@
 <Window x:Class="Klyr.Views.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Klyr.Resources"
         Title="Paramètres – Klyr"
         Width="460" Height="620"
         WindowStyle="None"
@@ -26,7 +27,7 @@
             <Border Grid.Row="0" Background="{DynamicResource BackgroundPanelBrush}" CornerRadius="10,10,0,0"
                     MouseDown="TitleBar_MouseDown">
                 <Grid Margin="16,0">
-                    <TextBlock Text="Paramètres" FontSize="13" FontWeight="SemiBold"
+                    <TextBlock Text="{x:Static loc:Strings.Settings_Title}" FontSize="13" FontWeight="SemiBold"
                                Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                     <Button HorizontalAlignment="Right"
                             Width="32" Height="26" BorderThickness="0"
@@ -55,7 +56,7 @@
             <ScrollViewer Grid.Row="1" Padding="20,16">
                 <StackPanel>
 
-                    <TextBlock Text="SÉCURITÉ" FontSize="10" FontWeight="Bold"
+                    <TextBlock Text="{x:Static loc:Strings.Settings_HeaderSecurity}" FontSize="10" FontWeight="Bold"
                                Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,10"/>
 
                     <!-- Confirmation -->
@@ -67,9 +68,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Confirmation avant exécution"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_ConfirmBeforeRun}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Demande confirmation pour chaque optimisation"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_ConfirmDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleConfirm"
@@ -86,9 +87,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Point de restauration automatique"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_AutoRestorePoint}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Crée un point avant chaque action admin"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_AutoRestoreDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleAutoRestore"
@@ -105,9 +106,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Avertissement redémarrage"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_RebootWarning}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Affiche un message quand un reboot est requis"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_RebootDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleReboot"
@@ -124,9 +125,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Mode simulation (actions critiques)"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_Simulation}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="N'applique pas les resets réseau/pare-feu/hosts, affiche seulement un aperçu"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_SimulationDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleSimulation"
@@ -143,9 +144,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Afficher optimisations avancées"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_ShowAdvanced}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Inclut les tweaks à gain incertain ou à risque de régression"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_AdvancedDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleAdvanced"
@@ -162,9 +163,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Benchmark avant/après (optimisations majeures)"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_Benchmarks}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Mesure CPU/RAM/disque/latence pour objectiver le gain"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_BenchmarksDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleBenchmarks"
@@ -172,7 +173,7 @@
                         </Grid>
                     </Border>
 
-                    <TextBlock Text="INTERFACE" FontSize="10" FontWeight="Bold"
+                    <TextBlock Text="{x:Static loc:Strings.Settings_HeaderInterface}" FontSize="10" FontWeight="Bold"
                                Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,10"/>
 
                     <!-- Auto scroll -->
@@ -184,9 +185,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Scroll automatique du terminal"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_AutoScrollTerminal}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Défile vers les derniers logs"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_AutoScrollDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleScroll"
@@ -203,9 +204,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Afficher le badge Admin"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_ShowAdminBadge}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Indique les optimisations nécessitant des droits élevés"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_AdminBadgeDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleAdminBadge"
@@ -215,21 +216,46 @@
 
                     <!-- Theme -->
                     <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
-                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,18">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Thème clair"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_LightTheme}"
                                            FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                <TextBlock Text="Applique immédiatement la palette claire (sinon palette sombre)"
+                                <TextBlock Text="{x:Static loc:Strings.Settings_LightThemeDesc}"
                                            FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox Grid.Column="1" x:Name="ToggleLightTheme"
                                       Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
                         </Grid>
+                    </Border>
+
+                    <!-- v2.2.0 — Sélecteur de langue -->
+                    <TextBlock Text="{x:Static loc:Strings.Settings_HeaderLanguage}" FontSize="10" FontWeight="Bold"
+                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,10"/>
+
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="{x:Static loc:Strings.Settings_Language}"
+                                       FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Text="{x:Static loc:Strings.Settings_LanguageRestartHint}"
+                                       FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,10" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="LangAuto" GroupName="Language" Margin="0,0,18,0"
+                                             Content="{x:Static loc:Strings.Settings_Language_Auto}"
+                                             Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <RadioButton x:Name="LangFr" GroupName="Language" Margin="0,0,18,0"
+                                             Content="{x:Static loc:Strings.Settings_Language_FR}"
+                                             Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <RadioButton x:Name="LangEn" GroupName="Language"
+                                             Content="{x:Static loc:Strings.Settings_Language_EN}"
+                                             Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
                     </Border>
 
                 </StackPanel>
@@ -240,10 +266,10 @@
                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                             VerticalAlignment="Center" Margin="0,0,16,0">
-                    <Button Content="Annuler" Click="Cancel_Click"
+                    <Button Content="{x:Static loc:Strings.Button_Cancel}" Click="Cancel_Click"
                             Style="{StaticResource SecondaryButtonStyle}"
                             Margin="0,0,8,0" Height="32" Width="88"/>
-                    <Button Content="Enregistrer" Click="Save_Click"
+                    <Button Content="{x:Static loc:Strings.Button_Save}" Click="Save_Click"
                             Style="{StaticResource PrimaryButtonStyle}"
                             Height="32" Width="108"/>
                 </StackPanel>

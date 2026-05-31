@@ -2,7 +2,7 @@
 
 # Klyr
 
-**Optimiseur PC Windows — 34 optimisations en 4 modules, 100% local, sans télémétrie.**
+**Optimiseur PC Windows — 40 optimisations en 5 modules, FR + EN, 100% local, sans télémétrie.**
 
 ![Klyr Dashboard](Assets/Branding/screenshot-dashboard.png)
 
@@ -18,7 +18,7 @@
 
 ## Pourquoi Klyr
 
-Windows accumule au fil des mois des paramètres lourds, des services inutiles, de la télémétrie et des optimisations désactivées par défaut. Klyr regroupe **34 ajustements** validés en 4 modules, sans installer 50 utilitaires séparés et sans envoyer une seule donnée sur internet.
+Windows accumule au fil des mois des paramètres lourds, des services inutiles, de la télémétrie et des optimisations désactivées par défaut. Klyr regroupe **40 ajustements** validés en 5 modules, sans installer 50 utilitaires séparés et sans envoyer une seule donnée sur internet.
 
 - ⚡ **Mesurable** : +377 points 3DMark mesurés après le module Gaming
 - 🔒 **100% local** : aucune télémétrie, aucun tracking, aucun compte
@@ -29,7 +29,7 @@ Windows accumule au fil des mois des paramètres lourds, des services inutiles, 
 
 ## Installation
 
-1. Télécharger la dernière release depuis [Releases](../../releases) → **`Klyr_Setup_v2.1.0.exe`**
+1. Télécharger la dernière release depuis [Releases](../../releases) → **`Klyr_Setup_v2.2.0.exe`**
 2. Lancer l'installeur
 3. L'app s'installe dans `C:\Program Files\Klyr` et un raccourci apparaît sur le Bureau
 
@@ -56,10 +56,15 @@ Si Defender bloque le téléchargement : ajoute le dossier de téléchargement a
 |---|---|---|
 | **Gaming / FPS** | 9 | Mode haute perf, désactivation Game DVR, déblocage FPS, latence TCP, fermeture processus parasites |
 | **Vieux PC** | 8 | Désactivation services lourds, télémétrie, animations, nettoyage RAM Win32, defrag SSD/HDD intelligent |
-| **Nettoyage** | 8 | Disk cleanup, suppression bloatware, SFC/DISM, scan Defender intégré, vidage caches |
+| **Nettoyage** | 8 | Disk cleanup, suppression bloatware, SFC/DISM, scan Defender intégré + quarantaine, vidage caches |
 | **Réseau** | 9 | Reset Winsock/TCP, DNS auto-bench, optimisation ping, test vitesse, blocage télémétrie hosts |
+| **Streaming / Création** | 6 | Mode Streamer (perf + latence), prio CPU encoder auto, Game Mode OFF, HAGS OFF, killer parasites, cleanup cache OBS |
 
 Les optimisations marquées **« Avancé »** (gain incertain ou risque de régression) sont masquées par défaut. Active-les dans Paramètres si tu veux pousser plus loin.
+
+**Annulation par optimisation** : chaque optim affiche un bouton « Annuler » pendant l'exécution qui tue le processus en cours (utile pour les longues passes SFC/DISM/scan antivirus).
+
+**Langue** : FR par défaut, EN disponible (Settings → Langue / Language). L'app suit la culture système par défaut.
 
 ---
 
@@ -148,26 +153,32 @@ Klyr/
 │   └── Branding/                     Mark + wordmark SVG + PNG export + screenshot
 │
 ├── Commands/                         RelayCommand + AsyncRelayCommand
-├── Models/                           OptimizationItem, SystemInfoModel
+├── Models/                           OptimizationItem (Func<CancellationToken, Task<string>>), SystemInfoModel
 ├── Services/
-│   ├── SystemService                 P/Invoke Win32, runner CMD/PowerShell, restore points
+│   ├── SystemService                 P/Invoke Win32, runner CMD/PowerShell (CancellationToken kill), restore points
 │   ├── LogService                    Buffer circulaire 2000 entrées + auto-save fichier
-│   ├── SettingsService               Persistance JSON dans %AppData%\Klyr
+│   ├── SettingsService               Persistance JSON dans %AppData%\Klyr (langue + thème + 8 toggles)
 │   ├── ThemeService                  Bascule Dark/Light dynamique (45 brushes)
 │   ├── DiagnosticService             Génération diagnostic + export zip
 │   ├── ErrorHandler                  Crash handler global + crash reports persistants
 │   ├── AdminChecker                  WindowsPrincipal — vérif droits admin
-│   ├── ProgressHelper                Animation de progression durant exécution
+│   ├── ProgressHelper                Animation de progression durant exécution (propage CancellationToken)
 │   ├── OptimizationBenchmarkService  Capture snapshots CPU/RAM/disque avant/après
 │   ├── OptimizationProfileService    Métadonnées des optimisations (confidence, etc.)
 │   ├── GamingOptimizations           Module 1 (9 optimisations)
 │   ├── OldPcOptimizations            Module 2 (8)
-│   ├── CleaningOptimizations         Module 3 (8)
-│   └── NetworkOptimizations          Module 4 (9)
+│   ├── CleaningOptimizations         Module 3 (8 + scan antivirus avec quarantaine)
+│   ├── NetworkOptimizations          Module 4 (9)
+│   └── StreamingOptimizations        Module 5 (6 — v2.2.0)
+│
+├── Resources/                        v2.2.0 — Localisation FR/EN
+│   ├── Strings.resx                  Culture neutre (FR)
+│   ├── Strings.en.resx               Satellite anglais → en/Klyr.resources.dll
+│   └── Strings.Designer.cs           Accesseurs typés (ResourceManager)
 │
 ├── Styles/                           Icons.xaml (Segoe Fluent Icons) + Animations.xaml
-├── ViewModels/                       MainViewModel (IDisposable, navigation cache, run all)
-├── Views/                            MainWindow, SplashScreen, Settings, About, Legal
+├── ViewModels/                       MainViewModel (IDisposable, navigation cache, run all, CTS par item)
+├── Views/                            MainWindow, SplashScreen, Settings (+ sélecteur langue), About, Legal
 └── Installer/                        BUILD_INSTALLER.bat + script Klyr_Setup.nsi
 ```
 

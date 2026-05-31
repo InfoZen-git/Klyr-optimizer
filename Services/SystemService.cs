@@ -20,12 +20,15 @@ namespace Klyr.Services
         public int ExitCode { get; set; }
         public bool WasElevated { get; set; }
         public bool TimedOut { get; set; }
-        
+        /// <summary>v2.2.0 : true si l'utilisateur a annulé via le bouton cancel de l'item.</summary>
+        public bool WasCancelled { get; set; }
+
         /// <summary>Message formaté pour affichage terminal.</summary>
         public string DisplayMessage
         {
             get
             {
+                if (WasCancelled) return "Annulé par l'utilisateur.";
                 if (TimedOut) return "Timeout : la commande a dépassé le délai imparti.";
 
                 bool hasOutput = !string.IsNullOrWhiteSpace(Output);
@@ -57,8 +60,28 @@ namespace Klyr.Services
 
         // ─────────────────────────────── EXÉCUTION ──────────────────────────────
 
-        /// <summary>Exécute une commande CMD et retourne un résultat structuré.</summary>
-        public static async Task<CommandResult> RunCmdAsync(string command, bool asAdmin = false, TimeSpan? timeout = null)
+        /// <summary>
+        /// v2.2.0 — Kill le process suite à annulation (timeout interne OU token utilisateur).
+        /// Distingue les deux causes via WasCancelled vs TimedOut sur le résultat retourné.
+        /// </summary>
+        private static CommandResult BuildCancelResult(
+            Process proc,
+            CancellationToken userToken,
+            CancellationTokenSource timeoutCts,
+            bool wasElevated,
+            string processLabel)
+        {
+            try { proc.Kill(entireProcessTree: true); }
+            catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer {processLabel} : {killEx.Message}", "SystemService"); }
+            bool userCancelled = userToken.IsCancellationRequested && !timeoutCts.IsCancellationRequested;
+            return new CommandResult { Success = false, TimedOut = !userCancelled, WasCancelled = userCancelled, WasElevated = wasElevated };
+        }
+
+        /// <summary>
+        /// Exécute une commande CMD et retourne un résultat structuré.
+        /// v2.2.0 : accepte un CancellationToken qui kill le process si annulé par l'utilisateur.
+        /// </summary>
+        public static async Task<CommandResult> RunCmdAsync(string command, bool asAdmin = false, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
         {
             timeout ??= DefaultTimeout;
             string? outFile = null;
@@ -107,7 +130,9 @@ namespace Klyr.Services
                     return new CommandResult { Success = false, Error = "Impossible de démarrer le processus." };
 
                 string output = "", error = "";
-                using var cts = new CancellationTokenSource(timeout.Value);
+                // v2.2.0 : CTS lié — timeout interne ET token utilisateur peuvent tous deux annuler
+                using var timeoutCts = new CancellationTokenSource(timeout.Value);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
 
                 if (!asAdmin)
                 {
@@ -115,28 +140,24 @@ namespace Klyr.Services
                     var errorTask  = proc.StandardError.ReadToEndAsync();
                     try
                     {
-                        await proc.WaitForExitAsync(cts.Token);
+                        await proc.WaitForExitAsync(linkedCts.Token);
                         output = await outputTask;
                         error  = await errorTask;
                     }
                     catch (OperationCanceledException)
                     {
-                        try { proc.Kill(entireProcessTree: true); }
-                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer le processus CMD après timeout : {killEx.Message}", "SystemService"); }
-                        return new CommandResult { Success = false, TimedOut = true, WasElevated = false };
+                        return BuildCancelResult(proc, cancellationToken, timeoutCts, wasElevated: false, "le processus CMD");
                     }
                 }
                 else
                 {
                     try
                     {
-                        await proc.WaitForExitAsync(cts.Token);
+                        await proc.WaitForExitAsync(linkedCts.Token);
                     }
                     catch (OperationCanceledException)
                     {
-                        try { proc.Kill(entireProcessTree: true); }
-                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer la commande admin après timeout : {killEx.Message}", "SystemService"); }
-                        return new CommandResult { Success = false, TimedOut = true, WasElevated = true };
+                        return BuildCancelResult(proc, cancellationToken, timeoutCts, wasElevated: true, "la commande admin");
                     }
 
                     // FIX P0-04: relire la sortie depuis les fichiers temporaires
@@ -176,8 +197,11 @@ namespace Klyr.Services
             }
         }
 
-        /// <summary>Exécute un script PowerShell et retourne un résultat structuré.</summary>
-        public static async Task<CommandResult> RunPowerShellAsync(string script, bool asAdmin = false, TimeSpan? timeout = null)
+        /// <summary>
+        /// Exécute un script PowerShell et retourne un résultat structuré.
+        /// v2.2.0 : accepte un CancellationToken qui kill le process si annulé par l'utilisateur.
+        /// </summary>
+        public static async Task<CommandResult> RunPowerShellAsync(string script, bool asAdmin = false, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
         {
             timeout ??= DefaultTimeout;
             string? outFile = null;
@@ -232,7 +256,9 @@ try {{
                     return new CommandResult { Success = false, Error = "Impossible de démarrer PowerShell." };
 
                 string output = "", error = "";
-                using var cts = new CancellationTokenSource(timeout.Value);
+                // v2.2.0 : CTS lié — timeout + token utilisateur
+                using var timeoutCts = new CancellationTokenSource(timeout.Value);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
 
                 if (!asAdmin)
                 {
@@ -240,28 +266,24 @@ try {{
                     var errorTask  = proc.StandardError.ReadToEndAsync();
                     try
                     {
-                        await proc.WaitForExitAsync(cts.Token);
+                        await proc.WaitForExitAsync(linkedCts.Token);
                         output = await outputTask;
                         error  = await errorTask;
                     }
                     catch (OperationCanceledException)
                     {
-                        try { proc.Kill(entireProcessTree: true); }
-                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer PowerShell après timeout : {killEx.Message}", "SystemService"); }
-                        return new CommandResult { Success = false, TimedOut = true, WasElevated = false };
+                        return BuildCancelResult(proc, cancellationToken, timeoutCts, wasElevated: false, "PowerShell");
                     }
                 }
                 else
                 {
                     try
                     {
-                        await proc.WaitForExitAsync(cts.Token);
+                        await proc.WaitForExitAsync(linkedCts.Token);
                     }
                     catch (OperationCanceledException)
                     {
-                        try { proc.Kill(entireProcessTree: true); }
-                        catch (Exception killEx) { LogService.Instance.Warn($"Impossible de terminer PowerShell admin après timeout : {killEx.Message}", "SystemService"); }
-                        return new CommandResult { Success = false, TimedOut = true, WasElevated = true };
+                        return BuildCancelResult(proc, cancellationToken, timeoutCts, wasElevated: true, "PowerShell admin");
                     }
 
                     // FIX P0-04: relire la sortie depuis les fichiers temporaires

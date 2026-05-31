@@ -11,10 +11,12 @@ namespace Klyr.Services
         /// <summary>
         /// Lance la progression fictive en parallèle de l'action réelle.
         /// La barre monte progressivement jusqu'à 90%, puis saute à 100% quand l'action est terminée.
+        /// v2.2.0 : propage le CancellationToken à l'action utilisateur.
         /// </summary>
         public static async Task<string> RunWithProgressAsync(
             OptimizationItem item,
-            Func<Task<string>> action,
+            Func<CancellationToken, Task<string>> action,
+            CancellationToken cancellationToken,
             int estimatedMs = 2500)
         {
             item.Progress = 0;
@@ -22,8 +24,8 @@ namespace Klyr.Services
             // Lance la progression fictive en arrière-plan
             var progressTask = SimulateProgressAsync(item, estimatedMs);
 
-            // Lance l'action réelle
-            string result = await action();
+            // Lance l'action réelle (la lambda peut propager ct à SystemService pour killer le process)
+            string result = await action(cancellationToken);
 
             // Arrête la simulation et complete à 100%
             item.Progress = 100;

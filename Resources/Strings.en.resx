@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- ─── PAGE TITLES ─── -->
+  <data name="PageTitle_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="PageTitle_Gaming" xml:space="preserve"><value>Gaming / FPS</value></data>
+  <data name="PageTitle_OldPC" xml:space="preserve"><value>Old PC</value></data>
+  <data name="PageTitle_Cleaning" xml:space="preserve"><value>Cleaning</value></data>
+  <data name="PageTitle_Network" xml:space="preserve"><value>Network</value></data>
+  <data name="PageTitle_Streaming" xml:space="preserve"><value>Streaming / Creation</value></data>
+  <data name="PageTitle_Terminal" xml:space="preserve"><value>Terminal</value></data>
+  <data name="PageTitle_Legal" xml:space="preserve"><value>Legal notice</value></data>
+
+  <!-- ─── NAVIGATION / SIDEBAR ─── -->
+  <data name="Nav_Modules" xml:space="preserve"><value>MODULES</value></data>
+  <data name="Nav_Tools" xml:space="preserve"><value>TOOLS</value></data>
+  <data name="Nav_OptimizationsCount" xml:space="preserve"><value>{0} optimizations</value></data>
+  <data name="Nav_NavigateGaming" xml:space="preserve"><value>Gaming / FPS</value></data>
+  <data name="Nav_NavigateOldPC" xml:space="preserve"><value>Old PC</value></data>
+  <data name="Nav_NavigateCleaning" xml:space="preserve"><value>Cleaning</value></data>
+  <data name="Nav_NavigateNetwork" xml:space="preserve"><value>Network</value></data>
+  <data name="Nav_NavigateStreaming" xml:space="preserve"><value>Streaming / Creation</value></data>
+  <data name="Nav_NavigateTerminal" xml:space="preserve"><value>Terminal</value></data>
+
+  <!-- ─── BUTTONS ─── -->
+  <data name="Button_Run" xml:space="preserve"><value>Run</value></data>
+  <data name="Button_RunAll" xml:space="preserve"><value>Run All</value></data>
+  <data name="Button_Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Button_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Button_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Button_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Button_Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="Button_No" xml:space="preserve"><value>No</value></data>
+  <data name="Button_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Button_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Button_About" xml:space="preserve"><value>About</value></data>
+  <data name="Button_CreateRestorePoint" xml:space="preserve"><value>Create restore point</value></data>
+  <data name="Button_ExportLogs" xml:space="preserve"><value>Export logs</value></data>
+  <data name="Button_ClearLogs" xml:space="preserve"><value>Clear terminal</value></data>
+  <data name="Button_Cancel_OptTooltip" xml:space="preserve"><value>Cancel this optimization</value></data>
+
+  <!-- ─── STATUS ─── -->
+  <data name="Status_Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="Status_Running" xml:space="preserve"><value>Running…</value></data>
+  <data name="Status_Done" xml:space="preserve"><value>Done</value></data>
+  <data name="Status_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Status_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Status_Cancelling" xml:space="preserve"><value>Cancelling…</value></data>
+  <data name="Status_Simulated" xml:space="preserve"><value>Simulated</value></data>
+
+  <!-- ─── SPLASH SCREEN ─── -->
+  <data name="Splash_CheckAdmin" xml:space="preserve"><value>Checking permissions…</value></data>
+  <data name="Splash_LoadModules" xml:space="preserve"><value>Loading modules…</value></data>
+  <data name="Splash_LoadSettings" xml:space="preserve"><value>Loading settings…</value></data>
+  <data name="Splash_AnalyzeSystem" xml:space="preserve"><value>Analyzing system…</value></data>
+  <data name="Splash_Ready" xml:space="preserve"><value>Ready!</value></data>
+
+  <!-- ─── DIALOGS ─── -->
+  <data name="Dialog_Confirm_Title" xml:space="preserve"><value>Confirmation – Klyr</value></data>
+  <data name="Dialog_RunOpt_Message" xml:space="preserve"><value>Run optimization:
+
+“{0}”
+
+{1}</value></data>
+  <data name="Dialog_RunAll_Title" xml:space="preserve"><value>Batch run – Klyr</value></data>
+  <data name="Dialog_RunAll_Message" xml:space="preserve"><value>Run {0} optimizations from “{1}”?
+
+Optimizations will be prioritized automatically.</value></data>
+  <data name="Dialog_Critical_Title" xml:space="preserve"><value>Critical action – Klyr</value></data>
+  <data name="Dialog_Critical_Message" xml:space="preserve"><value>The optimization “{0}” can modify critical system settings.
+
+Klyr will create a dedicated backup before running.
+
+Do you confirm this action?</value></data>
+  <data name="Dialog_AdminRequired_Title" xml:space="preserve"><value>Insufficient privileges – Klyr</value></data>
+  <data name="Dialog_AdminRequired_Message" xml:space="preserve"><value>The optimization “{0}” requires administrator rights.
+
+Do you want to restart Klyr as administrator?</value></data>
+  <data name="Dialog_Reboot_Title" xml:space="preserve"><value>Reboot required – Klyr</value></data>
+  <data name="Dialog_Reboot_Message" xml:space="preserve"><value>The optimization “{0}” requires a reboot.</value></data>
+  <data name="Dialog_Quarantine_Title" xml:space="preserve"><value>Klyr — Threats detected</value></data>
+  <data name="Dialog_Quarantine_Message" xml:space="preserve"><value>{0} threat(s) detected by Windows Defender.
+
+Quarantine them now?</value></data>
+
+  <!-- ─── SETTINGS WINDOW ─── -->
+  <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_ConfirmBeforeRun" xml:space="preserve"><value>Ask for confirmation before each optimization</value></data>
+  <data name="Settings_AutoRestorePoint" xml:space="preserve"><value>Auto-create a restore point before each admin optimization</value></data>
+  <data name="Settings_RebootWarning" xml:space="preserve"><value>Show reboot warnings</value></data>
+  <data name="Settings_Simulation" xml:space="preserve"><value>Simulation mode for critical optimizations</value></data>
+  <data name="Settings_ShowAdvanced" xml:space="preserve"><value>Show “Advanced” optimizations</value></data>
+  <data name="Settings_Benchmarks" xml:space="preserve"><value>Capture before/after benchmark for major optimizations</value></data>
+  <data name="Settings_AutoScrollTerminal" xml:space="preserve"><value>Auto-scroll terminal</value></data>
+  <data name="Settings_ShowAdminBadge" xml:space="preserve"><value>Show the “Admin” badge on optimizations</value></data>
+  <data name="Settings_LightTheme" xml:space="preserve"><value>Light theme</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Interface language</value></data>
+  <data name="Settings_Language_Auto" xml:space="preserve"><value>Auto (system)</value></data>
+  <data name="Settings_Language_FR" xml:space="preserve"><value>Français</value></data>
+  <data name="Settings_Language_EN" xml:space="preserve"><value>English</value></data>
+  <data name="Settings_LanguageRestartHint" xml:space="preserve"><value>Language change takes effect on next startup.</value></data>
+
+  <!-- ─── DASHBOARD ─── -->
+  <data name="Dashboard_System" xml:space="preserve"><value>System</value></data>
+  <data name="Dashboard_CPU" xml:space="preserve"><value>Processor</value></data>
+  <data name="Dashboard_RAM" xml:space="preserve"><value>Memory</value></data>
+  <data name="Dashboard_Disk" xml:space="preserve"><value>Disk C:</value></data>
+  <data name="Dashboard_Uptime" xml:space="preserve"><value>Up since</value></data>
+  <data name="Dashboard_OS" xml:space="preserve"><value>Operating system</value></data>
+  <data name="Dashboard_QuickActions" xml:space="preserve"><value>Quick actions</value></data>
+
+  <!-- ─── COMMON RESULTS / MESSAGES ─── -->
+  <data name="Msg_NoActiveAction" xml:space="preserve"><value>No active action.</value></data>
+  <data name="Msg_TimeoutSeconds" xml:space="preserve"><value>Timeout: command exceeded the allowed time.</value></data>
+  <data name="Msg_CancelledByUser" xml:space="preserve"><value>Cancelled by user.</value></data>
+  <data name="Msg_UacRefused" xml:space="preserve"><value>Elevation refused by user (UAC cancelled).</value></data>
+
+  <!-- ─── BADGES ─── -->
+  <data name="Badge_Admin" xml:space="preserve"><value>Admin</value></data>
+  <data name="Badge_Reboot" xml:space="preserve"><value>Reboot</value></data>
+  <data name="Badge_Advanced" xml:space="preserve"><value>Advanced</value></data>
+
+  <!-- ─── DASHBOARD CARDS / SECTIONS ─── -->
+  <data name="Dashboard_NavTitle" xml:space="preserve"><value>NAVIGATION</value></data>
+  <data name="Dashboard_CardCPU" xml:space="preserve"><value>CPU</value></data>
+  <data name="Dashboard_CardRAM" xml:space="preserve"><value>RAM</value></data>
+  <data name="Dashboard_CardDisk" xml:space="preserve"><value>DISK C:</value></data>
+  <data name="Dashboard_CardSession" xml:space="preserve"><value>SESSION</value></data>
+  <data name="Dashboard_CardSystem" xml:space="preserve"><value>SYSTEM</value></data>
+  <data name="Dashboard_RecentActivity" xml:space="preserve"><value>RECENT ACTIVITY</value></data>
+  <data name="Dashboard_UptimePrefix" xml:space="preserve"><value>Up since: </value></data>
+
+  <!-- ─── NAV BUTTONS (sidebar bottom) ─── -->
+  <data name="Nav_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Nav_Legal" xml:space="preserve"><value>Legal notice</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>About</value></data>
+  <data name="Nav_RestorePoint" xml:space="preserve"><value>Restore point</value></data>
+  <data name="Nav_ExportLogs" xml:space="preserve"><value>Export logs</value></data>
+
+  <!-- ─── TERMINAL ─── -->
+  <data name="Terminal_Live" xml:space="preserve"><value>LIVE</value></data>
+  <data name="Terminal_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Terminal_ExportTxt" xml:space="preserve"><value>Export as .txt</value></data>
+
+  <!-- ─── SETTINGS DESCRIPTIONS (tooltips) ─── -->
+  <data name="Settings_ConfirmDesc" xml:space="preserve"><value>Asks for confirmation for each optimization</value></data>
+  <data name="Settings_AutoRestoreDesc" xml:space="preserve"><value>Creates a restore point before each admin action</value></data>
+  <data name="Settings_RebootDesc" xml:space="preserve"><value>Shows a message when a reboot is required</value></data>
+  <data name="Settings_SimulationDesc" xml:space="preserve"><value>Does not apply network/firewall/hosts resets, only shows a preview</value></data>
+  <data name="Settings_AdvancedDesc" xml:space="preserve"><value>Includes tweaks with uncertain gain or risk of regression</value></data>
+  <data name="Settings_BenchmarksDesc" xml:space="preserve"><value>Measures CPU/RAM/disk/latency to objectivize the gain</value></data>
+  <data name="Settings_AutoScrollDesc" xml:space="preserve"><value>Scrolls toward the latest logs</value></data>
+  <data name="Settings_AdminBadgeDesc" xml:space="preserve"><value>Marks optimizations that require elevated rights</value></data>
+  <data name="Settings_LightThemeDesc" xml:space="preserve"><value>Applies the light palette immediately (otherwise dark palette)</value></data>
+  <data name="Settings_HeaderSecurity" xml:space="preserve"><value>SECURITY</value></data>
+  <data name="Settings_HeaderInterface" xml:space="preserve"><value>INTERFACE</value></data>
+  <data name="Settings_HeaderLanguage" xml:space="preserve"><value>LANGUAGE / LANGUE</value></data>
+
+  <!-- ─── OPTIM NAMES (40) ─── -->
+  <data name="Optim_gaming_highperf_Name" xml:space="preserve"><value>High Performance Mode</value></data>
+  <data name="Optim_gaming_gamedvr_Name" xml:space="preserve"><value>Disable Xbox Game DVR</value></data>
+  <data name="Optim_gaming_fullscreen_Name" xml:space="preserve"><value>Disable Fullscreen Optimization</value></data>
+  <data name="Optim_gaming_priority_Name" xml:space="preserve"><value>CPU Priority for Games</value></data>
+  <data name="Optim_gaming_network_latency_Name" xml:space="preserve"><value>Network Latency Reduction</value></data>
+  <data name="Optim_gaming_directx_Name" xml:space="preserve"><value>DirectX Tweaks</value></data>
+  <data name="Optim_gaming_kill_processes_Name" xml:space="preserve"><value>Close Unnecessary Processes</value></data>
+  <data name="Optim_gaming_fps_unlock_Name" xml:space="preserve"><value>FPS Unlock</value></data>
+  <data name="Optim_gaming_gpu_schedule_Name" xml:space="preserve"><value>GPU Optimization</value></data>
+
+  <data name="Optim_oldpc_startup_Name" xml:space="preserve"><value>Reduce Startup</value></data>
+  <data name="Optim_oldpc_animations_Name" xml:space="preserve"><value>Disable Animations</value></data>
+  <data name="Optim_oldpc_registry_Name" xml:space="preserve"><value>Registry Cleanup</value></data>
+  <data name="Optim_oldpc_ram_Name" xml:space="preserve"><value>RAM Release</value></data>
+  <data name="Optim_oldpc_temp_Name" xml:space="preserve"><value>Delete Temp Files</value></data>
+  <data name="Optim_oldpc_defrag_Name" xml:space="preserve"><value>HDD Defragmentation</value></data>
+  <data name="Optim_oldpc_theme_Name" xml:space="preserve"><value>Enable Lite Theme</value></data>
+  <data name="Optim_oldpc_telemetry_Name" xml:space="preserve"><value>Disable Telemetry</value></data>
+
+  <data name="Optim_clean_disk_Name" xml:space="preserve"><value>System Disk Cleanup</value></data>
+  <data name="Optim_clean_recycle_Name" xml:space="preserve"><value>Empty Recycle Bin</value></data>
+  <data name="Optim_clean_logs_Name" xml:space="preserve"><value>Delete Windows Logs</value></data>
+  <data name="Optim_clean_prefetch_Name" xml:space="preserve"><value>Prefetch Cleanup</value></data>
+  <data name="Optim_clean_bloatware_Name" xml:space="preserve"><value>Remove Bloatware</value></data>
+  <data name="Optim_clean_repair_Name" xml:space="preserve"><value>Windows Repair (SFC + DISM)</value></data>
+  <data name="Optim_clean_dns_cache_Name" xml:space="preserve"><value>DNS Cache Cleanup</value></data>
+  <data name="Optim_clean_antivirus_Name" xml:space="preserve"><value>Antivirus Scan (Windows Defender)</value></data>
+
+  <data name="Optim_net_tcpip_Name" xml:space="preserve"><value>TCP/IP Optimization</value></data>
+  <data name="Optim_net_reset_Name" xml:space="preserve"><value>Network Reset</value></data>
+  <data name="Optim_net_dns_fast_Name" xml:space="preserve"><value>Fast DNS (Cloudflare / Google)</value></data>
+  <data name="Optim_net_ping_Name" xml:space="preserve"><value>Ping Optimization</value></data>
+  <data name="Optim_net_telemetry_block_Name" xml:space="preserve"><value>Block Microsoft Telemetry</value></data>
+  <data name="Optim_net_flush_dns_Name" xml:space="preserve"><value>Flush DNS</value></data>
+  <data name="Optim_net_reset_firewall_Name" xml:space="preserve"><value>Reset Windows Firewall</value></data>
+  <data name="Optim_net_speed_test_Name" xml:space="preserve"><value>Internet Speed Test</value></data>
+  <data name="Optim_net_info_Name" xml:space="preserve"><value>Network Information</value></data>
+
+  <data name="Optim_stream_perf_mode_Name" xml:space="preserve"><value>Streamer Mode (perf + latency)</value></data>
+  <data name="Optim_stream_cpu_prio_Name" xml:space="preserve"><value>Auto encoder CPU priority</value></data>
+  <data name="Optim_stream_game_mode_off_Name" xml:space="preserve"><value>Game Mode OFF (Streamer-friendly)</value></data>
+  <data name="Optim_stream_hags_off_Name" xml:space="preserve"><value>HAGS OFF (Hardware GPU Scheduling)</value></data>
+  <data name="Optim_stream_killer_Name" xml:space="preserve"><value>Creator process killer</value></data>
+  <data name="Optim_stream_clean_cache_Name" xml:space="preserve"><value>OBS / browser source cache cleanup</value></data>
+
+  <!-- ─── OPTIM DESCRIPTIONS (40) ─── -->
+  <data name="Optim_gaming_highperf_Desc" xml:space="preserve"><value>Activates the Windows High Performance power plan to maximize CPU/GPU resources.</value></data>
+  <data name="Optim_gaming_gamedvr_Desc" xml:space="preserve"><value>Removes the Xbox background video recording that consumes CPU, RAM and disk I/O.</value></data>
+  <data name="Optim_gaming_fullscreen_Desc" xml:space="preserve"><value>Prevents Windows from intercepting game fullscreen mode, reducing micro-stutters.</value></data>
+  <data name="Optim_gaming_priority_Desc" xml:space="preserve"><value>Configures Windows to prioritize CPU resources for foreground applications.</value></data>
+  <data name="Optim_gaming_network_latency_Desc" xml:space="preserve"><value>Tunes TCP/IP settings to reduce in-game ping (disables Nagle, optimizes ACK).</value></data>
+  <data name="Optim_gaming_directx_Desc" xml:space="preserve"><value>Optimizes DirectX settings: disables DXGI flip model debug and tunes the GPU scheduler.</value></data>
+  <data name="Optim_gaming_kill_processes_Desc" xml:space="preserve"><value>Stops non-essential processes to free RAM and CPU before launching a game.</value></data>
+  <data name="Optim_gaming_fps_unlock_Desc" xml:space="preserve"><value>Disables the artificial frame rate limit and Windows-forced V-Sync.</value></data>
+  <data name="Optim_gaming_gpu_schedule_Desc" xml:space="preserve"><value>Enables Hardware-Accelerated GPU Scheduling (HAGS) to reduce graphics latency.</value></data>
+
+  <data name="Optim_oldpc_startup_Desc" xml:space="preserve"><value>Disables unnecessary programs at Windows startup.</value></data>
+  <data name="Optim_oldpc_animations_Desc" xml:space="preserve"><value>Removes heavy visual effects to smooth out the UI.</value></data>
+  <data name="Optim_oldpc_registry_Desc" xml:space="preserve"><value>Removes MRU entries and orphan keys from the Windows registry.</value></data>
+  <data name="Optim_oldpc_ram_Desc" xml:space="preserve"><value>Empties the Working Sets of all processes via the Win32 EmptyWorkingSet API (real and effective method).</value></data>
+  <data name="Optim_oldpc_temp_Desc" xml:space="preserve"><value>Deletes %TEMP%, C:\Windows\Temp folders and unnecessary files.</value></data>
+  <data name="Optim_oldpc_defrag_Desc" xml:space="preserve"><value>Runs defragmentation on disk C: (HDD only — ignored on SSD).</value></data>
+  <data name="Optim_oldpc_theme_Desc" xml:space="preserve"><value>Disables transparency and Aero effects to save GPU.</value></data>
+  <data name="Optim_oldpc_telemetry_Desc" xml:space="preserve"><value>Reduces data sent to Microsoft (DiagTrack, CEIP).</value></data>
+
+  <data name="Optim_clean_disk_Desc" xml:space="preserve"><value>Launches Disk Cleanup (cleanmgr) to remove unnecessary files and caches.</value></data>
+  <data name="Optim_clean_recycle_Desc" xml:space="preserve"><value>Permanently deletes all files in the Windows Recycle Bin.</value></data>
+  <data name="Optim_clean_logs_Desc" xml:space="preserve"><value>Exports then clears Windows event logs (advanced troubleshooting mode).</value></data>
+  <data name="Optim_clean_prefetch_Desc" xml:space="preserve"><value>Removes Prefetch files (advanced troubleshooting action; may temporarily slow down first launches).</value></data>
+  <data name="Optim_clean_bloatware_Desc" xml:space="preserve"><value>Uninstalls common Windows bloatware (Candy Crush, Solitaire…).</value></data>
+  <data name="Optim_clean_repair_Desc" xml:space="preserve"><value>Runs sfc /scannow then DISM to repair corrupted system files.</value></data>
+  <data name="Optim_clean_dns_cache_Desc" xml:space="preserve"><value>Clears the local DNS cache to fix browsing issues.</value></data>
+  <data name="Optim_clean_antivirus_Desc" xml:space="preserve"><value>Runs a Windows Defender QuickScan showing the number of files scanned. Offers to quarantine detected threats. Timeout extended to 10 minutes.</value></data>
+
+  <data name="Optim_net_tcpip_Desc" xml:space="preserve"><value>Tunes the Windows network stack: autotuning, ECN, timestamps for better performance.</value></data>
+  <data name="Optim_net_reset_Desc" xml:space="preserve"><value>Resets all network settings (netsh winsock reset + int ip reset). Reboot required.</value></data>
+  <data name="Optim_net_dns_fast_Desc" xml:space="preserve"><value>Benchmarks several DNS profiles then automatically applies the fastest one.</value></data>
+  <data name="Optim_net_ping_Desc" xml:space="preserve"><value>Reduces network latency by tuning TCP timers and disabling ACK delays.</value></data>
+  <data name="Optim_net_telemetry_block_Desc" xml:space="preserve"><value>Blocks connections to Microsoft tracking and telemetry servers via the hosts file.</value></data>
+  <data name="Optim_net_flush_dns_Desc" xml:space="preserve"><value>Clears the local DNS cache (ipconfig /flushdns) to fix browsing issues.</value></data>
+  <data name="Optim_net_reset_firewall_Desc" xml:space="preserve"><value>Restores the default Windows Firewall configuration (all custom rules will be removed).</value></data>
+  <data name="Optim_net_speed_test_Desc" xml:space="preserve"><value>Measures download speed (multi-run) + ping, jitter and packet loss.</value></data>
+  <data name="Optim_net_info_Desc" xml:space="preserve"><value>Displays local IP, DNS, gateway, MAC address and status of active network interfaces.</value></data>
+
+  <data name="Optim_stream_perf_mode_Desc" xml:space="preserve"><value>Activates the High Performance power plan and disables CPU C-States to stabilize encoding and avoid drops on transitions.</value></data>
+  <data name="Optim_stream_cpu_prio_Desc" xml:space="preserve"><value>Detects OBS, Streamlabs, Davinci Resolve, Adobe Premiere, Vegas Pro running and switches them to Above Normal priority for encoding.</value></data>
+  <data name="Optim_stream_game_mode_off_Desc" xml:space="preserve"><value>Disables Windows Game Mode which can throttle hardware encoders (NVENC / QuickSync / AMF) during streaming. Effect varies by GPU.</value></data>
+  <data name="Optim_stream_hags_off_Desc" xml:space="preserve"><value>Disables Hardware-accelerated GPU scheduling which causes NVENC artifacts on some Windows 10/11 configs. Reboot required.</value></data>
+  <data name="Optim_stream_killer_Desc" xml:space="preserve"><value>Closes parasitic processes during encoding: Adobe Updater, Edge background, Spotify, Discord (overlay), GitHub Desktop, Microsoft Teams.</value></data>
+  <data name="Optim_stream_clean_cache_Desc" xml:space="preserve"><value>Clears the Streamlabs / OBS browser source caches that accumulate and slow down startup.</value></data>
+
+  <!-- ─── COMMON RESULT MESSAGES (lambdas) ─── -->
+  <data name="Result_HighPerfActive" xml:space="preserve"><value>High Performance plan activated.</value></data>
+  <data name="Result_LatencyOptimized" xml:space="preserve"><value>Network latency optimized (Nagle disabled, TCPNoDelay enabled).</value></data>
+  <data name="Result_FpsUnlocked" xml:space="preserve"><value>FPS limits removed.</value></data>
+  <data name="Result_NoTargetProcesses" xml:space="preserve"><value>No targeted process running. Nothing to close.</value></data>
+  <data name="Result_KillCancelled" xml:space="preserve"><value>Action cancelled by user.</value></data>
+  <data name="Result_KillDialogTitle" xml:space="preserve"><value>Close Unnecessary Processes – Klyr</value></data>
+  <data name="Result_KillDialogMessage" xml:space="preserve"><value>The following processes will be closed:
+
+{0}
+
+Save your work in these applications before continuing.
+
+Continue?</value></data>
+  <data name="Result_ProcessesKilled" xml:space="preserve"><value>Processes closed: {0}</value></data>
+  <data name="Result_ProcessesNotKilled" xml:space="preserve"><value>{0} not closed (insufficient rights).</value></data>
+  <data name="Result_NoProcessKilled" xml:space="preserve"><value>No process could be closed ({0} failure(s)).</value></data>
+  <data name="Result_QuarantineRefused" xml:space="preserve"><value>Scan completed in {0}s — {1} threat(s) detected. Quarantine refused. Open Windows Defender to handle them manually.</value></data>
+  <data name="Result_QuarantineSuccess" xml:space="preserve"><value>Scan completed in {0}s — {1} threat(s) detected, {2} quarantined.</value></data>
+  <data name="Result_QuarantinePartial" xml:space="preserve"><value>Scan completed in {0}s — {1} detected: {2} quarantined, {3} failure(s). Check Windows Defender for details.</value></data>
+  <data name="Result_QuarantineTimeout" xml:space="preserve"><value>Scan completed in {0}s — {1} threat(s) detected. Quarantine exceeded 2 min. Check Windows Defender for the actual state.</value></data>
+  <data name="Result_QuarantineLaunched" xml:space="preserve"><value>Scan completed in {0}s — {1} threat(s) detected. Quarantine attempt launched — check Windows Defender.</value></data>
+  <data name="Result_ScanNoThreats" xml:space="preserve"><value>Scan completed in {0}s — No threat detected.</value></data>
+  <data name="Result_DefenderUnavailable" xml:space="preserve"><value>Windows Defender not found. It may have been disabled by 'Process Killer'. Restart the MsMpEng service.</value></data>
+  <data name="Result_ScanTimeout" xml:space="preserve"><value>Timeout: Scan cancelled after 10 minutes. Your PC may be heavily loaded. Try again via Windows Defender directly.</value></data>
+  <data name="Result_ScanCancelled" xml:space="preserve"><value>Antivirus scan cancelled by user.</value></data>
+  <data name="Result_ScanError" xml:space="preserve"><value>Scan error: {0}
+Hints: check that Windows Defender is active and that you have admin rights.</value></data>
+  <data name="Result_StreamerModeOn" xml:space="preserve"><value>Streamer Mode activated: High Performance plan + C-States disabled.</value></data>
+  <data name="Result_NoEncoderDetected" xml:space="preserve"><value>No encoder detected (OBS, Streamlabs, Davinci, Premiere, Vegas, AE not running). Launch your software then re-run this optimization.</value></data>
+  <data name="Result_EncoderBoosted" xml:space="preserve"><value>{0} encoder process(es) switched to Above Normal priority: {1}.</value></data>
+  <data name="Result_GameModeOff" xml:space="preserve"><value>Game Mode disabled (hardware encoders freed).</value></data>
+  <data name="Result_HagsOff" xml:space="preserve"><value>HAGS disabled. Reboot required to apply.</value></data>
+  <data name="Result_NoParasites" xml:space="preserve"><value>No parasitic process found. Good stream.</value></data>
+  <data name="Result_ParasitesKilled" xml:space="preserve"><value>{0} parasitic process(es) closed — CPU/RAM freed for encoding: {1}.</value></data>
+  <data name="Result_NoObsCache" xml:space="preserve"><value>No OBS / Streamlabs cache found (software not installed or caches already cleared).</value></data>
+  <data name="Result_ObsCacheCleared" xml:space="preserve"><value>{0} cache(s) cleared — {1} MB freed ({2}).</value></data>
+  <data name="Result_TcpOptimized" xml:space="preserve"><value>TCP/IP settings optimized.</value></data>
+  <data name="Result_PingOptimized" xml:space="preserve"><value>Latency optimized: Nagle disabled, ACK delay = 0.</value></data>
+  <data name="Result_TelemetryBlocked" xml:space="preserve"><value>{0} telemetry domains blocked in hosts.</value></data>
+  <data name="Result_NetReset" xml:space="preserve"><value>Network reset.
+Reboot required to apply the changes.</value></data>
+  <data name="Result_FirewallReset" xml:space="preserve"><value>Firewall reset.</value></data>
+  <data name="Result_NoActiveAdapter" xml:space="preserve"><value>No active network adapter detected.</value></data>
+
+  <!-- ─── ABOUT WINDOW ─── -->
+  <data name="About_Title" xml:space="preserve"><value>About</value></data>
+  <data name="About_Subtitle" xml:space="preserve"><value>Windows PC Optimizer</value></data>
+  <data name="About_Version" xml:space="preserve"><value>Version</value></data>
+  <data name="About_Developer" xml:space="preserve"><value>Developer</value></data>
+  <data name="About_Compatibility" xml:space="preserve"><value>Compatibility</value></data>
+  <data name="About_Framework" xml:space="preserve"><value>Framework</value></data>
+  <data name="About_DiagnosticHeader" xml:space="preserve"><value>DIAGNOSTICS</value></data>
+  <data name="About_CopySystemInfo" xml:space="preserve"><value>Copy system info</value></data>
+  <data name="About_ExportReport" xml:space="preserve"><value>Export report</value></data>
+
+  <!-- ─── LEGAL WINDOW ─── -->
+  <data name="Legal_Title" xml:space="preserve"><value>Legal notice</value></data>
+  <data name="Legal_PrivacyHeader" xml:space="preserve"><value>Privacy &amp; GDPR</value></data>
+  <data name="Legal_PrivacyContent" xml:space="preserve"><value>Klyr runs exclusively locally on your computer.
+No personal data is collected or sent.
+No internet connection is established (except for the network speed test).
+Logs are saved only in Documents\Klyr\Logs\</value></data>
+  <data name="Legal_RestoreHeader" xml:space="preserve"><value>Restoration Guarantee</value></data>
+  <data name="Legal_RestoreContent" xml:space="preserve"><value>Klyr offers to create system restore points before each advanced optimization, to ensure changes are reversible.
+Enable the option in Settings → Auto restore point.</value></data>
+  <data name="Legal_DisclaimerHeader" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="Legal_DisclaimerContent" xml:space="preserve"><value>Klyr is provided without warranty. The user is solely responsible for the use of the software.
+It is strongly recommended to create a restore point before any advanced optimization and to back up your important data.
+The developer cannot be held responsible for any damage resulting from the use of this software.</value></data>
+  <data name="Legal_AuditHeader" xml:space="preserve"><value>Change log (Audit)</value></data>
+  <data name="Legal_AuditContent" xml:space="preserve"><value>Each action is recorded in the terminal and exportable as .txt.
+Path: Documents\Klyr\Logs\Klyr_log_YYYYMMDD.txt</value></data>
+  <data name="Legal_Footer" xml:space="preserve"><value>Klyr v2.2 — Developed by InfoZen — 2026</value></data>
+
+  <!-- ─── LOG MESSAGES (startup / admin) ─── -->
+  <data name="Log_AppStarted" xml:space="preserve"><value>Klyr v2.2 started.</value></data>
+  <data name="Log_PrivacyNotice" xml:space="preserve"><value>Klyr runs exclusively locally. No personal data is collected.</value></data>
+  <data name="Log_AdminWarning" xml:space="preserve"><value>Klyr is not running as administrator. Optimizations marked [Admin] will be ignored or will fail. Re-launch Klyr as administrator for full access.</value></data>
+  <data name="Log_AdminConfirmed" xml:space="preserve"><value>Administrator rights confirmed.</value></data>
+
+  <!-- ─── LOG CATEGORIES (translated at LogService level) ─── -->
+  <data name="Category_System" xml:space="preserve"><value>System</value></data>
+  <data name="Category_Privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Category_App" xml:space="preserve"><value>App</value></data>
+  <data name="Category_Cleaning" xml:space="preserve"><value>Cleaning</value></data>
+  <data name="Category_Network" xml:space="preserve"><value>Network</value></data>
+  <data name="Category_Gaming" xml:space="preserve"><value>Gaming</value></data>
+  <data name="Category_OldPC" xml:space="preserve"><value>Old PC</value></data>
+  <data name="Category_Streaming" xml:space="preserve"><value>Streaming</value></data>
+  <data name="Category_Benchmark" xml:space="preserve"><value>Benchmark</value></data>
+  <data name="Category_Settings" xml:space="preserve"><value>Settings</value></data>
+
+  <!-- ─── DASHBOARD INLINE TEXTS ─── -->
+  <data name="Dashboard_OptimizationsRunSuffix" xml:space="preserve"><value>optimizations launched</value></data>
+  <data name="Dashboard_DiskUnitGo" xml:space="preserve"><value> GB</value></data>
+
+  <!-- ─── WINDOW CONTROLS TOOLTIPS ─── -->
+  <data name="Tooltip_Minimize" xml:space="preserve"><value>Minimize</value></data>
+  <data name="Tooltip_Maximize" xml:space="preserve"><value>Maximize</value></data>
+  <data name="Tooltip_Close" xml:space="preserve"><value>Close</value></data>
+
+</root>
