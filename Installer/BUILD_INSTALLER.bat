@@ -3,7 +3,7 @@ title Klyr - Compilation + Installeur
 color 0A
 echo.
 echo  ============================================
-echo   Klyr v2.2.0 - Build complet + Installeur
+echo   Klyr v2.3.0 - Build complet + Installeur
 echo  ============================================
 echo.
 
@@ -28,8 +28,10 @@ if %errorlevel% neq 0 (
     pause & exit /b 1
 )
 echo OK : runtime .NET 10 embarquee, aucun prerequis sur la machine cible.
-echo OK : satellite EN inclus dans publish\en\Klyr.resources.dll
+echo OK : satellite EN embarque dans le bundle single-file (Klyr.exe)
 echo.
+REM Pas besoin d'embarquer les symboles de debug dans l'installeur.
+if exist "publish\Klyr.pdb" del /q "publish\Klyr.pdb"
 
 echo [2/4] Localisation de NSIS (makensis.exe)...
 set "MAKENSIS="
@@ -63,24 +65,27 @@ echo OK
 echo.
 
 echo [4/4] Verification du resultat...
-if exist "installer\Klyr_Setup_v2.2.0.exe" (
-    move /Y "installer\Klyr_Setup_v2.2.0.exe" "Klyr_Setup_v2.2.0.exe" >nul
+if exist "installer\Klyr_Setup_v2.3.0.exe" (
+    move /Y "installer\Klyr_Setup_v2.3.0.exe" "Klyr_Setup_v2.3.0.exe" >nul
     echo.
     echo  ============================================
     echo   SUCCES !
-    echo   Installeur : %PROJECT_ROOT%\Klyr_Setup_v2.2.0.exe
+    echo   Installeur : %PROJECT_ROOT%\Klyr_Setup_v2.3.0.exe
     echo  ============================================
     echo.
-    echo  Contenu du build v2.2.0 :
+    echo  Contenu du build v2.3.0 :
     echo    - 5 modules / 40 optimisations
-    echo    - Module Streaming / Creation (nouveau)
-    echo    - Cancel par optimisation (kill du process)
-    echo    - Antivirus + quarantaine automatique
+    echo    - Monitoring materiel (temperatures CPU/GPU)
+    echo    - Performance Score /100
+    echo    - Desinstalleur + detection des restes
+    echo    - Software Updater (winget)
+    echo    - Disk Analyzer, Startup Manager, Browser Cleaner
+    echo    - Scans programmes automatiques
     echo    - Interface bilingue FR + EN
     echo.
 ) else (
     echo [ERREUR] Installeur introuvable apres compilation.
-    echo Verifiez que makensis a bien genere Klyr_Setup_v2.2.0.exe
+    echo Verifiez que makensis a bien genere Klyr_Setup_v2.3.0.exe
 )
 echo.
 pause

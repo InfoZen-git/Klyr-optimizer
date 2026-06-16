@@ -2,7 +2,9 @@
 
 # Klyr
 
-**Optimiseur PC Windows — 40 optimisations en 5 modules, FR + EN, 100% local, sans télémétrie.**
+**Optimiseur PC Windows — 40 optimisations en 5 modules + monitoring matériel + 5 outils avancés. FR + EN, 100% local, sans télémétrie.**
+
+🌐 **Français** · [English](README.en.md)
 
 ![Klyr Dashboard](Assets/Branding/screenshot-dashboard.png)
 
@@ -10,7 +12,7 @@
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/license-See%20LICENSE.txt-blue?style=flat-square)](LICENSE.txt)
 [![Discord](https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/invite/nPWU9cW3NG)
-[![Édité par](https://img.shields.io/badge/édité_par-InfoZen-4B8BF5?style=flat-square)](#)
+[![Édité par](https://img.shields.io/badge/édité_par-InfoZen_·_Yahya-4B8BF5?style=flat-square)](#)
 
 </div>
 
@@ -27,9 +29,43 @@ Windows accumule au fil des mois des paramètres lourds, des services inutiles, 
 
 ---
 
+## Nouveautés v2.3.0
+
+```
+                 KLYR  v2.2.0  ─────────────────►  v2.3.0
+ ┌────────────────────────────┐      ┌────────────────────────────────────────┐
+ │ DASHBOARD                   │      │ DASHBOARD                               │
+ │  • CPU % / RAM % / Disque   │  ──► │  • Jauge circulaire Performance Score   │
+ │                             │      │  • Carte GPU (nom / usage / température) │
+ │                             │      │  • Vitesse disque live                  │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ MODULES (5)                 │      │ MODULES (5)  — inchangés                │
+ │  Gaming · Vieux PC ·        │  ══  │  Gaming · Vieux PC · Nettoyage ·        │
+ │  Nettoyage · Réseau ·       │      │  Réseau · Streaming                     │
+ │  Streaming                  │      │                                        │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ OUTILS                      │      │ OUTILS  (+5 intégrés en onglets)        │
+ │  Terminal                   │  ──► │  Terminal · Désinstalleur · Maj winget  │
+ │                             │      │  · Analyseur disque · Démarrage ·       │
+ │                             │      │  Navigateurs                            │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ SYSTÈME                     │      │ SYSTÈME                                 │
+ │  • Fenêtre redimensionnable │  ──► │  • Sidebar : état actif + scrollable    │
+ │  • FR / EN                  │      │  • Scans programmés (Task Scheduler)    │
+ │                             │      │  • Auto-updater GitHub (opt-out)        │
+ │                             │      │  • Redémarrage auto au choix de langue  │
+ └────────────────────────────┘      └────────────────────────────────────────┘
+        4 modules outils                    monitoring matériel temps réel
+                                            + 5 outils façon Kudu/VoltAir
+```
+
+**En résumé** : la v2.2.0 était un optimiseur (5 modules). La v2.3.0 devient une **suite complète** — monitoring matériel temps réel (températures, Performance Score), 5 nouveaux outils intégrés (désinstalleur, winget, analyseur disque, démarrage, navigateurs), scans programmés et mises à jour automatiques.
+
+---
+
 ## Installation
 
-1. Télécharger la dernière release depuis [Releases](../../releases) → **`Klyr_Setup_v2.2.0.exe`**
+1. Télécharger la dernière release depuis [Releases](../../releases) → **`Klyr_Setup_v2.3.0.exe`**
 2. Lancer l'installeur
 3. L'app s'installe dans `C:\Program Files\Klyr` et un raccourci apparaît sur le Bureau
 
@@ -68,13 +104,44 @@ Les optimisations marquées **« Avancé »** (gain incertain ou risque de régr
 
 ---
 
+## Monitoring matériel & Performance Score
+
+Le Dashboard affiche en temps réel (rafraîchi toutes les 2 s) via **LibreHardwareMonitor** :
+
+- **Performance Score /100** — note globale (charge CPU + RAM + espace disque libre), code couleur
+- **Carte GPU dédiée** (nom + usage + température, via NvAPI — toutes marques)
+- **Vitesse disque** read/write live
+- CPU / RAM / disque avec barres responsives
+
+> La température **GPU** s'affiche via NvAPI. La température **CPU** n'est pas affichée : sur AMD/Intel elle dépend d'un driver noyau (WinRing0) souvent bloqué par l'Intégrité mémoire (HVCI) de Windows 11, ce qui la rend non fiable — on préfère ne rien afficher plutôt qu'un « 0 » trompeur.
+
+---
+
+## Outils avancés
+
+Accessibles depuis la section **Outils** du menu latéral :
+
+| Outil | Description |
+|---|---|
+| **Désinstalleur** | Liste les programmes installés, désinstalle et **détecte les fichiers résiduels** (dossiers + données app) à supprimer |
+| **Mises à jour** | Détecte et installe en masse les maj logicielles via **winget** |
+| **Analyseur disque** | Visualise l'occupation par dossier (barres proportionnelles + drill-down) |
+| **Démarrage** | Active/désactive les programmes au démarrage (réversible, sans suppression) |
+| **Navigateurs** | Vide cache / cookies / historique de Chrome, Edge, Firefox, Brave |
+
+**Scans programmés** (Paramètres → Scans programmés) : nettoyage automatique quotidien/hebdo/mensuel via le Planificateur de tâches Windows, en arrière-plan sans ouvrir l'app.
+
+---
+
 ## Privacy & Sécurité
 
 Klyr ne fait **aucun appel réseau** sauf :
 - Test de vitesse internet (ping `1.1.1.1` sur demande utilisateur)
 - Benchmark DNS (test de résolution `github.com`, `microsoft.com`, `cloudflare.com`)
+- **Vérification de mise à jour** (v2.3.0) : un simple `GET` vers l'API GitHub Releases au démarrage pour comparer la version. **Aucune donnée envoyée** (lecture seule), désactivable dans *Paramètres → Vérifier les mises à jour*.
+- **Software Updater** (v2.3.0) : `winget` télécharge les mises à jour des logiciels **que tu sélectionnes** (action explicite).
 
-**Aucune donnée n'est jamais envoyée nulle part.** Pas d'analytics, pas de tracking, pas de compte.
+**Aucune donnée personnelle n'est jamais envoyée nulle part.** Pas d'analytics, pas de tracking, pas de compte.
 
 ### Backups automatiques avant ops critiques
 
@@ -138,7 +205,7 @@ Klyr/
 ├── App.xaml / App.xaml.cs            Resources globales + ErrorHandler init
 ├── app.manifest                      UAC asInvoker + DPI PerMonitorV2
 │
-├── README.md                         Cette page
+├── README.md / README.en.md          Cette page (FR / EN)
 ├── CHANGELOG.md                      Historique des versions
 ├── SECURITY.md                       Politique de signalement de vulnérabilité
 ├── LICENSE.txt                       Conditions d'utilisation
@@ -153,32 +220,39 @@ Klyr/
 │   └── Branding/                     Mark + wordmark SVG + PNG export + screenshot
 │
 ├── Commands/                         RelayCommand + AsyncRelayCommand
-├── Models/                           OptimizationItem (Func<CancellationToken, Task<string>>), SystemInfoModel
+├── Models/                           OptimizationItem, SystemInfoModel (+ capteurs/score),
+│                                     InstalledProgram, UpgradablePackage, DiskEntry, StartupEntry
 ├── Services/
 │   ├── SystemService                 P/Invoke Win32, runner CMD/PowerShell (CancellationToken kill), restore points
-│   ├── LogService                    Buffer circulaire 2000 entrées + auto-save fichier
-│   ├── SettingsService               Persistance JSON dans %AppData%\Klyr (langue + thème + 8 toggles)
+│   ├── HardwareMonitorService        v2.3.0 — capteurs LibreHardwareMonitor (temp CPU/GPU, vitesse disque)
+│   ├── PerformanceScoreService       v2.3.0 — note /100 pondérée
+│   ├── UninstallerService            v2.3.0 — programmes installés + détection des restes
+│   ├── WingetService                 v2.3.0 — software updater (parsing winget)
+│   ├── DiskAnalyzerService           v2.3.0 — taille par dossier (récursif parallélisé)
+│   ├── StartupManagerService         v2.3.0 — démarrage Windows (toggle réversible)
+│   ├── BrowserCleanerService         v2.3.0 — cache/cookies/historique navigateurs
+│   ├── ScheduledScanService          v2.3.0 — Task Scheduler (schtasks)
+│   ├── SilentCleanupService          v2.3.0 — nettoyage headless (--scheduled-clean)
+│   ├── UpdateService                 v2.3.0 — vérification GitHub Releases (lecture seule)
+│   ├── LogService                    Buffer circulaire 2000 entrées + auto-save + catégories i18n
+│   ├── SettingsService               Persistance JSON %AppData%\Klyr (langue + thème + scans + toggles)
 │   ├── ThemeService                  Bascule Dark/Light dynamique (45 brushes)
 │   ├── DiagnosticService             Génération diagnostic + export zip
 │   ├── ErrorHandler                  Crash handler global + crash reports persistants
 │   ├── AdminChecker                  WindowsPrincipal — vérif droits admin
-│   ├── ProgressHelper                Animation de progression durant exécution (propage CancellationToken)
+│   ├── ProgressHelper                Animation de progression (propage CancellationToken)
 │   ├── OptimizationBenchmarkService  Capture snapshots CPU/RAM/disque avant/après
-│   ├── OptimizationProfileService    Métadonnées des optimisations (confidence, etc.)
-│   ├── GamingOptimizations           Module 1 (9 optimisations)
-│   ├── OldPcOptimizations            Module 2 (8)
-│   ├── CleaningOptimizations         Module 3 (8 + scan antivirus avec quarantaine)
-│   ├── NetworkOptimizations          Module 4 (9)
-│   └── StreamingOptimizations        Module 5 (6 — v2.2.0)
+│   ├── OptimizationProfileService    Métadonnées des optimisations
+│   ├── GamingOptimizations           Module 1 (9)   ── OldPcOptimizations  Module 2 (8)
+│   ├── CleaningOptimizations         Module 3 (8 + antivirus quarantaine)
+│   ├── NetworkOptimizations          Module 4 (9)   ── StreamingOptimizations Module 5 (6)
 │
-├── Resources/                        v2.2.0 — Localisation FR/EN
-│   ├── Strings.resx                  Culture neutre (FR)
-│   ├── Strings.en.resx               Satellite anglais → en/Klyr.resources.dll
-│   └── Strings.Designer.cs           Accesseurs typés (ResourceManager)
-│
+├── Resources/                        Localisation FR/EN (Strings.resx + .en.resx + .Designer.cs)
 ├── Styles/                           Icons.xaml (Segoe Fluent Icons) + Animations.xaml
-├── ViewModels/                       MainViewModel (IDisposable, navigation cache, run all, CTS par item)
-├── Views/                            MainWindow, SplashScreen, Settings (+ sélecteur langue), About, Legal
+├── ViewModels/                       MainViewModel (IDisposable, nav cache, run all, CTS, OpenTool)
+├── Views/                            MainWindow, SplashScreen, Settings, About, Legal,
+│                                     Uninstaller, Updater, DiskAnalyzer, StartupManager,
+│                                     BrowserCleaner  (v2.3.0)
 └── Installer/                        BUILD_INSTALLER.bat + script Klyr_Setup.nsi
 ```
 
@@ -194,6 +268,6 @@ Klyr/
 
 <div align="center">
 
-**Klyr** — Édité par **InfoZen** — 2026
+**Klyr** — Édité par **InfoZen · Yahya** — 2026
 
 </div>

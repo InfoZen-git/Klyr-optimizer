@@ -1,6 +1,7 @@
 <Window x:Class="Klyr.Views.SplashScreen"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Klyr.Resources"
         Width="420" Height="240"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -23,7 +24,7 @@
 
             <TextBlock Text="Klyr" FontSize="22" FontWeight="SemiBold"
                        Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
-            <TextBlock Text="Optimiseur PC" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"
+            <TextBlock Text="{x:Static loc:Strings.About_Subtitle}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"
                        HorizontalAlignment="Center" Margin="0,3,0,28"/>
 
             <!-- Barre de progression -->
@@ -33,7 +34,7 @@
                         Background="{DynamicResource AccentBrush}" HorizontalAlignment="Left" Width="0"/>
             </Border>
 
-            <TextBlock x:Name="StatusText" Text="Initialisation…"
+            <TextBlock x:Name="StatusText" Text="{x:Static loc:Strings.Splash_CheckAdmin}"
                        FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
                        HorizontalAlignment="Center"/>
 

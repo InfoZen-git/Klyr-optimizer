@@ -1,6 +1,7 @@
 <Application x:Class="Klyr.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:Klyr.Views"
              StartupUri="Views/SplashScreen.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -8,6 +9,20 @@
                 <ResourceDictionary Source="Styles/Icons.xaml"/>
                 <ResourceDictionary Source="Styles/Animations.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- v2.3.0 — Convertisseurs en portée GLOBALE (app).
+                 Avant ils étaient ajoutés au runtime dans MainWindow.Resources, donc
+                 invisibles depuis les UserControls (DiskAnalyzerView → XamlParseException
+                 sur {StaticResource PercentToStarConverter}). Ici ils sont accessibles partout. -->
+            <views:PageVisibilityConverter      x:Key="PageVisibilityConverter"/>
+            <views:BoolToVisibilityConverter    x:Key="BoolToVisibilityConverter"/>
+            <views:InverseBoolConverter         x:Key="InverseBoolConverter"/>
+            <views:PercentToWidthConverter      x:Key="PercentToWidthConverter"/>
+            <views:PercentToStarConverter       x:Key="PercentToStarConverter"/>
+            <views:AdminBadgeVisibilityConverter x:Key="AdminBadgeVisibilityConverter"/>
+            <views:ScoreToArcConverter          x:Key="ScoreToArcConverter"/>
+            <views:NavActiveBgConverter         x:Key="NavActiveBgConverter"/>
+            <views:NavActiveFgConverter         x:Key="NavActiveFgConverter"/>
 
         <!-- ═══════════════════════════════════════════════════════════
              PALETTE  –  Dark sobre, accent bleu ardoise
@@ -62,13 +77,15 @@
         <SolidColorBrush x:Key="StatusLiveSuccessBgBrush"     Color="#1E2E1E"/>
         <SolidColorBrush x:Key="StatusLiveSuccessBorderBrush" Color="#2E4A2E"/>
 
-        <!-- Badges (Admin / Reboot / Advanced) -->
+        <!-- Badges (Admin / Reboot / Advanced / Security) -->
         <SolidColorBrush x:Key="BadgeAdminBgBrush"        Color="#1E2834"/>
         <SolidColorBrush x:Key="BadgeAdminTextBrush"      Color="#6A9FD8"/>
         <SolidColorBrush x:Key="BadgeRebootBgBrush"       Color="#2A1E1E"/>
         <SolidColorBrush x:Key="BadgeRebootTextBrush"     Color="#C06060"/>
         <SolidColorBrush x:Key="BadgeAdvancedBgBrush"     Color="#3A2A1E"/>
         <SolidColorBrush x:Key="BadgeAdvancedTextBrush"   Color="#D0A46A"/>
+        <SolidColorBrush x:Key="BadgeSecurityBgBrush"     Color="#3A1F2A"/>
+        <SolidColorBrush x:Key="BadgeSecurityTextBrush"   Color="#D07AA0"/>
 
         <!-- Contrôles (scrollbar / toggle) -->
         <SolidColorBrush x:Key="ScrollBarThumbBrush"      Color="#383838"/>

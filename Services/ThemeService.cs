@@ -67,6 +67,8 @@ namespace Klyr.Services
             ["BadgeRebootTextBrush"]     = C("#C06060"),
             ["BadgeAdvancedBgBrush"]     = C("#3A2A1E"),
             ["BadgeAdvancedTextBrush"]   = C("#D0A46A"),
+            ["BadgeSecurityBgBrush"]     = C("#3A1F2A"),
+            ["BadgeSecurityTextBrush"]   = C("#D07AA0"),
 
             // Contrôles
             ["ScrollBarThumbBrush"]      = C("#383838"),
@@ -131,6 +133,8 @@ namespace Klyr.Services
             ["BadgeRebootTextBrush"]     = C("#C62828"),
             ["BadgeAdvancedBgBrush"]     = C("#FFF3E0"),
             ["BadgeAdvancedTextBrush"]   = C("#E65100"),
+            ["BadgeSecurityBgBrush"]     = C("#FCE4EC"),
+            ["BadgeSecurityTextBrush"]   = C("#AD1457"),
 
             // Contrôles
             ["ScrollBarThumbBrush"]      = C("#C1C1C1"),

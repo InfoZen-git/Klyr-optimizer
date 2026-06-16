@@ -10,6 +10,16 @@ namespace Klyr
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            // v2.3.0 — Mode scan programmé (headless) : nettoyage silencieux puis fermeture.
+            // Vérifié AVANT base.OnStartup pour éviter d'afficher le SplashScreen (StartupUri).
+            if (e.Args.Any(a => string.Equals(a, ScheduledScanService.CleanArg, StringComparison.OrdinalIgnoreCase)))
+            {
+                try { SilentCleanupService.Run(); }
+                catch { /* best-effort */ }
+                Shutdown();
+                return;
+            }
+
             base.OnStartup(e);
 
             // Capture toutes les exceptions non gérées
@@ -23,7 +33,7 @@ namespace Klyr
 
             ThemeService.ApplyTheme(SettingsService.Current.Theme);
 
-            LogService.Instance.Info(Strings.Log_AppStarted, "App");
+            LogService.Instance.Info(string.Format(Strings.Log_AppStarted, "v" + DiagnosticService.AppVersion), "App");
         }
 
         /// <summary>

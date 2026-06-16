@@ -32,7 +32,7 @@
                     <Button HorizontalAlignment="Right"
                             Width="32" Height="26" BorderThickness="0"
                             Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
-                            Cursor="Hand" Click="Close_Click" ToolTip="Fermer">
+                            Cursor="Hand" Click="Close_Click" ToolTip="{x:Static loc:Strings.Button_Close}">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">

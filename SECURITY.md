@@ -12,12 +12,16 @@ Seule la version la plus récente reçoit les correctifs de sécurité.
 ## Périmètre
 
 Klyr est un optimiseur Windows qui :
-- Lance des commandes système (`netsh`, `sfc`, `DISM`, `powercfg`, etc.)
+- Lance des commandes système (`netsh`, `sfc`, `DISM`, `powercfg`, `winget`, `schtasks`, etc.)
 - Modifie le registre Windows (HKLM + HKCU)
 - Édite le fichier `C:\Windows\System32\drivers\etc\hosts`
 - Crée des points de restauration système
 - Tue des processus utilisateur (avec confirmation)
 - Effectue des reset réseau / pare-feu (avec backup ciblé)
+- **v2.3.0** : désinstalle des programmes et supprime des dossiers résiduels — avec confirmation, matching par nom **exact** et garde-fou anti-suppression de dossiers système/racines
+- **v2.3.0** : charge un pilote noyau de lecture de capteurs (WinRing0, via LibreHardwareMonitor) pour les températures CPU/GPU. Ce pilote signé donne un accès ring0 ; il est **désactivable dans Paramètres → Capteurs matériels** pour réduire la surface d'attaque
+- **v2.3.0** : crée une tâche planifiée pour le nettoyage automatique, nettoie les navigateurs et %TEMP%
+- **v2.3.0** : vérifie les mises à jour via un `GET` HTTPS vers l'API GitHub Releases (lecture seule, aucune donnée envoyée, désactivable). Les URL ouvertes sont validées (schéma http/https uniquement) avant transmission au shell
 
 Les vulnérabilités potentielles concernent surtout :
 - **Élévation de privilèges** : exploitation d'une optimisation pour obtenir des droits admin non sollicités

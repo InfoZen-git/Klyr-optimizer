@@ -36,7 +36,17 @@ namespace Klyr.Models
         public bool   RequiresReboot { get; set; } = false;
         public bool   IsAdvanced     { get; set; } = false;
         public bool   IsBenchmarkCandidate { get; set; } = false;
+
+        /// <summary>
+        /// v2.3.0 — true si cette optimisation libère de l'espace disque sur C:.
+        /// MainViewModel mesure le delta d'espace libre autour de l'action et
+        /// l'enregistre dans l'historique de nettoyage en cas de succès.
+        /// </summary>
+        public bool   IsDiskCleanup  { get; set; } = false;
         public OptimizationPurpose Purpose { get; set; } = OptimizationPurpose.Performance;
+
+        /// <summary>true si l'optimisation touche à la sécurité / vie privée (badge dédié).</summary>
+        public bool IsSecurity => Purpose == OptimizationPurpose.SecurityPrivacy;
 
         /// <summary>
         /// Action à exécuter – retourne le message de résultat.

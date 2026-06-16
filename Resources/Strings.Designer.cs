@@ -88,6 +88,9 @@ namespace Klyr.Resources
         public static string Status_Cancelled  => Get(nameof(Status_Cancelled));
         public static string Status_Cancelling => Get(nameof(Status_Cancelling));
         public static string Status_Simulated  => Get(nameof(Status_Simulated));
+        public static string Status_CreatingRestorePoint => Get(nameof(Status_CreatingRestorePoint));
+        public static string Status_RunningItem          => Get(nameof(Status_RunningItem));
+        public static string Status_StopRequested        => Get(nameof(Status_StopRequested));
 
         // ─────────── SPLASH ───────────
         public static string Splash_CheckAdmin    => Get(nameof(Splash_CheckAdmin));
@@ -126,6 +129,7 @@ namespace Klyr.Resources
         public static string Settings_Language_FR         => Get(nameof(Settings_Language_FR));
         public static string Settings_Language_EN         => Get(nameof(Settings_Language_EN));
         public static string Settings_LanguageRestartHint => Get(nameof(Settings_LanguageRestartHint));
+        public static string Settings_LanguageRestartNow  => Get(nameof(Settings_LanguageRestartNow));
 
         // ─────────── DASHBOARD ───────────
         public static string Dashboard_System       => Get(nameof(Dashboard_System));
@@ -146,6 +150,7 @@ namespace Klyr.Resources
         public static string Badge_Admin    => Get(nameof(Badge_Admin));
         public static string Badge_Reboot   => Get(nameof(Badge_Reboot));
         public static string Badge_Advanced => Get(nameof(Badge_Advanced));
+        public static string Badge_Security => Get(nameof(Badge_Security));
 
         // ─────────── DASHBOARD ───────────
         public static string Dashboard_NavTitle       => Get(nameof(Dashboard_NavTitle));
@@ -163,6 +168,13 @@ namespace Klyr.Resources
         public static string Nav_About         => Get(nameof(Nav_About));
         public static string Nav_RestorePoint  => Get(nameof(Nav_RestorePoint));
         public static string Nav_ExportLogs    => Get(nameof(Nav_ExportLogs));
+
+        // ─────────── v2.3.0 NAV TOOLS ───────────
+        public static string Nav_Uninstaller  => Get(nameof(Nav_Uninstaller));
+        public static string Nav_Updater      => Get(nameof(Nav_Updater));
+        public static string Nav_DiskAnalyzer => Get(nameof(Nav_DiskAnalyzer));
+        public static string Nav_Startup      => Get(nameof(Nav_Startup));
+        public static string Nav_Browser      => Get(nameof(Nav_Browser));
 
         // ─────────── TERMINAL ───────────
         public static string Terminal_Live      => Get(nameof(Terminal_Live));
@@ -340,6 +352,9 @@ namespace Klyr.Resources
         public static string Log_PrivacyNotice  => Get(nameof(Log_PrivacyNotice));
         public static string Log_AdminWarning   => Get(nameof(Log_AdminWarning));
         public static string Log_AdminConfirmed => Get(nameof(Log_AdminConfirmed));
+        public static string Log_SensorsInitialized => Get(nameof(Log_SensorsInitialized));
+        public static string Log_UpdateFound        => Get(nameof(Log_UpdateFound));
+        public static string Log_SpaceFreed         => Get(nameof(Log_SpaceFreed));
 
         // ─────────── LOG CATEGORIES ───────────
         public static string Category_System    => Get(nameof(Category_System));
@@ -357,9 +372,96 @@ namespace Klyr.Resources
         public static string Dashboard_OptimizationsRunSuffix => Get(nameof(Dashboard_OptimizationsRunSuffix));
         public static string Dashboard_DiskUnitGo             => Get(nameof(Dashboard_DiskUnitGo));
 
+        // ─────────── v2.3.0 UNINSTALLER ───────────
+        public static string Uninstaller_Title             => Get(nameof(Uninstaller_Title));
+        public static string Uninstaller_SearchPlaceholder => Get(nameof(Uninstaller_SearchPlaceholder));
+        public static string Uninstaller_Count             => Get(nameof(Uninstaller_Count));
+        public static string Uninstaller_Loading           => Get(nameof(Uninstaller_Loading));
+        public static string Uninstaller_Refresh           => Get(nameof(Uninstaller_Refresh));
+        public static string Uninstaller_UninstallSelected => Get(nameof(Uninstaller_UninstallSelected));
+        public static string Uninstaller_NoSelection       => Get(nameof(Uninstaller_NoSelection));
+        public static string Uninstaller_ConfirmUninstall  => Get(nameof(Uninstaller_ConfirmUninstall));
+        public static string Uninstaller_Uninstalling      => Get(nameof(Uninstaller_Uninstalling));
+        public static string Uninstaller_LeftoversTitle    => Get(nameof(Uninstaller_LeftoversTitle));
+        public static string Uninstaller_LeftoversFound    => Get(nameof(Uninstaller_LeftoversFound));
+        public static string Uninstaller_LeftoversRemoved  => Get(nameof(Uninstaller_LeftoversRemoved));
+
+        // ─────────── v2.3.0 SOFTWARE UPDATER ───────────
+        public static string Updater_Title          => Get(nameof(Updater_Title));
+        public static string Updater_Loading        => Get(nameof(Updater_Loading));
+        public static string Updater_WingetMissing  => Get(nameof(Updater_WingetMissing));
+        public static string Updater_AllUpToDate    => Get(nameof(Updater_AllUpToDate));
+        public static string Updater_Count          => Get(nameof(Updater_Count));
+        public static string Updater_UpdateSelected => Get(nameof(Updater_UpdateSelected));
+        public static string Updater_NoSelection    => Get(nameof(Updater_NoSelection));
+        public static string Updater_Updating       => Get(nameof(Updater_Updating));
+        public static string Updater_Done           => Get(nameof(Updater_Done));
+        public static string Updater_WindowsUpdate     => Get(nameof(Updater_WindowsUpdate));
+        public static string Updater_WindowsUpdateHint => Get(nameof(Updater_WindowsUpdateHint));
+
+        // ─────────── v2.3.0 DISK ANALYZER ───────────
+        public static string DiskAnalyzer_Title    => Get(nameof(DiskAnalyzer_Title));
+        public static string DiskAnalyzer_Up       => Get(nameof(DiskAnalyzer_Up));
+        public static string DiskAnalyzer_Scanning => Get(nameof(DiskAnalyzer_Scanning));
+        public static string DiskAnalyzer_Status   => Get(nameof(DiskAnalyzer_Status));
+        public static string DiskAnalyzer_Start    => Get(nameof(DiskAnalyzer_Start));
+        public static string DiskAnalyzer_Stop     => Get(nameof(DiskAnalyzer_Stop));
+        public static string DiskAnalyzer_Idle     => Get(nameof(DiskAnalyzer_Idle));
+        public static string DiskAnalyzer_Stopped  => Get(nameof(DiskAnalyzer_Stopped));
+
+        // ─────────── v2.3.0 STARTUP MANAGER ───────────
+        public static string Startup_Title        => Get(nameof(Startup_Title));
+        public static string Startup_Loading      => Get(nameof(Startup_Loading));
+        public static string Startup_Status       => Get(nameof(Startup_Status));
+        public static string Startup_ToggleFailed => Get(nameof(Startup_ToggleFailed));
+
+        // ─────────── v2.3.0 BROWSER CLEANER ───────────
+        public static string Browser_Title      => Get(nameof(Browser_Title));
+        public static string Browser_Warning    => Get(nameof(Browser_Warning));
+        public static string Browser_Cache      => Get(nameof(Browser_Cache));
+        public static string Browser_Cookies    => Get(nameof(Browser_Cookies));
+        public static string Browser_History    => Get(nameof(Browser_History));
+        public static string Browser_NoBrowser  => Get(nameof(Browser_NoBrowser));
+        public static string Browser_Detected   => Get(nameof(Browser_Detected));
+        public static string Browser_CleanNow   => Get(nameof(Browser_CleanNow));
+        public static string Browser_Confirm    => Get(nameof(Browser_Confirm));
+        public static string Browser_Cleaning   => Get(nameof(Browser_Cleaning));
+        public static string Browser_Done       => Get(nameof(Browser_Done));
+
+        // ─────────── v2.3.0 UPDATE CHECK ───────────
+        public static string Update_Available        => Get(nameof(Update_Available));
+        public static string Settings_UpdateCheck    => Get(nameof(Settings_UpdateCheck));
+        public static string Settings_UpdateCheckDesc => Get(nameof(Settings_UpdateCheckDesc));
+
+        // ─────────── v2.3.0 HARDWARE SENSORS ───────────
+        public static string Settings_HwSensors     => Get(nameof(Settings_HwSensors));
+        public static string Settings_HwSensorsDesc => Get(nameof(Settings_HwSensorsDesc));
+
+        // ─────────── v2.3.0 SCHEDULED SCANS ───────────
+        public static string Settings_HeaderSchedule  => Get(nameof(Settings_HeaderSchedule));
+        public static string Settings_ScheduleEnable  => Get(nameof(Settings_ScheduleEnable));
+        public static string Settings_ScheduleDesc    => Get(nameof(Settings_ScheduleDesc));
+        public static string Settings_ScheduleDaily   => Get(nameof(Settings_ScheduleDaily));
+        public static string Settings_ScheduleWeekly  => Get(nameof(Settings_ScheduleWeekly));
+        public static string Settings_ScheduleMonthly => Get(nameof(Settings_ScheduleMonthly));
+        public static string Settings_ScheduleFailed  => Get(nameof(Settings_ScheduleFailed));
+
         // ─────────── WINDOW CONTROLS TOOLTIPS ───────────
         public static string Tooltip_Minimize => Get(nameof(Tooltip_Minimize));
         public static string Tooltip_Maximize => Get(nameof(Tooltip_Maximize));
         public static string Tooltip_Close    => Get(nameof(Tooltip_Close));
+
+        // ─────────── v2.3.0 DASHBOARD ───────────
+        public static string Dashboard_PerfScoreTitle => Get(nameof(Dashboard_PerfScoreTitle));
+        public static string Dashboard_PerfScoreHint  => Get(nameof(Dashboard_PerfScoreHint));
+        public static string Module_OptimizationsAvailable => Get(nameof(Module_OptimizationsAvailable));
+        public static string Score_Excellent => Get(nameof(Score_Excellent));
+        public static string Score_Good      => Get(nameof(Score_Good));
+        public static string Score_Average   => Get(nameof(Score_Average));
+        public static string Score_Low       => Get(nameof(Score_Low));
+        public static string Score_Critical  => Get(nameof(Score_Critical));
+        public static string Dashboard_CardGPU        => Get(nameof(Dashboard_CardGPU));
+        public static string Dashboard_GpuLoad        => Get(nameof(Dashboard_GpuLoad));
+        public static string Dashboard_GpuTemp        => Get(nameof(Dashboard_GpuTemp));
     }
 }

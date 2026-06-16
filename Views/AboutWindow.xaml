@@ -31,7 +31,7 @@
                     <Button HorizontalAlignment="Right"
                             Width="32" Height="26" BorderThickness="0"
                             Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
-                            Cursor="Hand" Click="Close_Click" ToolTip="Fermer">
+                            Cursor="Hand" Click="Close_Click" ToolTip="{x:Static loc:Strings.Button_Close}">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
@@ -89,7 +89,7 @@
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static loc:Strings.About_Developer}"
                                Foreground="{DynamicResource TextMutedBrush}" FontSize="12" Margin="0,0,0,7"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="InfoZen"
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="InfoZen · Yahya"
                                Foreground="{DynamicResource AccentBrush}" FontSize="12" FontWeight="Medium" Margin="0,0,0,7"/>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static loc:Strings.About_Compatibility}"

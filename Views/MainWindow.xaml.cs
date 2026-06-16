@@ -12,14 +12,8 @@ namespace Klyr.Views
     {
         public MainWindow()
         {
-            // Enregistre les convertisseurs avant InitializeComponent
-            Resources.Add("PageVisibilityConverter", new PageVisibilityConverter());
-            Resources.Add("BoolToVisibilityConverter", new BoolToVisibilityConverter());
-            Resources.Add("InverseBoolConverter", new InverseBoolConverter());
-            Resources.Add("PercentToWidthConverter", new PercentToWidthConverter());
-            Resources.Add("PercentToStarConverter", new PercentToStarConverter());
-            Resources.Add("AdminBadgeVisibilityConverter", new AdminBadgeVisibilityConverter());
-
+            // v2.3.0 — Les convertisseurs sont désormais déclarés en portée globale dans App.xaml
+            // (accessibles depuis MainWindow ET tous les UserControls/DataTemplates).
             InitializeComponent();
 
             // FIX P2-01: Auto-scroll du terminal si activé dans les settings
@@ -135,10 +129,95 @@ namespace Klyr.Views
                 "Dashboard" => page == "Dashboard"      ? Visibility.Visible : Visibility.Collapsed,
                 "Terminal"  => page == "Terminal"        ? Visibility.Visible : Visibility.Collapsed,
                 "Module"    => ModulePages.Contains(page)? Visibility.Visible : Visibility.Collapsed,
-                _           => Visibility.Collapsed
+                // v2.3.0 — pages outils intégrées : match exact sur le nom de page
+                _           => page == param             ? Visibility.Visible : Visibility.Collapsed
             };
         }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// v2.3.0 — Convertit un score 0-100 en arc circulaire (jauge style VoltAir).
+    /// Cercle de rayon 54 centré en (64,64), départ en haut, sens horaire.
+    /// </summary>
+    public class ScoreToArcConverter : IValueConverter
+    {
+        private const double Cx = 64, Cy = 64, R = 54;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double pct = value switch
+            {
+                int i => i,
+                double d => d,
+                float f => f,
+                _ => 0
+            };
+            pct = Math.Clamp(pct, 0, 100);
+
+            var geo = new System.Windows.Media.StreamGeometry();
+            if (pct <= 0) return geo;
+
+            // Évite l'arc 360° exact (ArcSegment ne dessine rien) en clampant à 359.9°
+            double sweep = Math.Min(pct / 100.0 * 360.0, 359.9);
+            double startAngle = -90;                       // haut
+            double endAngle = startAngle + sweep;
+
+            System.Windows.Point P(double angleDeg)
+            {
+                double a = angleDeg * Math.PI / 180.0;
+                return new System.Windows.Point(Cx + R * Math.Cos(a), Cy + R * Math.Sin(a));
+            }
+
+            var start = P(startAngle);
+            var end = P(endAngle);
+            bool largeArc = sweep > 180;
+
+            using (var ctx = geo.Open())
+            {
+                ctx.BeginFigure(start, isFilled: false, isClosed: false);
+                ctx.ArcTo(end, new System.Windows.Size(R, R), 0,
+                    largeArc, System.Windows.Media.SweepDirection.Clockwise,
+                    isStroked: true, isSmoothJoin: false);
+            }
+            geo.Freeze();
+            return geo;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// v2.3.0 — État actif du sidebar : fond accentué subtil si CurrentPage == ConverterParameter.
+    /// </summary>
+    public class NavActiveBgConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool active = string.Equals(value?.ToString(), parameter?.ToString(), StringComparison.Ordinal);
+            if (!active) return System.Windows.Media.Brushes.Transparent;
+            return Application.Current.TryFindResource("AccentSubtleBrush")
+                   ?? (object)System.Windows.Media.Brushes.Transparent;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// v2.3.0 — Texte accentué pour l'item de nav actif (sinon couleur secondaire).
+    /// </summary>
+    public class NavActiveFgConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool active = string.Equals(value?.ToString(), parameter?.ToString(), StringComparison.Ordinal);
+            string key = active ? "AccentBrush" : "TextSecondaryBrush";
+            return Application.Current.TryFindResource(key)
+                   ?? (object)System.Windows.Media.Brushes.Gray;
+        }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }

@@ -10,14 +10,14 @@
     <RootNamespace>Klyr</RootNamespace>
     <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.2.0</Version>
-    <FileVersion>2.2.0.0</FileVersion>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <Authors>InfoZen</Authors>
+    <Version>2.3.0</Version>
+    <FileVersion>2.3.0.0</FileVersion>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <Authors>InfoZen · Yahya</Authors>
     <Company>Klyr</Company>
     <Product>Klyr Optimiseur PC</Product>
-    <Description>Optimiseur PC Windows – par InfoZen</Description>
-    <Copyright>Copyright © 2026 InfoZen</Copyright>
+    <Description>Optimiseur PC Windows – par InfoZen · Yahya</Description>
+    <Copyright>Copyright © 2026 InfoZen · Yahya</Copyright>
     <PlatformTarget>x64</PlatformTarget>
     <Platforms>x64</Platforms>
     <Prefer32Bit>false</Prefer32Bit>
@@ -26,12 +26,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
     <PackageReference Include="System.Management" Version="10.0.5" />
   </ItemGroup>
 
   <!-- Icône incluse dans le build -->
   <ItemGroup>
-    <Resource Include="Assets\Icons\icon.ico"/>
+    <Resource Include="Assets\Icons\icon.ico" />
   </ItemGroup>
 
   <!-- v2.2.0 : Localisation FR/EN via ResourceManager + satellite assemblies -->

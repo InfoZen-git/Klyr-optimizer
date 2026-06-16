@@ -7,6 +7,69 @@ utilise un versionnement semantique [SemVer](https://semver.org/lang/fr/).
 
 ---
 
+## [2.3.0] — En préparation
+
+Grosse mise à jour inspirée des meilleures features de **Kudu** et **VoltAir**, repensées pour aller plus loin.
+
+### Added — Monitoring matériel (LibreHardwareMonitor)
+- Lecture réelle des capteurs via `LibreHardwareMonitorLib` : température + usage GPU (toutes marques), vitesse disque read/write
+- `HardwareMonitorService` (singleton thread-safe, best-effort, ne throw jamais)
+- Dashboard enrichi : vitesse disque live, **nouvelle carte GPU** (nom + usage + température)
+- ⚠️ Température **CPU retirée de l'affichage** : sur AMD/Intel elle dépend du driver ring0 WinRing0, bloqué par l'Intégrité mémoire (HVCI) de Windows 11 → lecture `0` non fiable. On n'affiche rien plutôt qu'une valeur fausse. Le Performance Score n'utilise donc que CPU/RAM/disque.
+
+### Added — Performance Score
+- Note globale **/100** affichée en grand sur le Dashboard, recalculée toutes les 2 s
+- `PerformanceScoreService` : pondération marge CPU (35) + marge RAM (35) + espace disque libre (30), poids renormalisés si capteur absent
+- Code couleur + libellé (Excellent / Bon / Moyen / Faible / Critique)
+
+### Added — Désinstalleur de programmes + détection des restes
+- Liste les programmes installés (registre Uninstall HKLM 64/32 bits + HKCU), filtre les composants système et mises à jour
+- Désinstallation (mode silencieux si dispo), puis **scan des dossiers résiduels** (InstallLocation, %AppData%, %LocalAppData%, %ProgramData%, Program Files) avec suppression sur confirmation
+- Recherche + sélection multiple
+
+### Added — Software Updater (winget)
+- Détecte les apps avec maj dispo via `winget upgrade`, parsing robuste de la sortie tabulaire
+- Mise à jour en masse en un clic, fallback propre si winget absent
+
+### Added — Disk Analyzer
+- Scanne un lecteur/dossier, calcule la taille de chaque sous-dossier (récursif parallélisé), trie par taille
+- Barres proportionnelles colorées + drill-down (clic pour explorer, bouton parent, sélecteur de lecteur)
+
+### Added — Startup Manager
+- Liste les programmes au démarrage (registre Run HKLM/HKCU + dossiers Startup)
+- Activation/désactivation **réversible** (backup dans une clé/dossier Klyr dédié, jamais de suppression destructive)
+
+### Added — Browser Cleaner
+- Détecte Chrome, Edge, Brave, Firefox ; nettoie cache / cookies / historique séparément (cases à cocher par navigateur)
+- Calcul de l'espace libéré affiché à l'écran et journalisé
+
+### Added — Mise à jour in-app (auto-updater)
+- `UpdateService` : vérifie les GitHub Releases au démarrage (GET API, **aucune donnée envoyée**, pas de télémétrie)
+- Bouton « v X.Y disponible » dans la barre de titre quand une version plus récente existe → ouvre la page de release
+- Setting `EnableUpdateCheck` (désactivable) ; **à configurer** : `GitHubOwner`/`GitHubRepo` dans `UpdateService.cs` (no-op sûr tant que non renseigné)
+
+### Added — Diagnostic enrichi
+- Le rapport diagnostic (`system_info.txt`) inclut désormais les capteurs : temp/charge CPU, GPU (nom/temp/usage), vitesses + temp disque
+
+### Added — Scans programmés
+- Nettoyage automatique quotidien/hebdo/mensuel via le Planificateur de tâches Windows (`schtasks`)
+- Mode headless `Klyr.exe --scheduled-clean` : nettoie temp + caches navigateurs sans ouvrir l'UI, puis se ferme
+- UI dans Paramètres (toggle + fréquence)
+
+### Changed
+- Sidebar : nouvelle section « Outils » (Désinstalleur, Mises à jour, Analyseur disque, Démarrage, Navigateurs) ; nav désormais scrollable
+- Espace libéré par les optimisations de nettoyage désormais **journalisé dans les logs** (mesure réelle du delta d'espace libre sur C:) — l'onglet « Historique » dédié a été retiré car redondant avec les logs
+- Badges d'optimisation simplifiés : **Admin / Redémarrage / Sécurité** uniquement (badges « objectif » génériques et « Avancé » retirés)
+- `SystemInfoModel` étendu (températures, GPU, vitesses disque, score)
+- Version assembly bumpée à 2.3.0.0
+- Dépendance ajoutée : `LibreHardwareMonitorLib` 0.9.6
+
+### Notes
+- La lecture des températures nécessite les droits administrateur (accès driver ring0). Sans admin, usages/charges restent dispo, températures à « — ».
+- Toutes les nouvelles chaînes sont traduites FR + EN.
+
+---
+
 ## [2.2.0] — En préparation
 
 ### Added

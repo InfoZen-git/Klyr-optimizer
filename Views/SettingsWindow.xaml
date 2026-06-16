@@ -32,7 +32,7 @@
                     <Button HorizontalAlignment="Right"
                             Width="32" Height="26" BorderThickness="0"
                             Background="Transparent" Foreground="{DynamicResource TextTertiaryBrush}"
-                            Cursor="Hand" Click="Close_Click" ToolTip="Fermer">
+                            Cursor="Hand" Click="Close_Click" ToolTip="{x:Static loc:Strings.Button_Close}">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
@@ -214,6 +214,44 @@
                         </Grid>
                     </Border>
 
+                    <!-- v2.3.0 (sécurité) — Capteurs matériels (driver kernel) -->
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{x:Static loc:Strings.Settings_HwSensors}"
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{x:Static loc:Strings.Settings_HwSensorsDesc}"
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleHwSensors"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- v2.3.0 — Vérification des mises à jour -->
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{x:Static loc:Strings.Settings_UpdateCheck}"
+                                           FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{x:Static loc:Strings.Settings_UpdateCheckDesc}"
+                                           FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" x:Name="ToggleUpdateCheck"
+                                      Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
                     <!-- Theme -->
                     <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
                             BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,18">
@@ -254,6 +292,42 @@
                                 <RadioButton x:Name="LangEn" GroupName="Language"
                                              Content="{x:Static loc:Strings.Settings_Language_EN}"
                                              Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- v2.3.0 — Scans programmés -->
+                    <TextBlock Text="{x:Static loc:Strings.Settings_HeaderSchedule}" FontSize="10" FontWeight="Bold"
+                               Foreground="{DynamicResource TextMutedBrush}" Margin="0,18,0,10"/>
+
+                    <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="7" Padding="14,12"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static loc:Strings.Settings_ScheduleEnable}"
+                                               FontSize="12" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="{x:Static loc:Strings.Settings_ScheduleDesc}"
+                                               FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <CheckBox Grid.Column="1" x:Name="ToggleSchedule"
+                                          Style="{StaticResource ToggleStyle}" VerticalAlignment="Center"
+                                          Click="ToggleSchedule_Click"/>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0" x:Name="FreqPanel">
+                                <RadioButton x:Name="FreqDaily" GroupName="Freq" Margin="0,0,18,0"
+                                             Content="{x:Static loc:Strings.Settings_ScheduleDaily}"
+                                             Foreground="{DynamicResource TextPrimaryBrush}" Checked="Freq_Checked"/>
+                                <RadioButton x:Name="FreqWeekly" GroupName="Freq" Margin="0,0,18,0" IsChecked="True"
+                                             Content="{x:Static loc:Strings.Settings_ScheduleWeekly}"
+                                             Foreground="{DynamicResource TextPrimaryBrush}" Checked="Freq_Checked"/>
+                                <RadioButton x:Name="FreqMonthly" GroupName="Freq"
+                                             Content="{x:Static loc:Strings.Settings_ScheduleMonthly}"
+                                             Foreground="{DynamicResource TextPrimaryBrush}" Checked="Freq_Checked"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

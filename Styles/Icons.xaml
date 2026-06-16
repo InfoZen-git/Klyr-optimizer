@@ -53,6 +53,13 @@
     <sys:String x:Key="IconDisk">&#xEDA2;</sys:String>               <!-- HardDrive -->
     <sys:String x:Key="IconSession">&#xE823;</sys:String>            <!-- TimeRunning -->
     <sys:String x:Key="IconLive">&#xEC4A;</sys:String>               <!-- Pulse / live indicator -->
+    <sys:String x:Key="IconGpu">&#xF211;</sys:String>                <!-- GPU / graphics card -->
+    <sys:String x:Key="IconUninstall">&#xE74D;</sys:String>          <!-- Delete (uninstaller) -->
+    <sys:String x:Key="IconUpdate">&#xE777;</sys:String>             <!-- Update / download -->
+    <sys:String x:Key="IconDiskAnalyzer">&#xE9D9;</sys:String>       <!-- DiagnosticDataViewer / treemap -->
+    <sys:String x:Key="IconStartup">&#xE7B5;</sys:String>            <!-- PowerButton / startup -->
+    <sys:String x:Key="IconBrowser">&#xE774;</sys:String>            <!-- Globe / browser -->
+    <sys:String x:Key="IconSchedule">&#xE787;</sys:String>           <!-- Calendar / schedule -->
 
     <!-- ═════════ FONCTIONS ═════════ -->
     <sys:String x:Key="IconChevronRight">&#xE76C;</sys:String>

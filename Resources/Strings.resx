@@ -105,6 +105,9 @@
   <data name="Status_Cancelled" xml:space="preserve"><value>Annulé</value></data>
   <data name="Status_Cancelling" xml:space="preserve"><value>Annulation…</value></data>
   <data name="Status_Simulated" xml:space="preserve"><value>Simulé</value></data>
+  <data name="Status_CreatingRestorePoint" xml:space="preserve"><value>Création du point de restauration…</value></data>
+  <data name="Status_RunningItem" xml:space="preserve"><value>⟳  {0}</value></data>
+  <data name="Status_StopRequested" xml:space="preserve"><value>Arrêt demandé…</value></data>
 
   <!-- ─── SPLASH SCREEN ─── -->
   <data name="Splash_CheckAdmin" xml:space="preserve"><value>Vérification des droits…</value></data>
@@ -156,7 +159,8 @@ Les mettre en quarantaine maintenant ?</value></data>
   <data name="Settings_Language_Auto" xml:space="preserve"><value>Auto (système)</value></data>
   <data name="Settings_Language_FR" xml:space="preserve"><value>Français</value></data>
   <data name="Settings_Language_EN" xml:space="preserve"><value>English</value></data>
-  <data name="Settings_LanguageRestartHint" xml:space="preserve"><value>Le changement de langue prend effet au prochain démarrage.</value></data>
+  <data name="Settings_LanguageRestartHint" xml:space="preserve"><value>Klyr redémarre automatiquement après le changement de langue.</value></data>
+  <data name="Settings_LanguageRestartNow" xml:space="preserve"><value>La langue a été modifiée. Klyr va redémarrer pour l'appliquer.</value></data>
 
   <!-- ─── DASHBOARD ─── -->
   <data name="Dashboard_System" xml:space="preserve"><value>Système</value></data>
@@ -175,8 +179,9 @@ Les mettre en quarantaine maintenant ?</value></data>
 
   <!-- ─── BADGES ─── -->
   <data name="Badge_Admin" xml:space="preserve"><value>Admin</value></data>
-  <data name="Badge_Reboot" xml:space="preserve"><value>Reboot</value></data>
+  <data name="Badge_Reboot" xml:space="preserve"><value>Redémarrage</value></data>
   <data name="Badge_Advanced" xml:space="preserve"><value>Avancé</value></data>
+  <data name="Badge_Security" xml:space="preserve"><value>Sécurité</value></data>
 
   <!-- ─── DASHBOARD CARDS / SECTIONS ─── -->
   <data name="Dashboard_NavTitle" xml:space="preserve"><value>NAVIGATION</value></data>
@@ -194,6 +199,13 @@ Les mettre en quarantaine maintenant ?</value></data>
   <data name="Nav_About" xml:space="preserve"><value>À propos</value></data>
   <data name="Nav_RestorePoint" xml:space="preserve"><value>Point de restauration</value></data>
   <data name="Nav_ExportLogs" xml:space="preserve"><value>Exporter les logs</value></data>
+
+  <!-- ─── v2.3.0 NAV OUTILS ─── -->
+  <data name="Nav_Uninstaller" xml:space="preserve"><value>Désinstalleur</value></data>
+  <data name="Nav_Updater" xml:space="preserve"><value>Mises à jour</value></data>
+  <data name="Nav_DiskAnalyzer" xml:space="preserve"><value>Analyseur disque</value></data>
+  <data name="Nav_Startup" xml:space="preserve"><value>Démarrage</value></data>
+  <data name="Nav_Browser" xml:space="preserve"><value>Navigateurs</value></data>
 
   <!-- ─── TERMINAL ─── -->
   <data name="Terminal_Live" xml:space="preserve"><value>LIVE</value></data>
@@ -379,13 +391,16 @@ Le développeur ne pourra être tenu responsable de tout dommage résultant de l
   <data name="Legal_AuditHeader" xml:space="preserve"><value>Journal des modifications (Audit)</value></data>
   <data name="Legal_AuditContent" xml:space="preserve"><value>Chaque action est consignée dans le terminal et exportable en .txt.
 Chemin : Documents\Klyr\Logs\Klyr_log_AAAAMMJJ.txt</value></data>
-  <data name="Legal_Footer" xml:space="preserve"><value>Klyr v2.2 — Développé par InfoZen — 2026</value></data>
+  <data name="Legal_Footer" xml:space="preserve"><value>Klyr — Développé par InfoZen · Yahya — 2026</value></data>
 
   <!-- ─── LOG MESSAGES (startup / admin) ─── -->
-  <data name="Log_AppStarted" xml:space="preserve"><value>Klyr v2.2 démarré.</value></data>
+  <data name="Log_AppStarted" xml:space="preserve"><value>Klyr {0} démarré.</value></data>
   <data name="Log_PrivacyNotice" xml:space="preserve"><value>Klyr fonctionne exclusivement en local. Aucune donnée personnelle n'est collectée.</value></data>
   <data name="Log_AdminWarning" xml:space="preserve"><value>Klyr n'est pas lancé en administrateur. Les optimisations marquées [Admin] seront ignorées ou échoueront. Relancez Klyr en tant qu'administrateur pour un accès complet.</value></data>
   <data name="Log_AdminConfirmed" xml:space="preserve"><value>Droits administrateur confirmés.</value></data>
+  <data name="Log_SensorsInitialized" xml:space="preserve"><value>Capteurs matériels initialisés (LibreHardwareMonitor).</value></data>
+  <data name="Log_UpdateFound" xml:space="preserve"><value>Mise à jour disponible : v{0}</value></data>
+  <data name="Log_SpaceFreed" xml:space="preserve"><value>« {0} » : {1} libérés.</value></data>
 
   <!-- ─── LOG CATEGORIES (translated at LogService level) ─── -->
   <data name="Category_System" xml:space="preserve"><value>Système</value></data>
@@ -402,6 +417,105 @@ Chemin : Documents\Klyr\Logs\Klyr_log_AAAAMMJJ.txt</value></data>
   <!-- ─── DASHBOARD INLINE TEXTS ─── -->
   <data name="Dashboard_OptimizationsRunSuffix" xml:space="preserve"><value>optimisations lancées</value></data>
   <data name="Dashboard_DiskUnitGo" xml:space="preserve"><value> Go</value></data>
+
+  <!-- ─── v2.3.0 DASHBOARD (perf score + GPU) ─── -->
+  <data name="Dashboard_PerfScoreTitle" xml:space="preserve"><value>SCORE DE PERFORMANCE</value></data>
+  <data name="Module_OptimizationsAvailable" xml:space="preserve"><value>{0} optimisations disponibles</value></data>
+  <data name="Score_Excellent" xml:space="preserve"><value>Excellent</value></data>
+  <data name="Score_Good" xml:space="preserve"><value>Bon</value></data>
+  <data name="Score_Average" xml:space="preserve"><value>Moyen</value></data>
+  <data name="Score_Low" xml:space="preserve"><value>Faible</value></data>
+  <data name="Score_Critical" xml:space="preserve"><value>Critique</value></data>
+  <data name="Dashboard_PerfScoreHint" xml:space="preserve"><value>Note globale basée sur la charge CPU, RAM, l'espace disque libre et la température. Plus c'est haut, mieux c'est.</value></data>
+  <data name="Dashboard_CardGPU" xml:space="preserve"><value>CARTE GRAPHIQUE</value></data>
+  <data name="Dashboard_GpuLoad" xml:space="preserve"><value>USAGE</value></data>
+  <data name="Dashboard_GpuTemp" xml:space="preserve"><value>TEMP.</value></data>
+
+  <!-- ─── v2.3.0 UNINSTALLER ─── -->
+  <data name="Uninstaller_Title" xml:space="preserve"><value>Désinstalleur de programmes</value></data>
+  <data name="Uninstaller_SearchPlaceholder" xml:space="preserve"><value>Rechercher un programme…</value></data>
+  <data name="Uninstaller_Count" xml:space="preserve"><value>{0} programmes</value></data>
+  <data name="Uninstaller_Loading" xml:space="preserve"><value>Analyse des programmes installés…</value></data>
+  <data name="Uninstaller_Refresh" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="Uninstaller_UninstallSelected" xml:space="preserve"><value>Désinstaller la sélection</value></data>
+  <data name="Uninstaller_NoSelection" xml:space="preserve"><value>Aucun programme sélectionné. Cochez les programmes à désinstaller.</value></data>
+  <data name="Uninstaller_ConfirmUninstall" xml:space="preserve"><value>Désinstaller {0} programme(s) ?
+
+Chaque désinstalleur va se lancer. Suivez les éventuelles fenêtres qui s'ouvrent.</value></data>
+  <data name="Uninstaller_Uninstalling" xml:space="preserve"><value>Désinstallation : {0}…</value></data>
+  <data name="Uninstaller_LeftoversTitle" xml:space="preserve"><value>Klyr — Fichiers résiduels détectés</value></data>
+  <data name="Uninstaller_LeftoversFound" xml:space="preserve"><value>{0} a été désinstallé.
+
+{1} dossier(s) résiduel(s) détecté(s) :
+{2}
+
+Les supprimer définitivement ?</value></data>
+  <data name="Uninstaller_LeftoversRemoved" xml:space="preserve"><value>Restes de {0} : {1} supprimé(s), {2} échec(s).</value></data>
+
+  <!-- ─── v2.3.0 SOFTWARE UPDATER ─── -->
+  <data name="Updater_Title" xml:space="preserve"><value>Mise à jour des logiciels</value></data>
+  <data name="Updater_Loading" xml:space="preserve"><value>Recherche des mises à jour disponibles (winget)…</value></data>
+  <data name="Updater_WingetMissing" xml:space="preserve"><value>winget n'est pas disponible sur ce système.
+
+Installez « App Installer » depuis le Microsoft Store, puis réessayez.</value></data>
+  <data name="Updater_AllUpToDate" xml:space="preserve"><value>Tous vos logiciels sont à jour. 🎉</value></data>
+  <data name="Updater_Count" xml:space="preserve"><value>{0} mise(s) à jour disponible(s)</value></data>
+  <data name="Updater_UpdateSelected" xml:space="preserve"><value>Mettre à jour la sélection</value></data>
+  <data name="Updater_NoSelection" xml:space="preserve"><value>Aucun logiciel sélectionné.</value></data>
+  <data name="Updater_Updating" xml:space="preserve"><value>Mise à jour : {0}…</value></data>
+  <data name="Updater_Done" xml:space="preserve"><value>{0} mis à jour, {1} échec(s).</value></data>
+  <data name="Updater_WindowsUpdate" xml:space="preserve"><value>Mises à jour Windows</value></data>
+  <data name="Updater_WindowsUpdateHint" xml:space="preserve"><value>winget met à jour les logiciels, pas Windows. Ouvre les paramètres Windows Update.</value></data>
+
+  <!-- ─── v2.3.0 DISK ANALYZER ─── -->
+  <data name="DiskAnalyzer_Title" xml:space="preserve"><value>Analyseur de disque</value></data>
+  <data name="DiskAnalyzer_Up" xml:space="preserve"><value>Dossier parent</value></data>
+  <data name="DiskAnalyzer_Scanning" xml:space="preserve"><value>Analyse en cours…</value></data>
+  <data name="DiskAnalyzer_Status" xml:space="preserve"><value>{0} éléments — clic sur un dossier pour explorer</value></data>
+  <data name="DiskAnalyzer_Start" xml:space="preserve"><value>Lancer</value></data>
+  <data name="DiskAnalyzer_Stop" xml:space="preserve"><value>Arrêter</value></data>
+  <data name="DiskAnalyzer_Idle" xml:space="preserve"><value>Choisissez un lecteur puis cliquez sur « Lancer » pour analyser l'espace disque.</value></data>
+  <data name="DiskAnalyzer_Stopped" xml:space="preserve"><value>Analyse arrêtée.</value></data>
+
+  <!-- ─── v2.3.0 STARTUP MANAGER ─── -->
+  <data name="Startup_Title" xml:space="preserve"><value>Gestionnaire de démarrage</value></data>
+  <data name="Startup_Loading" xml:space="preserve"><value>Lecture des programmes au démarrage…</value></data>
+  <data name="Startup_Status" xml:space="preserve"><value>{0} programmes au démarrage</value></data>
+  <data name="Startup_ToggleFailed" xml:space="preserve"><value>Impossible de modifier « {0} ». Certaines entrées HKLM nécessitent les droits administrateur.</value></data>
+
+  <!-- ─── v2.3.0 BROWSER CLEANER ─── -->
+  <data name="Browser_Title" xml:space="preserve"><value>Nettoyage des navigateurs</value></data>
+  <data name="Browser_Warning" xml:space="preserve"><value>Fermez vos navigateurs avant de nettoyer, sinon certains fichiers verrouillés seront ignorés.</value></data>
+  <data name="Browser_Cache" xml:space="preserve"><value>Cache</value></data>
+  <data name="Browser_Cookies" xml:space="preserve"><value>Cookies</value></data>
+  <data name="Browser_History" xml:space="preserve"><value>Historique</value></data>
+  <data name="Browser_NoBrowser" xml:space="preserve"><value>Aucun navigateur supporté détecté (Chrome, Edge, Firefox, Brave).</value></data>
+  <data name="Browser_Detected" xml:space="preserve"><value>{0} navigateur(s) détecté(s)</value></data>
+  <data name="Browser_CleanNow" xml:space="preserve"><value>Nettoyer maintenant</value></data>
+  <data name="Browser_Confirm" xml:space="preserve"><value>Nettoyer les données sélectionnées des navigateurs ?
+
+Cookies et historique seront définitivement supprimés (déconnexions possibles).</value></data>
+  <data name="Browser_Cleaning" xml:space="preserve"><value>Nettoyage en cours…</value></data>
+  <data name="Browser_Done" xml:space="preserve"><value>Nettoyage terminé — {0} Mo libérés.</value></data>
+
+
+  <!-- ─── v2.3.0 UPDATE CHECK ─── -->
+  <data name="Update_Available" xml:space="preserve"><value>v{0} disponible</value></data>
+  <data name="Settings_UpdateCheck" xml:space="preserve"><value>Vérifier les mises à jour au démarrage</value></data>
+  <data name="Settings_UpdateCheckDesc" xml:space="preserve"><value>Klyr interroge GitHub au lancement pour signaler une nouvelle version. Aucune donnée n'est envoyée (simple lecture).</value></data>
+
+  <!-- ─── v2.3.0 HARDWARE SENSORS (Settings) ─── -->
+  <data name="Settings_HwSensors" xml:space="preserve"><value>Capteurs matériels (températures)</value></data>
+  <data name="Settings_HwSensorsDesc" xml:space="preserve"><value>Affiche les températures CPU/GPU sur le tableau de bord. Charge un pilote système. Désactivez si vous préférez ne pas charger ce pilote (le changement prend effet au redémarrage).</value></data>
+
+  <!-- ─── v2.3.0 SCHEDULED SCANS (Settings) ─── -->
+  <data name="Settings_HeaderSchedule" xml:space="preserve"><value>SCANS PROGRAMMÉS</value></data>
+  <data name="Settings_ScheduleEnable" xml:space="preserve"><value>Nettoyage automatique programmé</value></data>
+  <data name="Settings_ScheduleDesc" xml:space="preserve"><value>Klyr nettoiera silencieusement les fichiers temporaires et caches navigateurs à 12h00, sans ouvrir l'application.</value></data>
+  <data name="Settings_ScheduleDaily" xml:space="preserve"><value>Quotidien</value></data>
+  <data name="Settings_ScheduleWeekly" xml:space="preserve"><value>Hebdomadaire</value></data>
+  <data name="Settings_ScheduleMonthly" xml:space="preserve"><value>Mensuel</value></data>
+  <data name="Settings_ScheduleFailed" xml:space="preserve"><value>Impossible de modifier la tâche planifiée. Vérifiez que le Planificateur de tâches Windows est actif.</value></data>
 
   <!-- ─── WINDOW CONTROLS TOOLTIPS ─── -->
   <data name="Tooltip_Minimize" xml:space="preserve"><value>Réduire</value></data>

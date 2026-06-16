@@ -22,6 +22,7 @@ namespace Klyr.Services
                 Description = Strings.Optim_clean_disk_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
+                IsDiskCleanup = true,
                 Action = async ct =>
                 {
                     string script = @"
@@ -42,6 +43,7 @@ namespace Klyr.Services
                 Name        = Strings.Optim_clean_recycle_Name,
                 Description = Strings.Optim_clean_recycle_Desc,
                 Category    = "Nettoyage",
+                IsDiskCleanup = true,
                 Action = async ct =>
                 {
                     string script = @"
@@ -58,6 +60,7 @@ namespace Klyr.Services
                 Description = Strings.Optim_clean_logs_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
+                IsDiskCleanup = true,
                 Action = async ct =>
                 {
                     string script = @"
@@ -89,6 +92,7 @@ namespace Klyr.Services
                 Description = Strings.Optim_clean_prefetch_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
+                IsDiskCleanup = true,
                 Action = async ct =>
                 {
                     string script = @"
@@ -112,6 +116,7 @@ namespace Klyr.Services
                 Description = Strings.Optim_clean_bloatware_Desc,
                 Category    = "Nettoyage",
                 RequiresAdmin = true,
+                IsDiskCleanup = true,
                 Action = async ct =>
                 {
                     string script = @"

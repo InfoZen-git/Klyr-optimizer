@@ -71,3 +71,6 @@ $RECYCLE.BIN/
 *.exe.config
 *.mdb
 launchSettings.json
+
+# Test publish folder (v2.3.0)
+publish_test/

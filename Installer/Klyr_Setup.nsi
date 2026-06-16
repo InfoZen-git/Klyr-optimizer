@@ -1,13 +1,13 @@
 ; ============================================================
-;  Klyr – Script NSIS v2.2.0
+;  Klyr – Script NSIS v2.3.0
 ;  Installeur self-contained .NET 10, bilingue FR/EN
 ; ============================================================
 
 Unicode True
 
 !define APP_NAME      "Klyr"
-!define APP_VERSION   "2.2.0"
-!define APP_PUBLISHER "InfoZen"
+!define APP_VERSION   "2.3.0"
+!define APP_PUBLISHER "InfoZen · Yahya"
 !define APP_EXE       "Klyr.exe"
 !define INSTALL_DIR   "$PROGRAMFILES64\Klyr"
 !define UNINSTALL_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Klyr"
@@ -43,8 +43,8 @@ SetCompressor     /SOLID lzma
 !insertmacro MUI_LANGUAGE "English"
 
 ; ── Textes localisés des pages NSIS ──────────────────────────
-LangString DESC_Welcome ${LANG_FRENCH}  "Klyr Optimiseur PC v${APP_VERSION}$\r$\n$\r$\nCet assistant va installer Klyr sur votre ordinateur.$\r$\n$\r$\nNouveautés v2.2 :$\r$\n  • Nouveau module Streaming / Création (6 optimisations)$\r$\n  • Annulation par optimisation pendant l'exécution$\r$\n  • Quarantaine automatique antivirus$\r$\n  • Interface bilingue Français / Anglais$\r$\n$\r$\nFermez toutes les applications avant de continuer."
-LangString DESC_Welcome ${LANG_ENGLISH} "Klyr PC Optimizer v${APP_VERSION}$\r$\n$\r$\nThis wizard will install Klyr on your computer.$\r$\n$\r$\nWhat's new in v2.2:$\r$\n  • New Streaming / Creation module (6 optimizations)$\r$\n  • Per-optimization cancellation during execution$\r$\n  • Automatic antivirus quarantine$\r$\n  • Bilingual UI: French / English$\r$\n$\r$\nClose all applications before continuing."
+LangString DESC_Welcome ${LANG_FRENCH}  "Klyr Optimiseur PC v${APP_VERSION}$\r$\n$\r$\nCet assistant va installer Klyr sur votre ordinateur.$\r$\n$\r$\nNouveautés v2.3 :$\r$\n  • Monitoring matériel : températures CPU/GPU, usage GPU$\r$\n  • Performance Score /100 en temps réel$\r$\n  • Désinstalleur + détection des restes$\r$\n  • Software Updater (winget), Disk Analyzer$\r$\n  • Startup Manager, Browser Cleaner, Historique$\r$\n  • Scans programmés automatiques$\r$\n$\r$\nFermez toutes les applications avant de continuer."
+LangString DESC_Welcome ${LANG_ENGLISH} "Klyr PC Optimizer v${APP_VERSION}$\r$\n$\r$\nThis wizard will install Klyr on your computer.$\r$\n$\r$\nWhat's new in v2.3:$\r$\n  • Hardware monitoring: CPU/GPU temperatures, GPU usage$\r$\n  • Real-time Performance Score /100$\r$\n  • Program uninstaller + leftover detection$\r$\n  • Software Updater (winget), Disk Analyzer$\r$\n  • Startup Manager, Browser Cleaner, History$\r$\n  • Automatic scheduled scans$\r$\n$\r$\nClose all applications before continuing."
 
 LangString DESC_RunKlyr ${LANG_FRENCH}  "Lancer Klyr"
 LangString DESC_RunKlyr ${LANG_ENGLISH} "Launch Klyr"

@@ -177,6 +177,25 @@ namespace Klyr.Services
             sb.AppendLine($".NET runtime       : {Environment.Version}");
             sb.AppendLine($"Process en admin   : {(isAdmin ? "OUI" : "NON")}");
             sb.AppendLine();
+            sb.AppendLine("── CAPTEURS MATÉRIELS ─────────────────────────────────");
+            try
+            {
+                var hw = HardwareMonitorService.Instance.Read();
+                sb.AppendLine($"Temp CPU           : {(hw.CpuTempC.HasValue ? $"{hw.CpuTempC.Value:F0} °C" : "n/a (admin requis / capteur indisponible)")}");
+                sb.AppendLine($"Charge CPU         : {(hw.CpuLoadPct.HasValue ? $"{hw.CpuLoadPct.Value:F0} %" : "n/a")}");
+                sb.AppendLine($"GPU                : {hw.GpuName}");
+                sb.AppendLine($"Temp GPU           : {(hw.GpuTempC.HasValue ? $"{hw.GpuTempC.Value:F0} °C" : "n/a")}");
+                sb.AppendLine($"Usage GPU          : {(hw.GpuLoadPct.HasValue ? $"{hw.GpuLoadPct.Value:F0} %" : "n/a")}");
+                sb.AppendLine($"Disque lecture     : {(hw.DiskReadKBs.HasValue ? $"{hw.DiskReadKBs.Value / 1024f:F1} Mo/s" : "n/a")}");
+                sb.AppendLine($"Disque écriture    : {(hw.DiskWriteKBs.HasValue ? $"{hw.DiskWriteKBs.Value / 1024f:F1} Mo/s" : "n/a")}");
+                sb.AppendLine($"Temp disque        : {(hw.DiskTempC.HasValue ? $"{hw.DiskTempC.Value:F0} °C" : "n/a")}");
+                sb.AppendLine($"Capteurs activés   : {settings.EnableHardwareSensors}");
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine($"(lecture capteurs indisponible : {ex.Message})");
+            }
+            sb.AppendLine();
             sb.AppendLine("── PARAMÈTRES KLYR ────────────────────────────────────");
             sb.AppendLine($"Theme              : {settings.Theme}");
             sb.AppendLine($"LastModule         : {settings.LastModule}");

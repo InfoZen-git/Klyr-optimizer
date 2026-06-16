@@ -1,0 +1,72 @@
+<UserControl x:Class="Klyr.Views.UpdaterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:Klyr.Resources">
+
+    <Grid Margin="24,20,24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{x:Static loc:Strings.Updater_Title}" FontSize="20" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl x:Name="PackagesList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{DynamicResource BackgroundCardBrush}" CornerRadius="6"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                Padding="12,8" Margin="0,0,0,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                          VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="Medium"
+                                               Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Id}" FontSize="10"
+                                               Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Text="{Binding VersionTransition}" FontSize="11"
+                                           Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" x:Name="OverlayPanel" Background="{DynamicResource BackgroundDeepBrush}" Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="380">
+                <TextBlock x:Name="OverlayIcon" Text="{StaticResource IconRefresh}" FontFamily="{StaticResource FluentIconsFont}"
+                           FontSize="28" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="OverlayText" Text="{x:Static loc:Strings.Updater_Loading}" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,10,0,0"
+                           TextWrapping="Wrap" TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <!-- Windows Update n'est PAS géré par winget : bouton dédié vers les paramètres Windows -->
+            <Button Content="{x:Static loc:Strings.Updater_WindowsUpdate}" Click="WindowsUpdate_Click"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Style="{StaticResource SecondaryButtonStyle}" Height="32" Padding="12,0"
+                    ToolTip="{x:Static loc:Strings.Updater_WindowsUpdateHint}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock x:Name="StatusText" VerticalAlignment="Center" FontSize="11"
+                           Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,0,12,0"/>
+                <Button Content="{x:Static loc:Strings.Uninstaller_Refresh}" Click="Refresh_Click"
+                        Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0" Height="32" Width="100"/>
+                <Button x:Name="UpdateButton" Content="{x:Static loc:Strings.Updater_UpdateSelected}"
+                        Click="Update_Click" Style="{StaticResource PrimaryButtonStyle}" Height="32" Width="180"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

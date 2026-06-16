@@ -118,6 +118,36 @@ namespace Klyr.Services
             set { _language = value; OnPropertyChanged(); }
         }
 
+        /// <summary>v2.3.0 — Fréquence du scan programmé : "Daily", "Weekly", "Monthly".</summary>
+        private string _scheduledScanFrequency = "Weekly";
+        public string ScheduledScanFrequency
+        {
+            get => _scheduledScanFrequency;
+            set { _scheduledScanFrequency = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// v2.3.0 (sécurité) — Active la lecture des capteurs matériels (températures CPU/GPU).
+        /// Charge un driver kernel (WinRing0 via LibreHardwareMonitor). Désactivable pour les
+        /// utilisateurs qui ne veulent pas charger ce driver (réduction de surface d'attaque).
+        /// </summary>
+        private bool _enableHardwareSensors = true;
+        public bool EnableHardwareSensors
+        {
+            get => _enableHardwareSensors;
+            set { _enableHardwareSensors = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// v2.3.0 — Vérifier les mises à jour au démarrage (GET GitHub Releases, aucune donnée envoyée).
+        /// </summary>
+        private bool _enableUpdateCheck = true;
+        public bool EnableUpdateCheck
+        {
+            get => _enableUpdateCheck;
+            set { _enableUpdateCheck = value; OnPropertyChanged(); }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? p = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));

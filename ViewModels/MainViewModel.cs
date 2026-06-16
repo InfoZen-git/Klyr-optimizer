@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -46,11 +47,20 @@ namespace Klyr.ViewModels
             "Streaming" => Strings.PageTitle_Streaming,
             "Terminal"  => Strings.PageTitle_Terminal,
             "Legal"     => Strings.PageTitle_Legal,
+            "Uninstaller"  => Strings.Uninstaller_Title,
+            "Updater"      => Strings.Updater_Title,
+            "DiskAnalyzer" => Strings.DiskAnalyzer_Title,
+            "Startup"      => Strings.Startup_Title,
+            "Browser"      => Strings.Browser_Title,
             _           => CurrentPage
         };
 
         // ─────────────────────── OPTIMISATIONS ─────────────────────────────────
         public ObservableCollection<OptimizationItem> CurrentOptimizations { get; } = new();
+
+        /// <summary>v2.3.0 — En-tête module localisé : « {n} optimisations disponibles ».</summary>
+        public string CurrentOptimizationsCountText =>
+            string.Format(Strings.Module_OptimizationsAvailable, CurrentOptimizations.Count);
 
         // ─────────────────────── INFOS SYSTÈME ─────────────────────────────────
         public SystemInfoModel SystemInfo { get; } = new();
@@ -81,7 +91,7 @@ namespace Klyr.ViewModels
             set { _isBusy = value; OnPropertyChanged(); }
         }
 
-        private string _statusMessage = "Prêt";
+        private string _statusMessage = Strings.Status_Ready;
         public  string StatusMessage
         {
             get => _statusMessage;
@@ -95,6 +105,23 @@ namespace Klyr.ViewModels
             set { _optimizationsRun = value; OnPropertyChanged(); }
         }
 
+        // ─────────────────────── MISE À JOUR (v2.3.0) ──────────────────────────
+        private bool _updateAvailable;
+        public  bool UpdateAvailable
+        {
+            get => _updateAvailable;
+            set { _updateAvailable = value; OnPropertyChanged(); }
+        }
+
+        private string _updateLabel = "";
+        public  string UpdateLabel
+        {
+            get => _updateLabel;
+            set { _updateLabel = value; OnPropertyChanged(); }
+        }
+
+        private string _updateUrl = "";
+
         // ─────────────────────── COMMANDS ──────────────────────────────────────
         public AsyncRelayCommand RunOptimizationCommand     { get; }
         public AsyncRelayCommand RunAllOptimizationsCommand { get; }
@@ -103,6 +130,8 @@ namespace Klyr.ViewModels
         public RelayCommand      ExportLogsCommand          { get; }
         public RelayCommand      ClearLogsCommand           { get; }
         public RelayCommand      NavigateCommand            { get; }
+        public RelayCommand      OpenToolCommand            { get; }   // v2.3.0
+        public RelayCommand      OpenUpdateCommand          { get; }   // v2.3.0
 
         private readonly System.Timers.Timer _refreshTimer;
         private bool _disposed;
@@ -134,6 +163,8 @@ namespace Klyr.ViewModels
             ExportLogsCommand          = new RelayCommand(ExportLogs);
             ClearLogsCommand           = new RelayCommand(() => Log.Clear());
             NavigateCommand            = new RelayCommand(p => CurrentPage = NormalizeStartupPage(p?.ToString()));
+            OpenToolCommand            = new RelayCommand(OpenTool);   // v2.3.0
+            OpenUpdateCommand          = new RelayCommand(_ => OpenUpdatePage());   // v2.3.0
 
             CurrentPage = NormalizeStartupPage(SettingsService.Current.LastModule);
 
@@ -149,8 +180,58 @@ namespace Klyr.ViewModels
             };
             Log.PropertyChanged += _logPropertyChangedHandler;
 
-            Log.Info(Strings.Log_AppStarted, "Système");
+            Log.Info(string.Format(Strings.Log_AppStarted, "v" + DiagnosticService.AppVersion), "Système");
             Log.Info(Strings.Log_PrivacyNotice, "RGPD");
+
+            // v2.3.0 — Vérification de mise à jour en arrière-plan (best-effort, non bloquant)
+            _ = CheckForUpdateAsync();
+        }
+
+        // ─────────────────────── MISE À JOUR (v2.3.0) ──────────────────────────
+        private async Task CheckForUpdateAsync()
+        {
+            try
+            {
+                var info = await UpdateService.CheckForUpdateAsync();
+                if (info == null) return;
+
+                Application.Current?.Dispatcher.Invoke(() =>
+                {
+                    _updateUrl = info.Url;
+                    UpdateLabel = string.Format(Strings.Update_Available, info.Version);
+                    UpdateAvailable = true;
+                });
+                Log.Info(string.Format(Strings.Log_UpdateFound, info.Version), "Système");
+            }
+            catch { /* best-effort */ }
+        }
+
+        private void OpenUpdatePage()
+        {
+            if (string.IsNullOrWhiteSpace(_updateUrl)) return;
+
+            // SÉCURITÉ (défense en profondeur) : n'ouvrir que des URL http(s).
+            // L'URL provient de l'API GitHub ; on refuse tout autre schéma
+            // (file:, javascript:, chemin local…) avant de la passer au shell.
+            if (!Uri.TryCreate(_updateUrl, UriKind.Absolute, out var uri) ||
+                (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp))
+            {
+                Log.Warn("URL de mise à jour ignorée (schéma non autorisé).", "Système");
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = uri.AbsoluteUri,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Impossible d'ouvrir la page de mise à jour : {ex.Message}", "Système");
+            }
         }
 
         // ─────────────────────── NAVIGATION ────────────────────────────────────
@@ -228,6 +309,8 @@ namespace Klyr.ViewModels
 
             CurrentOptimizations.Clear();
             foreach (var item in filtered) CurrentOptimizations.Add(item);
+
+            OnPropertyChanged(nameof(CurrentOptimizationsCountText));
         }
 
         /// <summary>
@@ -327,7 +410,7 @@ namespace Klyr.ViewModels
             if (SettingsService.Current.AutoRestorePoint && item.RequiresAdmin)
             {
                 Log.Info("Création d'un point de restauration automatique…", "Système");
-                StatusMessage = "Création du point de restauration…";
+                StatusMessage = Strings.Status_CreatingRestorePoint;
                 var restoreResult = await SystemService.CreateRestorePointAsync($"Klyr – avant : {item.Name}");
                 if (!restoreResult.Success)
                 {
@@ -340,7 +423,7 @@ namespace Klyr.ViewModels
             item.IsRunning = true;
             item.Progress  = 0;
             item.Status    = "En cours…";
-            StatusMessage  = $"⟳  {item.Name}";
+            StatusMessage  = string.Format(Strings.Status_RunningItem, item.Name);
             Log.Info($"Démarrage : {item.Name}", item.Category);
 
             OptimizationBenchmarkSnapshot? benchmarkBefore = null;
@@ -360,6 +443,10 @@ namespace Klyr.ViewModels
             }
 
             var benchmarkWatch = System.Diagnostics.Stopwatch.StartNew();
+
+            // v2.3.0 — Mesure de l'espace libre AVANT une optim de nettoyage.
+            // Le delta après exécution (s'il est positif) est journalisé dans les logs.
+            long freeBefore = item.IsDiskCleanup ? GetSystemDriveFreeBytes() : -1;
 
             // v2.2.0 — CTS par item, lié au _runAllCts si une exécution groupée est en cours.
             // Le bouton cancel de l'item annule perItemCts → kill du process via SystemService.
@@ -391,6 +478,16 @@ namespace Klyr.ViewModels
                     Log.Error(result, item.Category);
                 else
                     Log.Success(result, item.Category);
+
+                // v2.3.0 — On journalise l'espace réellement libéré sur C: (delta avant/après)
+                // lorsqu'une optim de nettoyage réussit. Les logs tiennent lieu d'historique.
+                // Seuil de 1 Mo pour ignorer le bruit (écritures système en arrière-plan).
+                if (item.IsDiskCleanup && !isCancelled && !isError && freeBefore >= 0)
+                {
+                    long freed = GetSystemDriveFreeBytes() - freeBefore;
+                    if (freed > 1_048_576)
+                        Log.Info(string.Format(Strings.Log_SpaceFreed, item.Name, FormatFreed(freed)), item.Category);
+                }
 
                 benchmarkWatch.Stop();
                 if (benchmarkEnabled && benchmarkBefore != null)
@@ -447,10 +544,33 @@ namespace Klyr.ViewModels
                 if (!IsRunAllInProgress)
                 {
                     IsBusy = false;
-                    StatusMessage = "Prêt";
+                    StatusMessage = Strings.Status_Ready;
                 }
             }
         }
+
+        /// <summary>
+        /// v2.3.0 — Espace libre du lecteur système (celui de Windows), en octets.
+        /// Best-effort : retourne -1 si la lecture échoue (l'historique sera juste ignoré).
+        /// </summary>
+        private static long GetSystemDriveFreeBytes()
+        {
+            try
+            {
+                string root = Path.GetPathRoot(Environment.SystemDirectory) ?? "C:\\";
+                return new DriveInfo(root).AvailableFreeSpace;
+            }
+            catch { return -1; }
+        }
+
+        /// <summary>Formate un nombre d'octets pour le log (Ko/Mo/Go).</summary>
+        private static string FormatFreed(long b) => b switch
+        {
+            >= 1073741824 => $"{b / 1073741824.0:F2} Go",
+            >= 1048576    => $"{b / 1048576.0:F1} Mo",
+            >= 1024       => $"{b / 1024.0:F0} Ko",
+            _             => $"{b} o"
+        };
 
         /// <summary>Estime la durée de chaque optimisation pour calibrer la progression fictive.</summary>
         private static int EstimateMs(string id) => id switch
@@ -519,9 +639,19 @@ namespace Klyr.ViewModels
                 _runAllCts = null;
 
                 IsBusy = false;
-                StatusMessage = "Prêt";
+                StatusMessage = Strings.Status_Ready;
                 CommandManager.InvalidateRequerySuggested();
             }
+        }
+
+        /// <summary>
+        /// v2.3.0 — Navigue vers une vue outil intégrée (plus de fenêtre séparée).
+        /// </summary>
+        private void OpenTool(object? param)
+        {
+            string tool = param?.ToString() ?? "";
+            if (!string.IsNullOrEmpty(tool))
+                CurrentPage = tool;
         }
 
         private void StopRunAllOptimizations(object? _)
@@ -529,7 +659,7 @@ namespace Klyr.ViewModels
             if (_runAllCts == null || _runAllCts.IsCancellationRequested) return;
 
             _runAllCts.Cancel();
-            StatusMessage = "Arrêt demandé…";
+            StatusMessage = Strings.Status_StopRequested;
             Log.Warn("Arrêt demandé. L'optimisation en cours va se terminer avant interruption.", "Système");
             CommandManager.InvalidateRequerySuggested();
         }
@@ -549,7 +679,7 @@ namespace Klyr.ViewModels
             
             TerminalOutput = Log.TerminalText;
             IsBusy         = false;
-            StatusMessage  = "Prêt";
+            StatusMessage  = Strings.Status_Ready;
         }
 
         private void ExportLogs(object? _)
@@ -606,6 +736,12 @@ namespace Klyr.ViewModels
                 float cpu = SystemService.GetCpuUsage();
                 var stats = SystemService.GetRealtimeStats();
 
+                // v2.3.0 — Capteurs matériels (best-effort, ne throw jamais).
+                // Sécurité : gated par EnableHardwareSensors (driver kernel WinRing0).
+                var hw = SettingsService.Current.EnableHardwareSensors
+                    ? HardwareMonitorService.Instance.Read()
+                    : new HardwareSnapshot();
+
                 Application.Current?.Dispatcher.Invoke(() =>
                 {
                     CpuUsage              = cpu;
@@ -616,6 +752,20 @@ namespace Klyr.ViewModels
                     SystemInfo.DiskFreeGb = stats.DiskFreeGb;
                     SystemInfo.DiskTotalGb = stats.DiskTotalGb;
                     SystemInfo.Uptime     = stats.Uptime;
+
+                    // v2.3.0 — capteurs HW
+                    // Température CPU retirée de l'UI (driver ring0 bloqué par HVCI → lecture 0
+                    // non fiable). On ne l'alimente plus. GPU/disque conservés.
+                    // SystemInfo.CpuTempC  = hw.CpuTempC;
+                    SystemInfo.GpuTempC     = hw.GpuTempC;
+                    SystemInfo.GpuLoadPct   = hw.GpuLoadPct;
+                    if (hw.GpuName != "—") SystemInfo.GpuName = hw.GpuName;
+                    SystemInfo.DiskReadKBs  = hw.DiskReadKBs;
+                    SystemInfo.DiskWriteKBs = hw.DiskWriteKBs;
+                    SystemInfo.DiskTempC    = hw.DiskTempC;
+
+                    // v2.3.0 — Performance Score recalculé à chaque tick
+                    SystemInfo.PerformanceScore = PerformanceScoreService.Compute(SystemInfo);
                 });
             }
             catch (Exception ex)
@@ -657,6 +807,9 @@ namespace Klyr.ViewModels
                 
                 // Cleanup des ressources système
                 SystemService.Cleanup();
+
+                // v2.3.0 — Fermer les capteurs matériels (driver ring0)
+                try { HardwareMonitorService.Instance.Dispose(); } catch { /* best-effort */ }
             }
             
             _disposed = true;
@@ -685,6 +838,12 @@ namespace Klyr.ViewModels
                 "Network"   => "Network",
                 "Streaming" => "Streaming",
                 "Terminal"  => "Terminal",
+                // v2.3.0 — pages outils intégrées
+                "Uninstaller"  => "Uninstaller",
+                "Updater"      => "Updater",
+                "DiskAnalyzer" => "DiskAnalyzer",
+                "Startup"      => "Startup",
+                "Browser"      => "Browser",
                 _           => "Dashboard"
             };
         }
