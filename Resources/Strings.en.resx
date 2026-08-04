@@ -66,6 +66,7 @@
   <data name="PageTitle_Cleaning" xml:space="preserve"><value>Cleaning</value></data>
   <data name="PageTitle_Network" xml:space="preserve"><value>Network</value></data>
   <data name="PageTitle_Streaming" xml:space="preserve"><value>Streaming / Creation</value></data>
+  <data name="PageTitle_Privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="PageTitle_Terminal" xml:space="preserve"><value>Terminal</value></data>
   <data name="PageTitle_Legal" xml:space="preserve"><value>Legal notice</value></data>
 
@@ -78,6 +79,22 @@
   <data name="Nav_NavigateCleaning" xml:space="preserve"><value>Cleaning</value></data>
   <data name="Nav_NavigateNetwork" xml:space="preserve"><value>Network</value></data>
   <data name="Nav_NavigateStreaming" xml:space="preserve"><value>Streaming / Creation</value></data>
+  <data name="Nav_NavigatePrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <!-- ─── Privacy optims (v2.4.0) ─── -->
+  <data name="Optim_priv_telemetry_Name" xml:space="preserve"><value>Disable Windows telemetry</value></data>
+  <data name="Optim_priv_telemetry_Desc" xml:space="preserve"><value>Stops the DiagTrack service and sets AllowTelemetry to 0: Windows stops sending diagnostic and usage data to Microsoft.</value></data>
+  <data name="Optim_priv_advertising_id_Name" xml:space="preserve"><value>Disable advertising ID</value></data>
+  <data name="Optim_priv_advertising_id_Desc" xml:space="preserve"><value>Prevents apps from using your advertising ID to profile you across applications.</value></data>
+  <data name="Optim_priv_activity_history_Name" xml:space="preserve"><value>Disable activity history</value></data>
+  <data name="Optim_priv_activity_history_Desc" xml:space="preserve"><value>Turns off Timeline: Windows no longer records or uploads the list of your recent activities.</value></data>
+  <data name="Optim_priv_location_Name" xml:space="preserve"><value>Disable location tracking</value></data>
+  <data name="Optim_priv_location_Desc" xml:space="preserve"><value>Denies location access at the system level. Can be re-enabled anytime in Windows settings.</value></data>
+  <data name="Optim_priv_tailored_Name" xml:space="preserve"><value>Disable tailored experiences</value></data>
+  <data name="Optim_priv_tailored_Desc" xml:space="preserve"><value>Stops Windows from using your diagnostic data to show personalized suggestions and targeted ads.</value></data>
+  <data name="Optim_priv_app_launch_tracking_Name" xml:space="preserve"><value>Disable app launch tracking</value></data>
+  <data name="Optim_priv_app_launch_tracking_Desc" xml:space="preserve"><value>Windows stops tracking the apps you launch to personalize the Start menu and search.</value></data>
+  <data name="Optim_priv_feedback_Name" xml:space="preserve"><value>Disable feedback prompts</value></data>
+  <data name="Optim_priv_feedback_Desc" xml:space="preserve"><value>Removes the Windows notifications that ask for your feedback (Feedback Hub).</value></data>
   <data name="Nav_NavigateTerminal" xml:space="preserve"><value>Terminal</value></data>
 
   <!-- ─── BUTTONS ─── -->
@@ -231,7 +248,6 @@ Quarantine them now?</value></data>
   <data name="Optim_gaming_gamedvr_Name" xml:space="preserve"><value>Disable Xbox Game DVR</value></data>
   <data name="Optim_gaming_fullscreen_Name" xml:space="preserve"><value>Disable Fullscreen Optimization</value></data>
   <data name="Optim_gaming_priority_Name" xml:space="preserve"><value>CPU Priority for Games</value></data>
-  <data name="Optim_gaming_network_latency_Name" xml:space="preserve"><value>Network Latency Reduction</value></data>
   <data name="Optim_gaming_directx_Name" xml:space="preserve"><value>DirectX Tweaks</value></data>
   <data name="Optim_gaming_kill_processes_Name" xml:space="preserve"><value>Close Unnecessary Processes</value></data>
   <data name="Optim_gaming_fps_unlock_Name" xml:space="preserve"><value>FPS Unlock</value></data>
@@ -244,7 +260,6 @@ Quarantine them now?</value></data>
   <data name="Optim_oldpc_temp_Name" xml:space="preserve"><value>Delete Temp Files</value></data>
   <data name="Optim_oldpc_defrag_Name" xml:space="preserve"><value>HDD Defragmentation</value></data>
   <data name="Optim_oldpc_theme_Name" xml:space="preserve"><value>Enable Lite Theme</value></data>
-  <data name="Optim_oldpc_telemetry_Name" xml:space="preserve"><value>Disable Telemetry</value></data>
 
   <data name="Optim_clean_disk_Name" xml:space="preserve"><value>System Disk Cleanup</value></data>
   <data name="Optim_clean_recycle_Name" xml:space="preserve"><value>Empty Recycle Bin</value></data>
@@ -252,7 +267,6 @@ Quarantine them now?</value></data>
   <data name="Optim_clean_prefetch_Name" xml:space="preserve"><value>Prefetch Cleanup</value></data>
   <data name="Optim_clean_bloatware_Name" xml:space="preserve"><value>Remove Bloatware</value></data>
   <data name="Optim_clean_repair_Name" xml:space="preserve"><value>Windows Repair (SFC + DISM)</value></data>
-  <data name="Optim_clean_dns_cache_Name" xml:space="preserve"><value>DNS Cache Cleanup</value></data>
   <data name="Optim_clean_antivirus_Name" xml:space="preserve"><value>Antivirus Scan (Windows Defender)</value></data>
 
   <data name="Optim_net_tcpip_Name" xml:space="preserve"><value>TCP/IP Optimization</value></data>
@@ -277,7 +291,6 @@ Quarantine them now?</value></data>
   <data name="Optim_gaming_gamedvr_Desc" xml:space="preserve"><value>Removes the Xbox background video recording that consumes CPU, RAM and disk I/O.</value></data>
   <data name="Optim_gaming_fullscreen_Desc" xml:space="preserve"><value>Prevents Windows from intercepting game fullscreen mode, reducing micro-stutters.</value></data>
   <data name="Optim_gaming_priority_Desc" xml:space="preserve"><value>Configures Windows to prioritize CPU resources for foreground applications.</value></data>
-  <data name="Optim_gaming_network_latency_Desc" xml:space="preserve"><value>Tunes TCP/IP settings to reduce in-game ping (disables Nagle, optimizes ACK).</value></data>
   <data name="Optim_gaming_directx_Desc" xml:space="preserve"><value>Optimizes DirectX settings: disables DXGI flip model debug and tunes the GPU scheduler.</value></data>
   <data name="Optim_gaming_kill_processes_Desc" xml:space="preserve"><value>Stops non-essential processes to free RAM and CPU before launching a game.</value></data>
   <data name="Optim_gaming_fps_unlock_Desc" xml:space="preserve"><value>Disables the artificial frame rate limit and Windows-forced V-Sync.</value></data>
@@ -290,7 +303,6 @@ Quarantine them now?</value></data>
   <data name="Optim_oldpc_temp_Desc" xml:space="preserve"><value>Deletes %TEMP%, C:\Windows\Temp folders and unnecessary files.</value></data>
   <data name="Optim_oldpc_defrag_Desc" xml:space="preserve"><value>Runs defragmentation on disk C: (HDD only — ignored on SSD).</value></data>
   <data name="Optim_oldpc_theme_Desc" xml:space="preserve"><value>Disables transparency and Aero effects to save GPU.</value></data>
-  <data name="Optim_oldpc_telemetry_Desc" xml:space="preserve"><value>Reduces data sent to Microsoft (DiagTrack, CEIP).</value></data>
 
   <data name="Optim_clean_disk_Desc" xml:space="preserve"><value>Launches Disk Cleanup (cleanmgr) to remove unnecessary files and caches.</value></data>
   <data name="Optim_clean_recycle_Desc" xml:space="preserve"><value>Permanently deletes all files in the Windows Recycle Bin.</value></data>
@@ -298,7 +310,6 @@ Quarantine them now?</value></data>
   <data name="Optim_clean_prefetch_Desc" xml:space="preserve"><value>Removes Prefetch files (advanced troubleshooting action; may temporarily slow down first launches).</value></data>
   <data name="Optim_clean_bloatware_Desc" xml:space="preserve"><value>Uninstalls common Windows bloatware (Candy Crush, Solitaire…).</value></data>
   <data name="Optim_clean_repair_Desc" xml:space="preserve"><value>Runs sfc /scannow then DISM to repair corrupted system files.</value></data>
-  <data name="Optim_clean_dns_cache_Desc" xml:space="preserve"><value>Clears the local DNS cache to fix browsing issues.</value></data>
   <data name="Optim_clean_antivirus_Desc" xml:space="preserve"><value>Runs a Windows Defender QuickScan showing the number of files scanned. Offers to quarantine detected threats. Timeout extended to 10 minutes.</value></data>
 
   <data name="Optim_net_tcpip_Desc" xml:space="preserve"><value>Tunes the Windows network stack: autotuning, ECN, timestamps for better performance.</value></data>
@@ -320,7 +331,6 @@ Quarantine them now?</value></data>
 
   <!-- ─── COMMON RESULT MESSAGES (lambdas) ─── -->
   <data name="Result_HighPerfActive" xml:space="preserve"><value>High Performance plan activated.</value></data>
-  <data name="Result_LatencyOptimized" xml:space="preserve"><value>Network latency optimized (Nagle disabled, TCPNoDelay enabled).</value></data>
   <data name="Result_FpsUnlocked" xml:space="preserve"><value>FPS limits removed.</value></data>
   <data name="Result_NoTargetProcesses" xml:space="preserve"><value>No targeted process running. Nothing to close.</value></data>
   <data name="Result_KillCancelled" xml:space="preserve"><value>Action cancelled by user.</value></data>
@@ -482,6 +492,10 @@ Install "App Installer" from the Microsoft Store, then try again.</value></data>
   <data name="Startup_Loading" xml:space="preserve"><value>Reading startup programs…</value></data>
   <data name="Startup_Status" xml:space="preserve"><value>{0} startup programs</value></data>
   <data name="Startup_ToggleFailed" xml:space="preserve"><value>Cannot modify "{0}". Some HKLM entries require administrator rights.</value></data>
+  <data name="Startup_Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Startup_Disabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Startup_AddTask" xml:space="preserve"><value>Add a task…</value></data>
+  <data name="Startup_AddFailed" xml:space="preserve"><value>Could not add this program to startup.</value></data>
 
   <!-- ─── v2.3.0 BROWSER CLEANER ─── -->
   <data name="Browser_Title" xml:space="preserve"><value>Browser Cleaner</value></data>
@@ -498,11 +512,132 @@ Cookies and history will be permanently deleted (you may be signed out).</value>
   <data name="Browser_Cleaning" xml:space="preserve"><value>Cleaning…</value></data>
   <data name="Browser_Done" xml:space="preserve"><value>Cleaning complete — {0} MB freed.</value></data>
 
+  <!-- ─── v2.4.0 SERVICES MANAGER ─── -->
+  <data name="Nav_Services" xml:space="preserve"><value>Services</value></data>
+  <data name="Services_Title" xml:space="preserve"><value>Services manager</value></data>
+  <data name="Services_Subtitle" xml:space="preserve"><value>Non-essential Windows services that are safe to disable. Re-enabling restores the original startup type. Requires administrator rights.</value></data>
+  <data name="Services_Loading" xml:space="preserve"><value>Reading services…</value></data>
+  <data name="Services_Status" xml:space="preserve"><value>{0} services listed</value></data>
+  <data name="Services_Applying" xml:space="preserve"><value>Applying…</value></data>
+  <data name="Services_AdminRequired" xml:space="preserve"><value>Changing a service requires running Klyr as administrator.</value></data>
+  <data name="Services_ToggleFailed" xml:space="preserve"><value>Could not change the "{0}" service.</value></data>
+  <data name="Service_DiagTrack_Desc" xml:space="preserve"><value>Connected User Experiences and Telemetry: sends diagnostic data to Microsoft.</value></data>
+  <data name="Service_dmwappushservice_Desc" xml:space="preserve"><value>WAP Push message routing, used for telemetry.</value></data>
+  <data name="Service_Fax_Desc" xml:space="preserve"><value>Fax service. Useless if you don't send faxes.</value></data>
+  <data name="Service_RetailDemo_Desc" xml:space="preserve"><value>Retail demo mode. Useless on a personal PC.</value></data>
+  <data name="Service_RemoteRegistry_Desc" xml:space="preserve"><value>Remote registry access: an attack surface, better disabled.</value></data>
+  <data name="Service_MapsBroker_Desc" xml:space="preserve"><value>Downloaded Maps Manager. Useless without the offline Maps app.</value></data>
+  <data name="Service_WMPNetworkSvc_Desc" xml:space="preserve"><value>Windows Media Player network sharing. Rarely used.</value></data>
+  <data name="Service_WerSvc_Desc" xml:space="preserve"><value>Windows Error Reporting: sends crash reports to Microsoft.</value></data>
+  <data name="Service_lfsvc_Desc" xml:space="preserve"><value>System geolocation service.</value></data>
+
+  <!-- ─── v2.4.0 RESTORE POINT MANAGER ─── -->
+  <data name="Nav_Restore" xml:space="preserve"><value>Restore</value></data>
+  <data name="Restore_Title" xml:space="preserve"><value>Restore points</value></data>
+  <data name="Restore_Create" xml:space="preserve"><value>Create a point</value></data>
+  <data name="Restore_Open" xml:space="preserve"><value>Open System Restore</value></data>
+  <data name="Restore_DeleteAll" xml:space="preserve"><value>Delete all points</value></data>
+  <data name="Restore_Empty" xml:space="preserve"><value>No restore points. System protection may be off, or Klyr is not running as administrator.</value></data>
+  <data name="Restore_Status" xml:space="preserve"><value>{0} restore point(s)</value></data>
+  <data name="Restore_Loading" xml:space="preserve"><value>Reading points…</value></data>
+  <data name="Restore_Creating" xml:space="preserve"><value>Creating restore point…</value></data>
+  <data name="Restore_Created" xml:space="preserve"><value>Restore point created.</value></data>
+  <data name="Restore_CreateFailed" xml:space="preserve"><value>Creation failed. System protection may be disabled for drive C:.</value></data>
+  <data name="Restore_Deleting" xml:space="preserve"><value>Deleting…</value></data>
+  <data name="Restore_Deleted" xml:space="preserve"><value>Restore points deleted.</value></data>
+  <data name="Restore_DeleteFailed" xml:space="preserve"><value>Deletion failed.</value></data>
+  <data name="Restore_DeleteConfirm" xml:space="preserve"><value>Delete ALL restore points on drive C:? This frees space but you won't be able to roll back to an earlier state.</value></data>
+  <data name="Restore_AdminRequired" xml:space="preserve"><value>This action requires running Klyr as administrator.</value></data>
+  <data name="Restore_ManualPointName" xml:space="preserve"><value>Klyr — manual point</value></data>
+  <data name="Restore_OpenFailed" xml:space="preserve"><value>Could not open Windows System Restore.</value></data>
+
+  <!-- ─── v2.5.0 ONE-CLICK PROFILES ─── -->
+  <data name="Nav_Profiles" xml:space="preserve"><value>Profiles</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>One-click profiles</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>Apply a curated set of safe optimizations across several modules in one click. Great for moving fast without configuring each one.</value></data>
+  <data name="Profiles_Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="Profiles_OptimsLabel" xml:space="preserve"><value>optimizations</value></data>
+  <data name="Preset_Gaming_Name" xml:space="preserve"><value>Gaming Mode</value></data>
+  <data name="Preset_Gaming_Desc" xml:space="preserve"><value>High-performance plan, Game DVR off, HAGS, kill parasitic apps and reduced network latency.</value></data>
+  <data name="Preset_Perf_Name" xml:space="preserve"><value>Max Performance</value></data>
+  <data name="Preset_Perf_Desc" xml:space="preserve"><value>Disk cleanup + startup programs + lighter animations + RAM release + telemetry off.</value></data>
+  <data name="Preset_Privacy_Name" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Preset_Privacy_Desc" xml:space="preserve"><value>Disables telemetry, advertising ID, activity history, location, tailored experiences and app tracking.</value></data>
+  <data name="Preset_Balanced_Name" xml:space="preserve"><value>Balanced</value></data>
+  <data name="Preset_Balanced_Desc" xml:space="preserve"><value>A light, safe tune-up: quick cleanup, lighter startup, telemetry off, DNS cache flushed.</value></data>
+  <data name="Dialog_RunPreset_Title" xml:space="preserve"><value>Apply profile</value></data>
+  <data name="Dialog_RunPreset_Message" xml:space="preserve"><value>Apply the {0} optimizations in the "{1}" profile?</value></data>
+
+  <!-- ─── v2.5.0 UWP DEBLOAT ─── -->
+  <data name="Nav_Appx" xml:space="preserve"><value>Windows apps</value></data>
+  <data name="Appx_Title" xml:space="preserve"><value>Windows apps debloat</value></data>
+  <data name="Appx_Subtitle" xml:space="preserve"><value>Uninstall Windows Store apps you don't need. They stay reinstallable from the Store. No administrator rights required.</value></data>
+  <data name="Appx_Loading" xml:space="preserve"><value>Reading apps…</value></data>
+  <data name="Appx_Uninstalling" xml:space="preserve"><value>Uninstalling…</value></data>
+  <data name="Appx_Status" xml:space="preserve"><value>{0} removable apps</value></data>
+  <data name="Appx_UninstallSelected" xml:space="preserve"><value>Uninstall selected</value></data>
+  <data name="Appx_ConfirmUninstall" xml:space="preserve"><value>Uninstall {0} selected app(s)?</value></data>
+  <data name="Appx_Done" xml:space="preserve"><value>{0} uninstalled, {1} failed.</value></data>
+  <data name="Appx_NoneSelected" xml:space="preserve"><value>No app selected.</value></data>
+
+  <!-- ─── v2.5.0 LARGE FILES & DUPLICATES ─── -->
+  <data name="Nav_Files" xml:space="preserve"><value>Files</value></data>
+  <data name="Files_Title" xml:space="preserve"><value>Large files &amp; duplicates</value></data>
+  <data name="Files_ChooseFolder" xml:space="preserve"><value>Choose a folder</value></data>
+  <data name="Files_NoFolder" xml:space="preserve"><value>No folder selected.</value></data>
+  <data name="Files_ModeLarge" xml:space="preserve"><value>Large files</value></data>
+  <data name="Files_ModeDuplicates" xml:space="preserve"><value>Duplicates</value></data>
+  <data name="Files_Start" xml:space="preserve"><value>Scan</value></data>
+  <data name="Files_Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Files_Scanning" xml:space="preserve"><value>Scanning…</value></data>
+  <data name="Files_Status" xml:space="preserve"><value>{0} file(s) found</value></data>
+  <data name="Files_Empty" xml:space="preserve"><value>No results.</value></data>
+  <data name="Files_DeleteSelected" xml:space="preserve"><value>Delete selected (Recycle Bin)</value></data>
+  <data name="Files_ConfirmDelete" xml:space="preserve"><value>Send {0} file(s) to the Recycle Bin?</value></data>
+  <data name="Files_Done" xml:space="preserve"><value>{0} file(s) sent to the Recycle Bin.</value></data>
+  <data name="Files_NoneSelected" xml:space="preserve"><value>No file selected.</value></data>
+  <data name="Files_GroupLabel" xml:space="preserve"><value>Group {0}</value></data>
+
+  <!-- ─── v2.5.0 HEALTH REPORT ─── -->
+  <data name="Nav_Health" xml:space="preserve"><value>Health</value></data>
+  <data name="Health_Title" xml:space="preserve"><value>Health report</value></data>
+  <data name="Health_Subtitle" xml:space="preserve"><value>A quick overview of your PC with concrete recommendations. Click "Fix" to jump straight to the relevant tool.</value></data>
+  <data name="Health_Loading" xml:space="preserve"><value>Scanning system…</value></data>
+  <data name="Health_Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Health_Fix" xml:space="preserve"><value>Fix</value></data>
+  <data name="Health_Ram_Title" xml:space="preserve"><value>Memory (RAM)</value></data>
+  <data name="Health_Ram_Detail" xml:space="preserve"><value>{0}% used</value></data>
+  <data name="Health_Disk_Title" xml:space="preserve"><value>System disk space</value></data>
+  <data name="Health_Disk_Detail" xml:space="preserve"><value>{0} GB free ({1}%)</value></data>
+  <data name="Health_Temp_Title" xml:space="preserve"><value>Temporary files</value></data>
+  <data name="Health_Temp_Detail" xml:space="preserve"><value>{0} of temporary files</value></data>
+  <data name="Health_Telemetry_Title" xml:space="preserve"><value>Windows telemetry</value></data>
+  <data name="Health_Telemetry_On" xml:space="preserve"><value>The telemetry service (DiagTrack) is running.</value></data>
+  <data name="Health_Telemetry_Off" xml:space="preserve"><value>Telemetry disabled.</value></data>
+  <data name="Health_Startup_Title" xml:space="preserve"><value>Startup programs</value></data>
+  <data name="Health_Startup_Detail" xml:space="preserve"><value>{0} programs launch at startup.</value></data>
+  <data name="Health_Restore_Title" xml:space="preserve"><value>Restore points</value></data>
+  <data name="Health_Restore_None" xml:space="preserve"><value>No restore point: create one before big changes.</value></data>
+  <data name="Health_Restore_Ok" xml:space="preserve"><value>{0} restore point(s) available.</value></data>
+  <data name="Health_Restore_Unknown" xml:space="preserve"><value>Run Klyr as administrator to check restore points.</value></data>
+
 
   <!-- ─── v2.3.0 UPDATE CHECK ─── -->
   <data name="Update_Available" xml:space="preserve"><value>v{0} available</value></data>
   <data name="Settings_UpdateCheck" xml:space="preserve"><value>Check for updates on startup</value></data>
   <data name="Settings_UpdateCheckDesc" xml:space="preserve"><value>Klyr queries GitHub at launch to flag a new version. No data is sent (read-only check).</value></data>
+
+  <!-- ─── v2.4.0 TRAY / STARTUP ─── -->
+  <data name="Settings_MinimizeTray" xml:space="preserve"><value>Minimize to notification area</value></data>
+  <data name="Settings_MinimizeTrayDesc" xml:space="preserve"><value>The Minimize and Close buttons send Klyr to the system tray instead of quitting. Right-click the icon for the menu.</value></data>
+  <data name="Settings_LaunchStartup" xml:space="preserve"><value>Launch at Windows startup</value></data>
+  <data name="Settings_LaunchStartupDesc" xml:space="preserve"><value>Starts Klyr automatically when you sign in (Run key, no administrator rights needed).</value></data>
+  <data name="Tray_Open" xml:space="preserve"><value>Open Klyr</value></data>
+  <data name="Tray_QuickClean" xml:space="preserve"><value>Quick clean</value></data>
+  <data name="Tray_Quit" xml:space="preserve"><value>Quit</value></data>
+  <data name="Tray_MinimizedHint" xml:space="preserve"><value>Klyr keeps running in the background. Click the icon to reopen.</value></data>
+  <data name="Tray_Cleaning" xml:space="preserve"><value>Quick clean in progress…</value></data>
+  <data name="Tray_CleanDone" xml:space="preserve"><value>Cleaning complete — {0} MB freed.</value></data>
 
   <!-- ─── v2.3.0 HARDWARE SENSORS (Settings) ─── -->
   <data name="Settings_HwSensors" xml:space="preserve"><value>Hardware sensors (temperatures)</value></data>

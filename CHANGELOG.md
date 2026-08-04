@@ -7,6 +7,68 @@ utilise un versionnement semantique [SemVer](https://semver.org/lang/fr/).
 
 ---
 
+## [2.5.0] — En préparation
+
+Mise à jour orientée productivité : appliquer les optimisations plus vite (presets), nettoyer plus en profondeur (UWP, gros fichiers/doublons) et savoir quoi faire (rapport de santé).
+
+### Added — Profils 1-clic
+- Nouveaux presets qui appliquent un ensemble curé d'optimisations à travers les modules en un clic : **Gaming**, **Performance max**, **Vie privée**, **Équilibré**
+- Vue dédiée avec aperçu des optims du profil et statut en direct
+
+### Added — Débloat UWP avancé
+- Liste toutes les applications du Windows Store installées (removable) avec cases à cocher
+- Désinstallation par lot (par utilisateur, réinstallable via le Store)
+
+### Added — Gros fichiers & doublons
+- Outil qui trouve les plus gros fichiers d'un dossier et les fichiers en double (taille + empreinte SHA-256)
+- Suppression sécurisée vers la Corbeille (réversible)
+
+### Added — Rapport de santé actionnable
+- Scan qui liste des recommandations concrètes (RAM, espace disque, fichiers temporaires, télémétrie, programmes au démarrage, point de restauration…)
+- Bouton « corriger » par recommandation qui déclenche l'action ou l'outil adéquat
+
+### Changed
+- Version assembly bumpée à 2.5.0.0
+
+### Fixed (retours bêta)
+- **Gestionnaire de démarrage** : affiche désormais TOUTES les sources (Run HKCU + HKLM 64-bit + HKLM 32-bit WOW6432Node + dossiers Démarrage utilisateur/commun) et l'état activé/désactivé est lu depuis `StartupApproved` — **exactement comme le Gestionnaire des tâches** (corrige « affiché activé alors que désactivé »). Le toggle écrit ce même flag. Ajout d'un bouton **« Ajouter une tâche »** (choisir un .exe à lancer au démarrage).
+- **Désinstalleur** : récupère les produits **MSI sans `UninstallString`** explicite (synthèse `msiexec /X{ProductCode}`) → davantage de programmes listés.
+- **Mises à jour (winget)** : **indicateur de statut par ligne** (… en cours, ✓ terminé, ✕ échec) + **barre de progression globale avec pourcentage**, et le **pourcentage s'affiche sur l'onglet « Mises à jour »** du menu latéral → on peut aller sur un autre outil tout en suivant l'avancement.
+
+### Notes
+- Toutes les nouvelles chaînes sont traduites FR + EN.
+
+---
+
+## [2.4.0] — En préparation
+
+Mise à jour axée confidentialité, outils système réversibles et confort d'usage, dans la continuité de la suite v2.3.0.
+
+### Added — Module Confidentialité
+- Nouveau module **Confidentialité** : désactivation de la télémétrie Windows, de l'ID publicitaire, de l'historique d'activité, de la localisation, des expériences personnalisées et du suivi de lancement d'apps
+- Toutes les actions sont réversibles (point de restauration auto avant exécution) et tracées dans les logs
+
+### Added — Gestionnaire de services Windows
+- Liste curée de services non essentiels désactivables (télémétrie, fax, etc.)
+- Activation/désactivation **réversible** : le type de démarrage d'origine est sauvegardé avant toute modification
+
+### Added — Gestionnaire de points de restauration
+- Liste les points de restauration existants, en crée un en un clic, ouvre la restauration système Windows
+- Suppression des anciens points pour libérer de l'espace
+
+### Added — Mode arrière-plan (system tray)
+- Icône dans la zone de notification : **Ouvrir / Nettoyage rapide / Quitter**
+- Réduction dans le tray, option de lancement au démarrage de Windows, notification après nettoyage
+
+### Changed
+- Version assembly bumpée à 2.4.0.0
+- **Déduplication des optimisations** : suppression de doublons fonctionnels entre modules — `clean_dns_cache` (identique à `net_flush_dns`), `oldpc_telemetry` (identique à la nouvelle optim télémétrie du module Confidentialité), `gaming_network_latency` (sous-ensemble de `net_ping`). Le HAGS n'est plus écrit deux fois côté Gaming (`gaming_directx` ne fait plus que le réglage DirectX/VRR). Total : 44 optimisations.
+
+### Notes
+- Toutes les nouvelles chaînes sont traduites FR + EN.
+
+---
+
 ## [2.3.0] — En préparation
 
 Grosse mise à jour inspirée des meilleures features de **Kudu** et **VoltAir**, repensées pour aller plus loin.

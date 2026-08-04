@@ -8,6 +8,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="{x:Static loc:Strings.Updater_Title}" FontSize="20" FontWeight="SemiBold"
@@ -25,6 +26,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}"
                                           VerticalAlignment="Center" Margin="0,0,12,0"/>
@@ -36,6 +38,10 @@
                                 </StackPanel>
                                 <TextBlock Grid.Column="2" Text="{Binding VersionTransition}" FontSize="11"
                                            Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                <!-- v2.5.0 : indicateur de statut par ligne (… / ✓ / ✕) -->
+                                <TextBlock Grid.Column="3" Text="{Binding StatusGlyph}" FontSize="15" FontWeight="Bold"
+                                           Foreground="{Binding StatusColor}" VerticalAlignment="Center"
+                                           Width="22" TextAlignment="Center" Margin="8,0,0,0"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -53,7 +59,20 @@
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="2" Margin="0,12,0,0">
+        <!-- v2.5.0 : progression globale de la mise à jour en lot (visible pendant l'opération) -->
+        <Grid Grid.Row="2" x:Name="ProgressRow" Visibility="Collapsed" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ProgressBar Grid.Column="0" x:Name="GlobalProgress" Height="8" Minimum="0" Maximum="100"
+                         Foreground="{DynamicResource AccentBrush}" Background="{DynamicResource BackgroundCardBrush}"
+                         BorderThickness="0" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" x:Name="ProgressPercent" Text="0%" FontSize="11" FontWeight="SemiBold"
+                       Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="10,0,0,0" MinWidth="34"/>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,12,0,0">
             <!-- Windows Update n'est PAS géré par winget : bouton dédié vers les paramètres Windows -->
             <Button Content="{x:Static loc:Strings.Updater_WindowsUpdate}" Click="WindowsUpdate_Click"
                     HorizontalAlignment="Left" VerticalAlignment="Center"

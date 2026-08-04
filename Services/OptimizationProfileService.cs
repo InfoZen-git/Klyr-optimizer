@@ -20,7 +20,6 @@ namespace Klyr.Services
             ["gaming_gamedvr"] = new(OptimizationPurpose.Performance, 75, IsBenchmarkCandidate: true),
             ["gaming_fullscreen"] = new(OptimizationPurpose.Troubleshooting, 45, IsAdvanced: true),
             ["gaming_priority"] = new(OptimizationPurpose.Troubleshooting, 35, IsAdvanced: true),
-            ["gaming_network_latency"] = new(OptimizationPurpose.Troubleshooting, 30, IsAdvanced: true),
             ["gaming_directx"] = new(OptimizationPurpose.Troubleshooting, 42, IsAdvanced: true),
             ["gaming_kill_processes"] = new(OptimizationPurpose.Performance, 70),
             ["gaming_fps_unlock"] = new(OptimizationPurpose.Troubleshooting, 20, IsAdvanced: true),
@@ -34,7 +33,6 @@ namespace Klyr.Services
             ["oldpc_temp"] = new(OptimizationPurpose.Maintenance, 78, IsBenchmarkCandidate: true),
             ["oldpc_defrag"] = new(OptimizationPurpose.Performance, 85, IsBenchmarkCandidate: true),
             ["oldpc_theme"] = new(OptimizationPurpose.Performance, 35),
-            ["oldpc_telemetry"] = new(OptimizationPurpose.SecurityPrivacy, 28, IsAdvanced: true),
 
             // Nettoyage
             ["clean_disk"] = new(OptimizationPurpose.Maintenance, 72),
@@ -43,7 +41,6 @@ namespace Klyr.Services
             ["clean_prefetch"] = new(OptimizationPurpose.Troubleshooting, 10, IsAdvanced: true),
             ["clean_bloatware"] = new(OptimizationPurpose.Maintenance, 58),
             ["clean_repair"] = new(OptimizationPurpose.Maintenance, 76, IsBenchmarkCandidate: true),
-            ["clean_dns_cache"] = new(OptimizationPurpose.Troubleshooting, 25),
             ["clean_antivirus"] = new(OptimizationPurpose.SecurityPrivacy, 30),
 
             // Réseau
@@ -64,6 +61,15 @@ namespace Klyr.Services
             ["stream_hags_off"]      = new(OptimizationPurpose.Troubleshooting, 30, IsAdvanced: true),
             ["stream_killer"]        = new(OptimizationPurpose.Performance,     65),
             ["stream_clean_cache"]   = new(OptimizationPurpose.Maintenance,     70),
+
+            // Confidentialité (v2.4.0)
+            ["priv_telemetry"]            = new(OptimizationPurpose.SecurityPrivacy, 70),
+            ["priv_advertising_id"]       = new(OptimizationPurpose.SecurityPrivacy, 72),
+            ["priv_activity_history"]     = new(OptimizationPurpose.SecurityPrivacy, 68),
+            ["priv_location"]             = new(OptimizationPurpose.SecurityPrivacy, 60),
+            ["priv_tailored"]             = new(OptimizationPurpose.SecurityPrivacy, 74),
+            ["priv_app_launch_tracking"]  = new(OptimizationPurpose.SecurityPrivacy, 66),
+            ["priv_feedback"]             = new(OptimizationPurpose.SecurityPrivacy, 64),
         };
 
         public static void ApplyMetadata(IEnumerable<OptimizationItem> items)

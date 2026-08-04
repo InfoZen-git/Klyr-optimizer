@@ -148,6 +148,28 @@ namespace Klyr.Services
             set { _enableUpdateCheck = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// v2.4.0 — Réduire dans la zone de notification (system tray) au lieu de fermer/réduire
+        /// dans la barre des tâches. La fenêtre reste accessible via l'icône du tray.
+        /// </summary>
+        private bool _minimizeToTray = false;
+        public bool MinimizeToTray
+        {
+            get => _minimizeToTray;
+            set { _minimizeToTray = value; OnPropertyChanged(); }
+        }
+
+        /// <summary>
+        /// v2.4.0 — Lancer Klyr automatiquement au démarrage de Windows
+        /// (clé Run HKCU). Reflété dans le registre lors du toggle.
+        /// </summary>
+        private bool _launchAtStartup = false;
+        public bool LaunchAtStartup
+        {
+            get => _launchAtStartup;
+            set { _launchAtStartup = value; OnPropertyChanged(); }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? p = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));

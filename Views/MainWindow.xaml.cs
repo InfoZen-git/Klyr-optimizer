@@ -10,6 +10,11 @@ namespace Klyr.Views
 {
     public partial class MainWindow : Window
     {
+        // v2.4.0 — Mode arrière-plan (system tray)
+        private TrayIconService? _tray;
+        private bool _reallyClosing;        // true quand l'utilisateur quitte vraiment
+        private bool _trayHintShown;        // n'affiche le ballon « réduit » qu'une fois
+
         public MainWindow()
         {
             // v2.3.0 — Les convertisseurs sont désormais déclarés en portée globale dans App.xaml
@@ -25,6 +30,76 @@ namespace Klyr.Views
 
             // v2.2.0 — Adapter le Border aux changements d'état (maximize vs normal)
             StateChanged += OnWindowStateChanged;
+
+            // v2.4.0 — Icône de zone de notification (créée une fois, masquée par défaut)
+            InitializeTray();
+        }
+
+        // ─────────────────────── SYSTEM TRAY (v2.4.0) ───────────────────────
+        private void InitializeTray()
+        {
+            try
+            {
+                _tray = new TrayIconService(
+                    $"Klyr {DiagnosticService.AppVersion}",
+                    Klyr.Resources.Strings.Tray_Open,
+                    Klyr.Resources.Strings.Tray_QuickClean,
+                    Klyr.Resources.Strings.Tray_Quit);
+
+                _tray.OpenRequested       += ShowFromTray;
+                _tray.QuickCleanRequested += TrayQuickClean;
+                _tray.QuitRequested       += QuitFromTray;
+            }
+            catch { _tray = null; /* tray indisponible : l'app reste utilisable normalement */ }
+        }
+
+        private void HideToTray()
+        {
+            if (_tray == null) { WindowState = WindowState.Minimized; return; }
+            _tray.Show();
+            Hide();                       // retire de la barre des tâches
+            if (!_trayHintShown)
+            {
+                _trayHintShown = true;
+                _tray.ShowBalloon("Klyr", Klyr.Resources.Strings.Tray_MinimizedHint);
+            }
+        }
+
+        private void ShowFromTray()
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            Activate();
+            Topmost = true; Topmost = false;   // amène au premier plan
+            _tray?.Hide();
+        }
+
+        private async void TrayQuickClean()
+        {
+            _tray?.ShowBalloon("Klyr", Klyr.Resources.Strings.Tray_Cleaning);
+            long freed = await System.Threading.Tasks.Task.Run(() =>
+            {
+                try { return SilentCleanupService.Run(); } catch { return 0L; }
+            });
+            long mb = freed / (1024 * 1024);
+            _tray?.ShowBalloon("Klyr", string.Format(Klyr.Resources.Strings.Tray_CleanDone, mb));
+        }
+
+        private void QuitFromTray()
+        {
+            _reallyClosing = true;
+            if (DataContext is IDisposable disposable)
+                disposable.Dispose();
+            _tray?.Dispose();
+            Application.Current.Shutdown();
+        }
+
+        // v2.4.0 — Filet de sécurité : libère l'icône tray quel que soit le chemin de fermeture
+        // (bouton fermer, Alt+F4, arrêt session…) pour éviter une icône fantôme.
+        protected override void OnClosed(EventArgs e)
+        {
+            _tray?.Dispose();
+            base.OnClosed(e);
         }
 
         /// <summary>
@@ -34,6 +109,13 @@ namespace Klyr.Views
         /// </summary>
         private void OnWindowStateChanged(object? sender, EventArgs e)
         {
+            // v2.4.0 — Réduction dans le tray si l'option est activée
+            if (WindowState == WindowState.Minimized && SettingsService.Current.MinimizeToTray)
+            {
+                HideToTray();
+                return;
+            }
+
             if (WindowState == WindowState.Maximized)
             {
                 OuterBorder.CornerRadius   = new CornerRadius(0);
@@ -83,9 +165,18 @@ namespace Klyr.Views
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
+            // v2.4.0 — Si le mode arrière-plan est activé, le bouton fermer réduit dans le tray
+            // au lieu de quitter. Le vrai « Quitter » est dans le menu de l'icône tray.
+            if (!_reallyClosing && SettingsService.Current.MinimizeToTray && _tray != null)
+            {
+                HideToTray();
+                return;
+            }
+
             // FIX P1-05: Disposer le ViewModel avant de fermer
             if (DataContext is IDisposable disposable)
                 disposable.Dispose();
+            _tray?.Dispose();
             Application.Current.Shutdown();
         }
 
@@ -117,7 +208,7 @@ namespace Klyr.Views
     public class PageVisibilityConverter : IValueConverter
     {
         private static readonly HashSet<string> ModulePages =
-            new() { "Gaming", "OldPC", "Cleaning", "Network", "Streaming" };
+            new() { "Gaming", "OldPC", "Cleaning", "Network", "Streaming", "Privacy" };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

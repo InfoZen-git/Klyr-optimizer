@@ -6,7 +6,7 @@
 Unicode True
 
 !define APP_NAME      "Klyr"
-!define APP_VERSION   "2.3.0"
+!define APP_VERSION   "2.5.0"
 !define APP_PUBLISHER "InfoZen · Yahya"
 !define APP_EXE       "Klyr.exe"
 !define INSTALL_DIR   "$PROGRAMFILES64\Klyr"
@@ -43,8 +43,8 @@ SetCompressor     /SOLID lzma
 !insertmacro MUI_LANGUAGE "English"
 
 ; ── Textes localisés des pages NSIS ──────────────────────────
-LangString DESC_Welcome ${LANG_FRENCH}  "Klyr Optimiseur PC v${APP_VERSION}$\r$\n$\r$\nCet assistant va installer Klyr sur votre ordinateur.$\r$\n$\r$\nNouveautés v2.3 :$\r$\n  • Monitoring matériel : températures CPU/GPU, usage GPU$\r$\n  • Performance Score /100 en temps réel$\r$\n  • Désinstalleur + détection des restes$\r$\n  • Software Updater (winget), Disk Analyzer$\r$\n  • Startup Manager, Browser Cleaner, Historique$\r$\n  • Scans programmés automatiques$\r$\n$\r$\nFermez toutes les applications avant de continuer."
-LangString DESC_Welcome ${LANG_ENGLISH} "Klyr PC Optimizer v${APP_VERSION}$\r$\n$\r$\nThis wizard will install Klyr on your computer.$\r$\n$\r$\nWhat's new in v2.3:$\r$\n  • Hardware monitoring: CPU/GPU temperatures, GPU usage$\r$\n  • Real-time Performance Score /100$\r$\n  • Program uninstaller + leftover detection$\r$\n  • Software Updater (winget), Disk Analyzer$\r$\n  • Startup Manager, Browser Cleaner, History$\r$\n  • Automatic scheduled scans$\r$\n$\r$\nClose all applications before continuing."
+LangString DESC_Welcome ${LANG_FRENCH}  "Klyr Optimiseur PC v${APP_VERSION}$\r$\n$\r$\nCet assistant va installer Klyr sur votre ordinateur.$\r$\n$\r$\nNouveautés v2.5 :$\r$\n  • Profils 1-clic (Gaming / Perf max / Vie privée / Équilibré)$\r$\n  • Débloat UWP avancé (apps du Windows Store)$\r$\n  • Gros fichiers & doublons (suppression vers la Corbeille)$\r$\n  • Rapport de santé actionnable$\r$\n  • 6 modules / 44 optimisations + 11 outils avancés$\r$\n  • Monitoring matériel, mode tray, services, restauration$\r$\n$\r$\nFermez toutes les applications avant de continuer."
+LangString DESC_Welcome ${LANG_ENGLISH} "Klyr PC Optimizer v${APP_VERSION}$\r$\n$\r$\nThis wizard will install Klyr on your computer.$\r$\n$\r$\nWhat's new in v2.5:$\r$\n  • One-click profiles (Gaming / Max perf / Privacy / Balanced)$\r$\n  • Advanced UWP debloat (Windows Store apps)$\r$\n  • Large files & duplicates (delete to Recycle Bin)$\r$\n  • Actionable health report$\r$\n  • 6 modules / 44 optimizations + 11 advanced tools$\r$\n  • Hardware monitoring, tray mode, services, restore$\r$\n$\r$\nClose all applications before continuing."
 
 LangString DESC_RunKlyr ${LANG_FRENCH}  "Lancer Klyr"
 LangString DESC_RunKlyr ${LANG_ENGLISH} "Launch Klyr"

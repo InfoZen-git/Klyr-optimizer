@@ -59,6 +59,11 @@
     <sys:String x:Key="IconDiskAnalyzer">&#xE9D9;</sys:String>       <!-- DiagnosticDataViewer / treemap -->
     <sys:String x:Key="IconStartup">&#xE7B5;</sys:String>            <!-- PowerButton / startup -->
     <sys:String x:Key="IconBrowser">&#xE774;</sys:String>            <!-- Globe / browser -->
+    <sys:String x:Key="IconServices">&#xE90F;</sys:String>           <!-- Repair / services (v2.4.0) -->
+    <sys:String x:Key="IconProfiles">&#xE734;</sys:String>           <!-- FavoriteStar / profils 1-clic (v2.5.0) -->
+    <sys:String x:Key="IconAppx">&#xE71D;</sys:String>               <!-- AllApps / débloat UWP (v2.5.0) -->
+    <sys:String x:Key="IconFiles">&#xE8B7;</sys:String>              <!-- Folder / gros fichiers (v2.5.0) -->
+    <sys:String x:Key="IconHealth">&#xE95E;</sys:String>             <!-- Health / rapport (v2.5.0) -->
     <sys:String x:Key="IconSchedule">&#xE787;</sys:String>           <!-- Calendar / schedule -->
 
     <!-- ═════════ FONCTIONS ═════════ -->

@@ -64,7 +64,16 @@ namespace Klyr.Services
                         if (releaseType.Contains("Update") || releaseType.Contains("Hotfix")) continue;
 
                         string uninstall = sub.GetValue("UninstallString") as string ?? "";
-                        if (string.IsNullOrWhiteSpace(uninstall)) continue;
+                        if (string.IsNullOrWhiteSpace(uninstall))
+                        {
+                            // Beaucoup de produits MSI n'exposent pas de UninstallString explicite :
+                            // la sous-clé EST le ProductCode (GUID) → on synthétise msiexec /X{GUID}.
+                            // Récupère ces entrées (Windows/Glary les comptent aussi).
+                            bool isMsi = (sub.GetValue("WindowsInstaller") is int wi && wi == 1)
+                                         || LooksLikeGuid(subName);
+                            if (!isMsi) continue;
+                            uninstall = $"MsiExec.exe /X{subName}";
+                        }
 
                         long sizeKb = 0;
                         if (sub.GetValue("EstimatedSize") is int es) sizeKb = es;
@@ -243,6 +252,13 @@ namespace Klyr.Services
             }
 
             return true;
+        }
+
+        /// <summary>true si le nom de sous-clé ressemble à un ProductCode MSI : {GUID}.</summary>
+        private static bool LooksLikeGuid(string s)
+        {
+            if (string.IsNullOrEmpty(s) || s.Length < 38 || s[0] != '{' || s[^1] != '}') return false;
+            return Guid.TryParse(s.Trim('{', '}'), out _);
         }
 
         private static string SanitizeForMatch(string s)

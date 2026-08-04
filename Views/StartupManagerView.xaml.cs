@@ -47,5 +47,24 @@ namespace Klyr.Views
             cb.IsChecked = entry.IsEnabled;
             StatusText.Text = string.Format(Strings.Startup_Status, _entries.Count);
         }
+
+        /// <summary>v2.5.0 — Ajoute un exécutable choisi par l'utilisateur au démarrage (HKCU).</summary>
+        private async void AddTask_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Title  = Strings.Startup_AddTask,
+                Filter = "Exécutables (*.exe)|*.exe|Tous les fichiers (*.*)|*.*",
+                InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles)
+            };
+            if (dlg.ShowDialog() != true) return;
+
+            bool ok = StartupManagerService.AddUserStartup(dlg.FileName);
+            if (ok)
+                await LoadAsync();
+            else
+                MessageBox.Show(Strings.Startup_AddFailed, Strings.Startup_Title,
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 }

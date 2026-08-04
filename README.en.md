@@ -2,7 +2,7 @@
 
 # Klyr
 
-**Windows PC optimizer — 40 optimizations across 5 modules + hardware monitoring + 5 advanced tools. EN + FR, 100% local, no telemetry.**
+**Windows PC optimizer — 44 optimizations across 6 modules + hardware monitoring + 11 advanced tools. EN + FR, 100% local, no telemetry.**
 
 🌐 **English** · [Français](README.md)
 
@@ -26,6 +26,43 @@ Over the months, Windows accumulates heavy settings, useless services, telemetry
 - 🔒 **100% local**: no telemetry, no tracking, no account
 - ↩️ **Reversible**: automatic restore point + targeted backups of system files
 - 📖 **Open-source**: you can read every line before installing
+
+---
+
+## What's new in v2.5.0
+
+Productivity update: apply optimizations faster, clean deeper, and know what to do.
+
+- **One-click profiles** — presets that apply a curated set of optimizations across modules: *Gaming Mode*, *Max Performance*, *Privacy*, *Balanced*
+- **Advanced UWP debloat** — lists all removable Windows Store apps (checkboxes, batch uninstall, reinstallable from the Store)
+- **Large files & duplicates** — finds the biggest files and duplicate files (SHA-256 hash), deletion to the Recycle Bin
+- **Actionable health report** — a scan listing concrete recommendations (RAM, disk, temp, telemetry, startup, restore) with a *Fix* button that jumps straight to the relevant tool
+
+---
+
+## What's new in v2.4.0
+
+```
+                 KLYR  v2.3.0  ─────────────────►  v2.4.0
+ ┌────────────────────────────┐      ┌────────────────────────────────────────┐
+ │ MODULES (5)                 │      │ MODULES (6)  — + Privacy                 │
+ │  Gaming · Old PC ·          │  ──► │  Gaming · Old PC · Cleaning ·           │
+ │  Cleaning · Network ·       │      │  Network · Streaming · Privacy          │
+ │  Streaming                  │      │                                         │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ TOOLS (5)                   │      │ TOOLS (7)  — + Services + Restore        │
+ │  Uninstaller · winget ·     │  ──► │  … + Windows services manager           │
+ │  Disk · Startup ·           │      │  + Restore point manager                │
+ │  Browsers                   │      │                                         │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ SYSTEM                      │      │ SYSTEM                                  │
+ │  • Scheduled scans          │  ──► │  • Background mode (system tray)        │
+ │  • Auto-updater             │      │  • Launch at Windows startup            │
+ │                             │      │  • Quick clean from the tray            │
+ └────────────────────────────┘      └────────────────────────────────────────┘
+```
+
+**In short, v2.4.0** adds a new **Privacy module** (telemetry, advertising ID, location, activity history… all reversible), two new reversible system tools (**Windows services manager** and **restore point manager**), and a **background mode** (notification-area icon, one-click quick clean, launch at Windows startup).
 
 ---
 
@@ -90,11 +127,12 @@ If Defender blocks the download: add the download folder to the exclusions, or d
 
 | Module | Count | Highlights |
 |---|---|---|
-| **Gaming / FPS** | 9 | High-perf power plan, Game DVR off, FPS unlock, TCP latency, kill parasitic processes |
-| **Old PC** | 8 | Disable heavy services, telemetry, animations, Win32 RAM cleanup, smart SSD/HDD defrag |
-| **Cleaning** | 8 | Disk cleanup, debloat, SFC/DISM, built-in Defender scan + quarantine, cache wipe |
+| **Gaming / FPS** | 8 | High-perf power plan, Game DVR off, FPS unlock, HAGS, kill parasitic processes |
+| **Old PC** | 7 | Disable startup programs, animations, Win32 RAM cleanup, smart SSD/HDD defrag |
+| **Cleaning** | 7 | Disk cleanup, debloat, SFC/DISM, built-in Defender scan + quarantine, cache wipe |
 | **Network** | 9 | Winsock/TCP reset, DNS auto-bench, ping optimization, speed test, hosts telemetry block |
 | **Streaming / Creation** | 6 | Streamer mode (perf + latency), auto encoder CPU priority, Game Mode OFF, HAGS OFF, parasite killer, OBS cache cleanup |
+| **Privacy** | 7 | Disable Windows telemetry, advertising ID, activity history, location, tailored experiences, app tracking, feedback — all reversible |
 
 Optimizations marked **"Advanced"** (uncertain gain or regression risk) are hidden by default. Enable them in Settings if you want to push further.
 
@@ -128,8 +166,16 @@ Accessible from the **Tools** section of the sidebar:
 | **Disk Analyzer** | Visualizes folder usage (proportional bars + drill-down) |
 | **Startup** | Enables/disables startup programs (reversible, no deletion) |
 | **Browsers** | Clears cache / cookies / history for Chrome, Edge, Firefox, Brave |
+| **Services** | Disables non-essential Windows services (curated, safe list); re-enabling restores the original startup type |
+| **Restore** | Lists / creates / deletes system restore points, opens the Windows wizard |
+| **One-click profiles** | Applies a curated set of optimizations in one click (Gaming / Max perf / Privacy / Balanced) |
+| **UWP debloat** | Lists and batch-uninstalls Windows Store apps (reinstallable from the Store) |
+| **Large files & duplicates** | Finds large files and duplicates (SHA-256), deletion to the Recycle Bin |
+| **Health report** | Concrete recommendations (RAM, disk, temp, telemetry, startup…) with a fix button |
 
 **Scheduled scans** (Settings → Scheduled scans): automatic daily/weekly/monthly cleanup via the Windows Task Scheduler, in the background without opening the app.
+
+**Background mode** (Settings): Klyr can minimize to the notification area (system tray) with an **Open / Quick clean / Quit** menu, and launch automatically at Windows startup.
 
 ---
 

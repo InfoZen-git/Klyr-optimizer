@@ -45,6 +45,7 @@ namespace Klyr.ViewModels
             "Cleaning"  => Strings.PageTitle_Cleaning,
             "Network"   => Strings.PageTitle_Network,
             "Streaming" => Strings.PageTitle_Streaming,
+            "Privacy"   => Strings.PageTitle_Privacy,
             "Terminal"  => Strings.PageTitle_Terminal,
             "Legal"     => Strings.PageTitle_Legal,
             "Uninstaller"  => Strings.Uninstaller_Title,
@@ -52,6 +53,12 @@ namespace Klyr.ViewModels
             "DiskAnalyzer" => Strings.DiskAnalyzer_Title,
             "Startup"      => Strings.Startup_Title,
             "Browser"      => Strings.Browser_Title,
+            "Services"     => Strings.Services_Title,
+            "Restore"      => Strings.Restore_Title,
+            "Profiles"     => Strings.Profiles_Title,
+            "Appx"         => Strings.Appx_Title,
+            "Files"        => Strings.Files_Title,
+            "Health"       => Strings.Health_Title,
             _           => CurrentPage
         };
 
@@ -122,6 +129,23 @@ namespace Klyr.ViewModels
 
         private string _updateUrl = "";
 
+        // ─────────── PROGRESSION MISES À JOUR WINGET (v2.5.0) ───────────
+        // Alimenté par UpdaterView pendant la mise à jour en lot ; affiché sur
+        // l'onglet « Mises à jour » du sidebar pour suivre l'avancement en changeant d'outil.
+        private bool _isUpdaterRunning;
+        public bool IsUpdaterRunning
+        {
+            get => _isUpdaterRunning;
+            set { _isUpdaterRunning = value; OnPropertyChanged(); }
+        }
+
+        private string _updaterProgressText = "";
+        public string UpdaterProgressText
+        {
+            get => _updaterProgressText;
+            set { _updaterProgressText = value; OnPropertyChanged(); }
+        }
+
         // ─────────────────────── COMMANDS ──────────────────────────────────────
         public AsyncRelayCommand RunOptimizationCommand     { get; }
         public AsyncRelayCommand RunAllOptimizationsCommand { get; }
@@ -132,6 +156,10 @@ namespace Klyr.ViewModels
         public RelayCommand      NavigateCommand            { get; }
         public RelayCommand      OpenToolCommand            { get; }   // v2.3.0
         public RelayCommand      OpenUpdateCommand          { get; }   // v2.3.0
+        public AsyncRelayCommand RunPresetCommand           { get; }   // v2.5.0
+
+        /// <summary>v2.5.0 — Profils 1-clic proposés dans la vue Profils.</summary>
+        public IReadOnlyList<OptimizationPreset> Presets { get; } = PresetService.GetPresets();
 
         private readonly System.Timers.Timer _refreshTimer;
         private bool _disposed;
@@ -165,6 +193,7 @@ namespace Klyr.ViewModels
             NavigateCommand            = new RelayCommand(p => CurrentPage = NormalizeStartupPage(p?.ToString()));
             OpenToolCommand            = new RelayCommand(OpenTool);   // v2.3.0
             OpenUpdateCommand          = new RelayCommand(_ => OpenUpdatePage());   // v2.3.0
+            RunPresetCommand           = new AsyncRelayCommand(RunPresetAsync);   // v2.5.0
 
             CurrentPage = NormalizeStartupPage(SettingsService.Current.LastModule);
 
@@ -245,6 +274,7 @@ namespace Klyr.ViewModels
         public int CleaningCount  => GetModuleCount("Cleaning");
         public int NetworkCount   => GetModuleCount("Network");
         public int StreamingCount => GetModuleCount("Streaming");
+        public int PrivacyCount   => GetModuleCount("Privacy");
 
         // v2.2.0 — Versions formatées localisées pour le sidebar ("{0} optimisations" / "{0} optimizations")
         public string GamingCountText    => string.Format(Strings.Nav_OptimizationsCount, GamingCount);
@@ -252,6 +282,7 @@ namespace Klyr.ViewModels
         public string CleaningCountText  => string.Format(Strings.Nav_OptimizationsCount, CleaningCount);
         public string NetworkCountText   => string.Format(Strings.Nav_OptimizationsCount, NetworkCount);
         public string StreamingCountText => string.Format(Strings.Nav_OptimizationsCount, StreamingCount);
+        public string PrivacyCountText   => string.Format(Strings.Nav_OptimizationsCount, PrivacyCount);
 
         private int GetModuleCount(string module)
         {
@@ -264,6 +295,7 @@ namespace Klyr.ViewModels
                     "Cleaning"  => CleaningOptimizations.GetOptimizations(),
                     "Network"   => NetworkOptimizations.GetOptimizations(),
                     "Streaming" => StreamingOptimizations.GetOptimizations(),
+                    "Privacy"   => PrivacyOptimizations.GetOptimizations(),
                     _           => new List<OptimizationItem>()
                 };
                 _pageOptimizationsCache[module] = items;
@@ -280,11 +312,13 @@ namespace Klyr.ViewModels
             OnPropertyChanged(nameof(CleaningCount));
             OnPropertyChanged(nameof(NetworkCount));
             OnPropertyChanged(nameof(StreamingCount));
+            OnPropertyChanged(nameof(PrivacyCount));
             OnPropertyChanged(nameof(GamingCountText));
             OnPropertyChanged(nameof(OldPCCountText));
             OnPropertyChanged(nameof(CleaningCountText));
             OnPropertyChanged(nameof(NetworkCountText));
             OnPropertyChanged(nameof(StreamingCountText));
+            OnPropertyChanged(nameof(PrivacyCountText));
         }
 
         private void LoadPageOptimizations()
@@ -298,6 +332,7 @@ namespace Klyr.ViewModels
                     "Cleaning"  => CleaningOptimizations.GetOptimizations(),
                     "Network"   => NetworkOptimizations.GetOptimizations(),
                     "Streaming" => StreamingOptimizations.GetOptimizations(),
+                    "Privacy"   => PrivacyOptimizations.GetOptimizations(),
                     _           => new List<OptimizationItem>()
                 };
                 _pageOptimizationsCache[CurrentPage] = items;
@@ -645,6 +680,73 @@ namespace Klyr.ViewModels
         }
 
         /// <summary>
+        /// v2.5.0 — Applique un profil 1-clic : résout les optims du preset depuis tous les
+        /// modules et les exécute en lot (mêmes gardes admin/critiques que « Tout exécuter »).
+        /// </summary>
+        private async Task RunPresetAsync(object? param)
+        {
+            if (param is not OptimizationPreset preset) return;
+            if (IsRunAllInProgress) return;
+
+            var items = PresetService.ResolveItems(preset);
+            if (items.Count == 0) return;
+
+            if (SettingsService.Current.ConfirmBeforeRun)
+            {
+                var batchConfirm = MessageBox.Show(
+                    string.Format(Strings.Dialog_RunPreset_Message, items.Count, preset.Name),
+                    Strings.Dialog_RunPreset_Title,
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Question);
+
+                if (batchConfirm != MessageBoxResult.OK)
+                    return;
+            }
+
+            _runAllCts = new CancellationTokenSource();
+            IsRunAllInProgress = true;
+            _suppressPerItemConfirmation = true;
+            IsBusy = true;
+            CommandManager.InvalidateRequerySuggested();
+
+            var prioritizedItems = items
+                .OrderBy(GetRunAllPriority)
+                .ThenBy(i => EstimateMs(i.Id))
+                .ToList();
+
+            Log.Info($"=== Application du profil : {preset.Name} ({items.Count} optimisations) ===", "Système");
+
+            try
+            {
+                foreach (var item in prioritizedItems)
+                {
+                    if (_runAllCts.IsCancellationRequested)
+                    {
+                        Log.Warn("Profil interrompu par l'utilisateur.", "Système");
+                        break;
+                    }
+
+                    await RunOptimizationAsync(item);
+                }
+
+                if (!_runAllCts.IsCancellationRequested)
+                    Log.Info($"=== Profil « {preset.Name} » appliqué ===", "Système");
+            }
+            finally
+            {
+                _suppressPerItemConfirmation = false;
+                IsRunAllInProgress = false;
+
+                _runAllCts.Dispose();
+                _runAllCts = null;
+
+                IsBusy = false;
+                StatusMessage = Strings.Status_Ready;
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        /// <summary>
         /// v2.3.0 — Navigue vers une vue outil intégrée (plus de fenêtre séparée).
         /// </summary>
         private void OpenTool(object? param)
@@ -837,6 +939,7 @@ namespace Klyr.ViewModels
                 "Cleaning"  => "Cleaning",
                 "Network"   => "Network",
                 "Streaming" => "Streaming",
+                "Privacy"   => "Privacy",
                 "Terminal"  => "Terminal",
                 // v2.3.0 — pages outils intégrées
                 "Uninstaller"  => "Uninstaller",
@@ -844,6 +947,12 @@ namespace Klyr.ViewModels
                 "DiskAnalyzer" => "DiskAnalyzer",
                 "Startup"      => "Startup",
                 "Browser"      => "Browser",
+                "Services"     => "Services",
+                "Restore"      => "Restore",
+                "Profiles"     => "Profiles",
+                "Appx"         => "Appx",
+                "Files"        => "Files",
+                "Health"       => "Health",
                 _           => "Dashboard"
             };
         }

@@ -76,30 +76,6 @@ namespace Klyr.Services
             },
             new OptimizationItem
             {
-                Id          = "gaming_network_latency",
-                Name        = Strings.Optim_gaming_network_latency_Name,
-                Description = Strings.Optim_gaming_network_latency_Desc,
-                Category    = "Gaming",
-                RequiresAdmin = true,
-                Action = async ct =>
-                {
-                    string script = @"
-                        # Désactiver l'algorithme de Nagle
-                        $adapters = Get-ChildItem 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces'
-                        foreach ($adapter in $adapters) {
-                            Set-ItemProperty -Path $adapter.PSPath -Name 'TcpAckFrequency' -Value 1 -Type DWord -ErrorAction SilentlyContinue
-                            Set-ItemProperty -Path $adapter.PSPath -Name 'TCPNoDelay'       -Value 1 -Type DWord -ErrorAction SilentlyContinue
-                        }
-                        Write-Output 'OK_LATENCY'
-                    ";
-                    var psResult = await SystemService.RunPowerShellAsync(script);
-                    return psResult.Output.Contains("OK_LATENCY")
-                        ? Strings.Result_LatencyOptimized
-                        : psResult.DisplayMessage;
-                }
-            },
-            new OptimizationItem
-            {
                 Id          = "gaming_directx",
                 Name        = Strings.Optim_gaming_directx_Name,
                 Description = Strings.Optim_gaming_directx_Desc,
@@ -108,14 +84,11 @@ namespace Klyr.Services
                 Action = async ct =>
                 {
                     await Task.Yield();
-                    string r1 = SystemService.SetRegistryValue(
+                    // Réglage DirectX/VRR uniquement. Le HAGS (HwSchMode) est géré par
+                    // l'optimisation dédiée « gaming_gpu_schedule » pour éviter le doublon.
+                    return SystemService.SetRegistryValue(
                         @"SOFTWARE\Microsoft\DirectX\UserGpuPreferences",
                         "DirectXUserGlobalSettings", "VRROptimizeEnable=0;", RegistryValueKind.String);
-                    // Hardware-accelerated GPU scheduling (HAGS)
-                    string r2 = SystemService.SetRegistryValue(
-                        @"SYSTEM\CurrentControlSet\Control\GraphicsDrivers",
-                        "HwSchMode", 2, RegistryValueKind.DWord);
-                    return $"{r1}\n{r2}";
                 }
             },
             new OptimizationItem

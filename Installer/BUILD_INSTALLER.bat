@@ -3,7 +3,7 @@ title Klyr - Compilation + Installeur
 color 0A
 echo.
 echo  ============================================
-echo   Klyr v2.3.0 - Build complet + Installeur
+echo   Klyr v2.5.0 - Build complet + Installeur
 echo  ============================================
 echo.
 
@@ -65,22 +65,21 @@ echo OK
 echo.
 
 echo [4/4] Verification du resultat...
-if exist "installer\Klyr_Setup_v2.3.0.exe" (
-    move /Y "installer\Klyr_Setup_v2.3.0.exe" "Klyr_Setup_v2.3.0.exe" >nul
+if exist "installer\Klyr_Setup_v2.5.0.exe" (
+    move /Y "installer\Klyr_Setup_v2.5.0.exe" "Klyr_Setup_v2.5.0.exe" >nul
     echo.
     echo  ============================================
     echo   SUCCES !
-    echo   Installeur : %PROJECT_ROOT%\Klyr_Setup_v2.3.0.exe
+    echo   Installeur : %PROJECT_ROOT%\Klyr_Setup_v2.5.0.exe
     echo  ============================================
     echo.
-    echo  Contenu du build v2.3.0 :
-    echo    - 5 modules / 40 optimisations
-    echo    - Monitoring materiel (temperatures CPU/GPU)
-    echo    - Performance Score /100
-    echo    - Desinstalleur + detection des restes
-    echo    - Software Updater (winget)
-    echo    - Disk Analyzer, Startup Manager, Browser Cleaner
-    echo    - Scans programmes automatiques
+    echo  Contenu du build v2.5.0 :
+    echo    - 6 modules / 44 optimisations
+    echo    - Profils 1-clic (Gaming / Perf max / Vie privee / Equilibre)
+    echo    - Debloat UWP avance + Gros fichiers et doublons
+    echo    - Rapport de sante actionnable
+    echo    - Monitoring materiel, Performance Score, scans programmes
+    echo    - Services, points de restauration, mode arriere-plan (tray)
     echo    - Interface bilingue FR + EN
     echo.
 ) else (

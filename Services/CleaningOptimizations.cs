@@ -162,14 +162,6 @@ namespace Klyr.Services
                     return $"── SFC ──\n{sfcResult.DisplayMessage}\n\n── DISM ──\n{dismResult.DisplayMessage}";
                 }
             },
-            new OptimizationItem
-            {
-                Id          = "clean_dns_cache",
-                Name        = Strings.Optim_clean_dns_cache_Name,
-                Description = Strings.Optim_clean_dns_cache_Desc,
-                Category    = "Nettoyage",
-                Action = async ct => (await SystemService.RunCmdAsync("ipconfig /flushdns")).DisplayMessage
-            },
             // ── NOUVEAU : Scan antivirus avec progression réelle ──────────────────
             new OptimizationItem
             {

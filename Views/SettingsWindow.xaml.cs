@@ -30,6 +30,8 @@ namespace Klyr.Views
             ToggleAdminBadge.IsChecked = s.ShowAdminBadge;
             ToggleHwSensors.IsChecked  = s.EnableHardwareSensors;
             ToggleUpdateCheck.IsChecked = s.EnableUpdateCheck;
+            ToggleMinimizeTray.IsChecked = s.MinimizeToTray;
+            ToggleLaunchStartup.IsChecked = s.LaunchAtStartup;
             ToggleLightTheme.IsChecked = string.Equals(s.Theme, "Light", StringComparison.OrdinalIgnoreCase);
 
             // v2.2.0 — Langue
@@ -54,6 +56,13 @@ namespace Klyr.Views
             s.ShowAdminBadge    = ToggleAdminBadge.IsChecked  == true;
             s.EnableHardwareSensors = ToggleHwSensors.IsChecked == true;
             s.EnableUpdateCheck = ToggleUpdateCheck.IsChecked == true;
+            s.MinimizeToTray    = ToggleMinimizeTray.IsChecked == true;
+
+            // v2.4.0 — Reflète le lancement au démarrage dans le registre (HKCU Run)
+            bool launch = ToggleLaunchStartup.IsChecked == true;
+            if (launch != s.LaunchAtStartup) AutoStartService.Apply(launch);
+            s.LaunchAtStartup   = launch;
+
             s.Theme             = ToggleLightTheme.IsChecked  == true ? "Light" : "Dark";
 
             // v2.2.0 — Persistence langue (prend effet au prochain démarrage)

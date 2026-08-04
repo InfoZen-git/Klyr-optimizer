@@ -266,30 +266,6 @@ namespace Klyr.Services
                         "AppsUseLightTheme", 1, RegistryValueKind.DWord);
                     return $"{r1}\n{r2}\nThème léger activé, transparence désactivée.";
                 }
-            },
-            new OptimizationItem
-            {
-                Id          = "oldpc_telemetry",
-                Name        = Strings.Optim_oldpc_telemetry_Name,
-                Description = Strings.Optim_oldpc_telemetry_Desc,
-                Category    = "VieuxPC",
-                RequiresAdmin = true,
-                Action = async ct =>
-                {
-                    await Task.Yield();
-                    string r1 = SystemService.SetRegistryValue(
-                        @"SOFTWARE\Policies\Microsoft\Windows\DataCollection",
-                        "AllowTelemetry", 0, RegistryValueKind.DWord);
-                    string script = @"
-                        Stop-Service DiagTrack -Force -ErrorAction SilentlyContinue
-                        Set-Service  DiagTrack -StartupType Disabled -ErrorAction SilentlyContinue
-                        Stop-Service dmwappushservice -Force -ErrorAction SilentlyContinue
-                        Set-Service  dmwappushservice -StartupType Disabled -ErrorAction SilentlyContinue
-                        Write-Output 'Services télémétrie désactivés (DiagTrack, dmwappushservice)'
-                    ";
-                    var r2 = await SystemService.RunPowerShellAsync(script);
-                    return $"{r1}\n{r2.DisplayMessage}";
-                }
             }
             };
 

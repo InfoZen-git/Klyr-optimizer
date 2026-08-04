@@ -6,13 +6,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <!-- v2.4.0 : NotifyIcon (mode arrière-plan / system tray) via System.Windows.Forms -->
+    <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>Klyr</AssemblyName>
     <RootNamespace>Klyr</RootNamespace>
     <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.3.0</Version>
-    <FileVersion>2.3.0.0</FileVersion>
-    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <Version>2.5.0</Version>
+    <FileVersion>2.5.0.0</FileVersion>
+    <AssemblyVersion>2.5.0.0</AssemblyVersion>
     <Authors>InfoZen · Yahya</Authors>
     <Company>Klyr</Company>
     <Product>Klyr Optimiseur PC</Product>
@@ -23,7 +25,17 @@
     <Prefer32Bit>false</Prefer32Bit>
     <Optimize>true</Optimize>
     <NeutralLanguage>fr</NeutralLanguage>
+    <!-- v2.4.0 : WinForms (NotifyIcon) signale le DPI du manifest ; WPF gère déjà le DPI. -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
   </PropertyGroup>
+
+  <!-- v2.4.0 : on garde la référence WinForms (NotifyIcon) mais on RETIRE ses implicit
+       usings, sinon System.Windows.Forms entre en conflit avec WPF (MessageBox, Application,
+       System.Drawing.Point/Color…). Les types WinForms sont pleinement qualifiés dans le code. -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />

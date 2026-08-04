@@ -49,6 +49,7 @@ namespace Klyr.Resources
         public static string PageTitle_Cleaning  => Get(nameof(PageTitle_Cleaning));
         public static string PageTitle_Network   => Get(nameof(PageTitle_Network));
         public static string PageTitle_Streaming => Get(nameof(PageTitle_Streaming));
+        public static string PageTitle_Privacy   => Get(nameof(PageTitle_Privacy));
         public static string PageTitle_Terminal  => Get(nameof(PageTitle_Terminal));
         public static string PageTitle_Legal     => Get(nameof(PageTitle_Legal));
 
@@ -61,6 +62,7 @@ namespace Klyr.Resources
         public static string Nav_NavigateCleaning   => Get(nameof(Nav_NavigateCleaning));
         public static string Nav_NavigateNetwork    => Get(nameof(Nav_NavigateNetwork));
         public static string Nav_NavigateStreaming  => Get(nameof(Nav_NavigateStreaming));
+        public static string Nav_NavigatePrivacy    => Get(nameof(Nav_NavigatePrivacy));
         public static string Nav_NavigateTerminal   => Get(nameof(Nav_NavigateTerminal));
 
         // ─────────── BUTTONS ───────────
@@ -200,7 +202,6 @@ namespace Klyr.Resources
         public static string Optim_gaming_gamedvr_Name         => Get(nameof(Optim_gaming_gamedvr_Name));
         public static string Optim_gaming_fullscreen_Name      => Get(nameof(Optim_gaming_fullscreen_Name));
         public static string Optim_gaming_priority_Name        => Get(nameof(Optim_gaming_priority_Name));
-        public static string Optim_gaming_network_latency_Name => Get(nameof(Optim_gaming_network_latency_Name));
         public static string Optim_gaming_directx_Name         => Get(nameof(Optim_gaming_directx_Name));
         public static string Optim_gaming_kill_processes_Name  => Get(nameof(Optim_gaming_kill_processes_Name));
         public static string Optim_gaming_fps_unlock_Name      => Get(nameof(Optim_gaming_fps_unlock_Name));
@@ -213,7 +214,6 @@ namespace Klyr.Resources
         public static string Optim_oldpc_temp_Name       => Get(nameof(Optim_oldpc_temp_Name));
         public static string Optim_oldpc_defrag_Name     => Get(nameof(Optim_oldpc_defrag_Name));
         public static string Optim_oldpc_theme_Name      => Get(nameof(Optim_oldpc_theme_Name));
-        public static string Optim_oldpc_telemetry_Name  => Get(nameof(Optim_oldpc_telemetry_Name));
 
         public static string Optim_clean_disk_Name      => Get(nameof(Optim_clean_disk_Name));
         public static string Optim_clean_recycle_Name   => Get(nameof(Optim_clean_recycle_Name));
@@ -221,7 +221,6 @@ namespace Klyr.Resources
         public static string Optim_clean_prefetch_Name  => Get(nameof(Optim_clean_prefetch_Name));
         public static string Optim_clean_bloatware_Name => Get(nameof(Optim_clean_bloatware_Name));
         public static string Optim_clean_repair_Name    => Get(nameof(Optim_clean_repair_Name));
-        public static string Optim_clean_dns_cache_Name => Get(nameof(Optim_clean_dns_cache_Name));
         public static string Optim_clean_antivirus_Name => Get(nameof(Optim_clean_antivirus_Name));
 
         public static string Optim_net_tcpip_Name          => Get(nameof(Optim_net_tcpip_Name));
@@ -241,12 +240,28 @@ namespace Klyr.Resources
         public static string Optim_stream_killer_Name        => Get(nameof(Optim_stream_killer_Name));
         public static string Optim_stream_clean_cache_Name   => Get(nameof(Optim_stream_clean_cache_Name));
 
+        // Confidentialité (v2.4.0)
+        public static string Optim_priv_telemetry_Name           => Get(nameof(Optim_priv_telemetry_Name));
+        public static string Optim_priv_advertising_id_Name      => Get(nameof(Optim_priv_advertising_id_Name));
+        public static string Optim_priv_activity_history_Name    => Get(nameof(Optim_priv_activity_history_Name));
+        public static string Optim_priv_location_Name            => Get(nameof(Optim_priv_location_Name));
+        public static string Optim_priv_tailored_Name            => Get(nameof(Optim_priv_tailored_Name));
+        public static string Optim_priv_app_launch_tracking_Name => Get(nameof(Optim_priv_app_launch_tracking_Name));
+        public static string Optim_priv_feedback_Name            => Get(nameof(Optim_priv_feedback_Name));
+
+        public static string Optim_priv_telemetry_Desc           => Get(nameof(Optim_priv_telemetry_Desc));
+        public static string Optim_priv_advertising_id_Desc      => Get(nameof(Optim_priv_advertising_id_Desc));
+        public static string Optim_priv_activity_history_Desc    => Get(nameof(Optim_priv_activity_history_Desc));
+        public static string Optim_priv_location_Desc            => Get(nameof(Optim_priv_location_Desc));
+        public static string Optim_priv_tailored_Desc            => Get(nameof(Optim_priv_tailored_Desc));
+        public static string Optim_priv_app_launch_tracking_Desc => Get(nameof(Optim_priv_app_launch_tracking_Desc));
+        public static string Optim_priv_feedback_Desc            => Get(nameof(Optim_priv_feedback_Desc));
+
         // ─────────── OPTIM DESCRIPTIONS ───────────
         public static string Optim_gaming_highperf_Desc        => Get(nameof(Optim_gaming_highperf_Desc));
         public static string Optim_gaming_gamedvr_Desc         => Get(nameof(Optim_gaming_gamedvr_Desc));
         public static string Optim_gaming_fullscreen_Desc      => Get(nameof(Optim_gaming_fullscreen_Desc));
         public static string Optim_gaming_priority_Desc        => Get(nameof(Optim_gaming_priority_Desc));
-        public static string Optim_gaming_network_latency_Desc => Get(nameof(Optim_gaming_network_latency_Desc));
         public static string Optim_gaming_directx_Desc         => Get(nameof(Optim_gaming_directx_Desc));
         public static string Optim_gaming_kill_processes_Desc  => Get(nameof(Optim_gaming_kill_processes_Desc));
         public static string Optim_gaming_fps_unlock_Desc      => Get(nameof(Optim_gaming_fps_unlock_Desc));
@@ -259,7 +274,6 @@ namespace Klyr.Resources
         public static string Optim_oldpc_temp_Desc       => Get(nameof(Optim_oldpc_temp_Desc));
         public static string Optim_oldpc_defrag_Desc     => Get(nameof(Optim_oldpc_defrag_Desc));
         public static string Optim_oldpc_theme_Desc      => Get(nameof(Optim_oldpc_theme_Desc));
-        public static string Optim_oldpc_telemetry_Desc  => Get(nameof(Optim_oldpc_telemetry_Desc));
 
         public static string Optim_clean_disk_Desc      => Get(nameof(Optim_clean_disk_Desc));
         public static string Optim_clean_recycle_Desc   => Get(nameof(Optim_clean_recycle_Desc));
@@ -267,7 +281,6 @@ namespace Klyr.Resources
         public static string Optim_clean_prefetch_Desc  => Get(nameof(Optim_clean_prefetch_Desc));
         public static string Optim_clean_bloatware_Desc => Get(nameof(Optim_clean_bloatware_Desc));
         public static string Optim_clean_repair_Desc    => Get(nameof(Optim_clean_repair_Desc));
-        public static string Optim_clean_dns_cache_Desc => Get(nameof(Optim_clean_dns_cache_Desc));
         public static string Optim_clean_antivirus_Desc => Get(nameof(Optim_clean_antivirus_Desc));
 
         public static string Optim_net_tcpip_Desc           => Get(nameof(Optim_net_tcpip_Desc));
@@ -289,7 +302,6 @@ namespace Klyr.Resources
 
         // ─────────── RESULT MESSAGES ───────────
         public static string Result_HighPerfActive       => Get(nameof(Result_HighPerfActive));
-        public static string Result_LatencyOptimized     => Get(nameof(Result_LatencyOptimized));
         public static string Result_FpsUnlocked          => Get(nameof(Result_FpsUnlocked));
         public static string Result_NoTargetProcesses    => Get(nameof(Result_NoTargetProcesses));
         public static string Result_KillCancelled        => Get(nameof(Result_KillCancelled));
@@ -414,6 +426,10 @@ namespace Klyr.Resources
         public static string Startup_Loading      => Get(nameof(Startup_Loading));
         public static string Startup_Status       => Get(nameof(Startup_Status));
         public static string Startup_ToggleFailed => Get(nameof(Startup_ToggleFailed));
+        public static string Startup_Enabled      => Get(nameof(Startup_Enabled));
+        public static string Startup_Disabled     => Get(nameof(Startup_Disabled));
+        public static string Startup_AddTask      => Get(nameof(Startup_AddTask));
+        public static string Startup_AddFailed    => Get(nameof(Startup_AddFailed));
 
         // ─────────── v2.3.0 BROWSER CLEANER ───────────
         public static string Browser_Title      => Get(nameof(Browser_Title));
@@ -428,10 +444,131 @@ namespace Klyr.Resources
         public static string Browser_Cleaning   => Get(nameof(Browser_Cleaning));
         public static string Browser_Done       => Get(nameof(Browser_Done));
 
+        // ─────────── v2.4.0 SERVICES MANAGER ───────────
+        public static string Nav_Services             => Get(nameof(Nav_Services));
+        public static string Services_Title           => Get(nameof(Services_Title));
+        public static string Services_Subtitle        => Get(nameof(Services_Subtitle));
+        public static string Services_Loading         => Get(nameof(Services_Loading));
+        public static string Services_Status          => Get(nameof(Services_Status));
+        public static string Services_Applying        => Get(nameof(Services_Applying));
+        public static string Services_AdminRequired   => Get(nameof(Services_AdminRequired));
+        public static string Services_ToggleFailed    => Get(nameof(Services_ToggleFailed));
+        public static string Service_DiagTrack_Desc        => Get(nameof(Service_DiagTrack_Desc));
+        public static string Service_dmwappushservice_Desc => Get(nameof(Service_dmwappushservice_Desc));
+        public static string Service_Fax_Desc              => Get(nameof(Service_Fax_Desc));
+        public static string Service_RetailDemo_Desc       => Get(nameof(Service_RetailDemo_Desc));
+        public static string Service_RemoteRegistry_Desc   => Get(nameof(Service_RemoteRegistry_Desc));
+        public static string Service_MapsBroker_Desc       => Get(nameof(Service_MapsBroker_Desc));
+        public static string Service_WMPNetworkSvc_Desc    => Get(nameof(Service_WMPNetworkSvc_Desc));
+        public static string Service_WerSvc_Desc           => Get(nameof(Service_WerSvc_Desc));
+        public static string Service_lfsvc_Desc            => Get(nameof(Service_lfsvc_Desc));
+
+        // ─────────── v2.4.0 RESTORE POINT MANAGER ───────────
+        public static string Nav_Restore             => Get(nameof(Nav_Restore));
+        public static string Restore_Title           => Get(nameof(Restore_Title));
+        public static string Restore_Create          => Get(nameof(Restore_Create));
+        public static string Restore_Open            => Get(nameof(Restore_Open));
+        public static string Restore_DeleteAll       => Get(nameof(Restore_DeleteAll));
+        public static string Restore_Empty           => Get(nameof(Restore_Empty));
+        public static string Restore_Status          => Get(nameof(Restore_Status));
+        public static string Restore_Loading         => Get(nameof(Restore_Loading));
+        public static string Restore_Creating        => Get(nameof(Restore_Creating));
+        public static string Restore_Created         => Get(nameof(Restore_Created));
+        public static string Restore_CreateFailed    => Get(nameof(Restore_CreateFailed));
+        public static string Restore_Deleting        => Get(nameof(Restore_Deleting));
+        public static string Restore_Deleted         => Get(nameof(Restore_Deleted));
+        public static string Restore_DeleteFailed    => Get(nameof(Restore_DeleteFailed));
+        public static string Restore_DeleteConfirm   => Get(nameof(Restore_DeleteConfirm));
+        public static string Restore_AdminRequired   => Get(nameof(Restore_AdminRequired));
+        public static string Restore_ManualPointName => Get(nameof(Restore_ManualPointName));
+        public static string Restore_OpenFailed      => Get(nameof(Restore_OpenFailed));
+
+        // ─────────── v2.5.0 PROFILS 1-CLIC ───────────
+        public static string Nav_Profiles         => Get(nameof(Nav_Profiles));
+        public static string Profiles_Title       => Get(nameof(Profiles_Title));
+        public static string Profiles_Subtitle    => Get(nameof(Profiles_Subtitle));
+        public static string Profiles_Apply       => Get(nameof(Profiles_Apply));
+        public static string Profiles_OptimsLabel => Get(nameof(Profiles_OptimsLabel));
+        public static string Preset_Gaming_Name    => Get(nameof(Preset_Gaming_Name));
+        public static string Preset_Gaming_Desc    => Get(nameof(Preset_Gaming_Desc));
+        public static string Preset_Perf_Name      => Get(nameof(Preset_Perf_Name));
+        public static string Preset_Perf_Desc      => Get(nameof(Preset_Perf_Desc));
+        public static string Preset_Privacy_Name   => Get(nameof(Preset_Privacy_Name));
+        public static string Preset_Privacy_Desc   => Get(nameof(Preset_Privacy_Desc));
+        public static string Preset_Balanced_Name  => Get(nameof(Preset_Balanced_Name));
+        public static string Preset_Balanced_Desc  => Get(nameof(Preset_Balanced_Desc));
+        public static string Dialog_RunPreset_Title   => Get(nameof(Dialog_RunPreset_Title));
+        public static string Dialog_RunPreset_Message => Get(nameof(Dialog_RunPreset_Message));
+
+        // ─────────── v2.5.0 DÉBLOAT UWP ───────────
+        public static string Nav_Appx                => Get(nameof(Nav_Appx));
+        public static string Appx_Title              => Get(nameof(Appx_Title));
+        public static string Appx_Subtitle           => Get(nameof(Appx_Subtitle));
+        public static string Appx_Loading            => Get(nameof(Appx_Loading));
+        public static string Appx_Uninstalling       => Get(nameof(Appx_Uninstalling));
+        public static string Appx_Status             => Get(nameof(Appx_Status));
+        public static string Appx_UninstallSelected  => Get(nameof(Appx_UninstallSelected));
+        public static string Appx_ConfirmUninstall   => Get(nameof(Appx_ConfirmUninstall));
+        public static string Appx_Done               => Get(nameof(Appx_Done));
+        public static string Appx_NoneSelected       => Get(nameof(Appx_NoneSelected));
+
+        // ─────────── v2.5.0 GROS FICHIERS & DOUBLONS ───────────
+        public static string Nav_Files            => Get(nameof(Nav_Files));
+        public static string Files_Title          => Get(nameof(Files_Title));
+        public static string Files_ChooseFolder   => Get(nameof(Files_ChooseFolder));
+        public static string Files_NoFolder       => Get(nameof(Files_NoFolder));
+        public static string Files_ModeLarge      => Get(nameof(Files_ModeLarge));
+        public static string Files_ModeDuplicates => Get(nameof(Files_ModeDuplicates));
+        public static string Files_Start          => Get(nameof(Files_Start));
+        public static string Files_Stop           => Get(nameof(Files_Stop));
+        public static string Files_Scanning       => Get(nameof(Files_Scanning));
+        public static string Files_Status         => Get(nameof(Files_Status));
+        public static string Files_Empty          => Get(nameof(Files_Empty));
+        public static string Files_DeleteSelected => Get(nameof(Files_DeleteSelected));
+        public static string Files_ConfirmDelete  => Get(nameof(Files_ConfirmDelete));
+        public static string Files_Done           => Get(nameof(Files_Done));
+        public static string Files_NoneSelected   => Get(nameof(Files_NoneSelected));
+        public static string Files_GroupLabel     => Get(nameof(Files_GroupLabel));
+
+        // ─────────── v2.5.0 RAPPORT DE SANTÉ ───────────
+        public static string Nav_Health              => Get(nameof(Nav_Health));
+        public static string Health_Title            => Get(nameof(Health_Title));
+        public static string Health_Subtitle         => Get(nameof(Health_Subtitle));
+        public static string Health_Loading          => Get(nameof(Health_Loading));
+        public static string Health_Refresh          => Get(nameof(Health_Refresh));
+        public static string Health_Fix              => Get(nameof(Health_Fix));
+        public static string Health_Ram_Title        => Get(nameof(Health_Ram_Title));
+        public static string Health_Ram_Detail       => Get(nameof(Health_Ram_Detail));
+        public static string Health_Disk_Title       => Get(nameof(Health_Disk_Title));
+        public static string Health_Disk_Detail      => Get(nameof(Health_Disk_Detail));
+        public static string Health_Temp_Title       => Get(nameof(Health_Temp_Title));
+        public static string Health_Temp_Detail      => Get(nameof(Health_Temp_Detail));
+        public static string Health_Telemetry_Title  => Get(nameof(Health_Telemetry_Title));
+        public static string Health_Telemetry_On     => Get(nameof(Health_Telemetry_On));
+        public static string Health_Telemetry_Off    => Get(nameof(Health_Telemetry_Off));
+        public static string Health_Startup_Title    => Get(nameof(Health_Startup_Title));
+        public static string Health_Startup_Detail   => Get(nameof(Health_Startup_Detail));
+        public static string Health_Restore_Title    => Get(nameof(Health_Restore_Title));
+        public static string Health_Restore_None     => Get(nameof(Health_Restore_None));
+        public static string Health_Restore_Ok       => Get(nameof(Health_Restore_Ok));
+        public static string Health_Restore_Unknown  => Get(nameof(Health_Restore_Unknown));
+
         // ─────────── v2.3.0 UPDATE CHECK ───────────
         public static string Update_Available        => Get(nameof(Update_Available));
         public static string Settings_UpdateCheck    => Get(nameof(Settings_UpdateCheck));
         public static string Settings_UpdateCheckDesc => Get(nameof(Settings_UpdateCheckDesc));
+
+        // ─────────── v2.4.0 TRAY / DÉMARRAGE ───────────
+        public static string Settings_MinimizeTray      => Get(nameof(Settings_MinimizeTray));
+        public static string Settings_MinimizeTrayDesc  => Get(nameof(Settings_MinimizeTrayDesc));
+        public static string Settings_LaunchStartup     => Get(nameof(Settings_LaunchStartup));
+        public static string Settings_LaunchStartupDesc => Get(nameof(Settings_LaunchStartupDesc));
+        public static string Tray_Open           => Get(nameof(Tray_Open));
+        public static string Tray_QuickClean     => Get(nameof(Tray_QuickClean));
+        public static string Tray_Quit           => Get(nameof(Tray_Quit));
+        public static string Tray_MinimizedHint  => Get(nameof(Tray_MinimizedHint));
+        public static string Tray_Cleaning       => Get(nameof(Tray_Cleaning));
+        public static string Tray_CleanDone      => Get(nameof(Tray_CleanDone));
 
         // ─────────── v2.3.0 HARDWARE SENSORS ───────────
         public static string Settings_HwSensors     => Get(nameof(Settings_HwSensors));

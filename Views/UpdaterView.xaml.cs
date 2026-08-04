@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Klyr.Models;
 using Klyr.Resources;
 using Klyr.Services;
+using Klyr.ViewModels;
 
 namespace Klyr.Views
 {
@@ -31,6 +32,7 @@ namespace Klyr.Views
         {
             ShowOverlay(Strings.Updater_Loading, "");
             UpdateButton.IsEnabled = false;
+            ProgressRow.Visibility = Visibility.Collapsed;
 
             if (!await WingetService.IsAvailableAsync())
             {
@@ -65,18 +67,47 @@ namespace Klyr.Views
             }
 
             UpdateButton.IsEnabled = false;
-            int ok = 0, fail = 0;
+            foreach (var p in selected) p.Status = PackageStatus.Pending;
+
+            ProgressRow.Visibility = Visibility.Visible;
+            GlobalProgress.Value = 0;
+            ProgressPercent.Text = "0%";
+
+            // v2.5.0 — Fait remonter la progression jusqu'à l'onglet de nav « Mises à jour »
+            var vm = MainVm;
+            if (vm != null) { vm.IsUpdaterRunning = true; vm.UpdaterProgressText = "0%"; }
+
+            int ok = 0, fail = 0, done = 0;
             foreach (var pkg in selected)
             {
+                pkg.Status = PackageStatus.Updating;
                 StatusText.Text = string.Format(Strings.Updater_Updating, pkg.Name);
+
                 bool success = await WingetService.UpgradePackageAsync(pkg.Id);
+
+                pkg.Status = success ? PackageStatus.Done : PackageStatus.Failed;
                 if (success) ok++; else fail++;
+
+                done++;
+                int pct = (int)(done * 100.0 / selected.Count);
+                GlobalProgress.Value = pct;
+                ProgressPercent.Text = $"{pct}%";
+                if (vm != null) vm.UpdaterProgressText = $"{pct}%";
             }
 
+            if (vm != null) vm.IsUpdaterRunning = false;
+
+            // On NE recharge PAS automatiquement : les indicateurs ✓ / ✕ restent visibles.
+            // L'utilisateur clique « Actualiser » pour re-scanner (les paquets à jour disparaissent).
             LogService.Instance.Success(string.Format(Strings.Updater_Done, ok, fail), "Système");
             StatusText.Text = string.Format(Strings.Updater_Done, ok, fail);
-            await LoadAsync();
+            UpdateButton.IsEnabled = true;
         }
+
+        /// <summary>DataContext hérité de la fenêtre (MainViewModel), null en cas d'imprévu.</summary>
+        private MainViewModel? MainVm =>
+            DataContext as MainViewModel
+            ?? Application.Current?.MainWindow?.DataContext as MainViewModel;
 
         private void ShowOverlay(string text, string glyph)
         {

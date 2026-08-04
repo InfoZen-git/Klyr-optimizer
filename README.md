@@ -2,7 +2,7 @@
 
 # Klyr
 
-**Optimiseur PC Windows — 40 optimisations en 5 modules + monitoring matériel + 5 outils avancés. FR + EN, 100% local, sans télémétrie.**
+**Optimiseur PC Windows — 44 optimisations en 6 modules + monitoring matériel + 11 outils avancés. FR + EN, 100% local, sans télémétrie.**
 
 🌐 **Français** · [English](README.en.md)
 
@@ -26,6 +26,43 @@ Windows accumule au fil des mois des paramètres lourds, des services inutiles, 
 - 🔒 **100% local** : aucune télémétrie, aucun tracking, aucun compte
 - ↩️ **Réversible** : point de restauration automatique + backups ciblés des fichiers système
 - 📖 **Open-source** : tu peux lire chaque ligne avant d'installer
+
+---
+
+## Nouveautés v2.5.0
+
+Mise à jour productivité : appliquer les optimisations plus vite, nettoyer plus en profondeur, et savoir quoi faire.
+
+- **Profils 1-clic** — presets qui appliquent un ensemble curé d'optimisations à travers les modules : *Mode Gaming*, *Performance max*, *Vie privée*, *Équilibré*
+- **Débloat UWP avancé** — liste toutes les apps du Windows Store désinstallables (cases à cocher, désinstallation par lot, réinstallable via le Store)
+- **Gros fichiers & doublons** — trouve les plus gros fichiers et les fichiers en double (empreinte SHA-256), suppression vers la Corbeille
+- **Rapport de santé actionnable** — un scan qui liste des recommandations concrètes (RAM, disque, temp, télémétrie, démarrage, restauration) avec un bouton *Corriger* qui mène droit à l'outil concerné
+
+---
+
+## Nouveautés v2.4.0
+
+```
+                 KLYR  v2.3.0  ─────────────────►  v2.4.0
+ ┌────────────────────────────┐      ┌────────────────────────────────────────┐
+ │ MODULES (5)                 │      │ MODULES (6)  — + Confidentialité        │
+ │  Gaming · Vieux PC ·        │  ──► │  Gaming · Vieux PC · Nettoyage ·        │
+ │  Nettoyage · Réseau ·       │      │  Réseau · Streaming · Confidentialité   │
+ │  Streaming                  │      │                                         │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ OUTILS (5)                  │      │ OUTILS (7)  — + Services + Restauration  │
+ │  Désinstalleur · winget ·   │  ──► │  … + Gestionnaire de services Windows   │
+ │  Disque · Démarrage ·       │      │  + Gestionnaire de points de restaur.   │
+ │  Navigateurs                │      │                                         │
+ ├────────────────────────────┤      ├────────────────────────────────────────┤
+ │ SYSTÈME                     │      │ SYSTÈME                                 │
+ │  • Scans programmés         │  ──► │  • Mode arrière-plan (system tray)      │
+ │  • Auto-updater             │      │  • Lancement au démarrage de Windows    │
+ │                             │      │  • Nettoyage rapide depuis le tray      │
+ └────────────────────────────┘      └────────────────────────────────────────┘
+```
+
+**En résumé v2.4.0** : un nouveau **module Confidentialité** (télémétrie, ID publicitaire, localisation, historique d'activité… tout réversible), deux nouveaux outils système réversibles (**Gestionnaire de services** Windows et **Gestionnaire de points de restauration**), et un **mode arrière-plan** (icône dans la zone de notification, nettoyage rapide en 1 clic, lancement au démarrage de Windows).
 
 ---
 
@@ -90,11 +127,12 @@ Si Defender bloque le téléchargement : ajoute le dossier de téléchargement a
 
 | Module | Nb | Points clés |
 |---|---|---|
-| **Gaming / FPS** | 9 | Mode haute perf, désactivation Game DVR, déblocage FPS, latence TCP, fermeture processus parasites |
-| **Vieux PC** | 8 | Désactivation services lourds, télémétrie, animations, nettoyage RAM Win32, defrag SSD/HDD intelligent |
-| **Nettoyage** | 8 | Disk cleanup, suppression bloatware, SFC/DISM, scan Defender intégré + quarantaine, vidage caches |
+| **Gaming / FPS** | 8 | Mode haute perf, désactivation Game DVR, déblocage FPS, HAGS, fermeture processus parasites |
+| **Vieux PC** | 7 | Désactivation programmes au démarrage, animations, nettoyage RAM Win32, defrag SSD/HDD intelligent |
+| **Nettoyage** | 7 | Disk cleanup, suppression bloatware, SFC/DISM, scan Defender intégré + quarantaine, vidage caches |
 | **Réseau** | 9 | Reset Winsock/TCP, DNS auto-bench, optimisation ping, test vitesse, blocage télémétrie hosts |
 | **Streaming / Création** | 6 | Mode Streamer (perf + latence), prio CPU encoder auto, Game Mode OFF, HAGS OFF, killer parasites, cleanup cache OBS |
+| **Confidentialité** | 7 | Désactivation télémétrie Windows, ID publicitaire, historique d'activité, localisation, expériences personnalisées, suivi d'apps, feedback — tout réversible |
 
 Les optimisations marquées **« Avancé »** (gain incertain ou risque de régression) sont masquées par défaut. Active-les dans Paramètres si tu veux pousser plus loin.
 
@@ -128,8 +166,16 @@ Accessibles depuis la section **Outils** du menu latéral :
 | **Analyseur disque** | Visualise l'occupation par dossier (barres proportionnelles + drill-down) |
 | **Démarrage** | Active/désactive les programmes au démarrage (réversible, sans suppression) |
 | **Navigateurs** | Vide cache / cookies / historique de Chrome, Edge, Firefox, Brave |
+| **Services** | Désactive des services Windows non essentiels (liste curée et sûre), réactivation restaurant le type de démarrage d'origine |
+| **Restauration** | Liste / crée / supprime les points de restauration système, ouvre l'assistant Windows |
+| **Profils 1-clic** | Applique un ensemble curé d'optimisations en un clic (Gaming / Perf max / Vie privée / Équilibré) |
+| **Débloat UWP** | Liste et désinstalle par lot les applications du Windows Store (réinstallables via le Store) |
+| **Gros fichiers & doublons** | Trouve les fichiers volumineux et les doublons (SHA-256), suppression vers la Corbeille |
+| **Rapport de santé** | Recommandations concrètes (RAM, disque, temp, télémétrie, démarrage…) avec bouton corriger |
 
 **Scans programmés** (Paramètres → Scans programmés) : nettoyage automatique quotidien/hebdo/mensuel via le Planificateur de tâches Windows, en arrière-plan sans ouvrir l'app.
+
+**Mode arrière-plan** (Paramètres) : Klyr peut se réduire dans la zone de notification (system tray) avec menu **Ouvrir / Nettoyage rapide / Quitter**, et se lancer automatiquement au démarrage de Windows.
 
 ---
 

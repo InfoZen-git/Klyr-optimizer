@@ -5,50 +5,46 @@ using Microsoft.Win32;
 namespace Klyr.Services
 {
     /// <summary>
-    /// v2.3.0 — Startup Manager (inspiré de Kudu).
-    /// Liste les programmes au démarrage (registre Run HKLM/HKCU + dossiers Startup),
-    /// avec activation/désactivation RÉVERSIBLE :
-    ///   - Désactiver = déplacer l'entrée vers une clé/dossier de backup Klyr.
-    ///   - Activer    = restaurer depuis le backup.
+    /// v2.5.0 (fix) — Startup Manager aligné sur le comportement du Gestionnaire des tâches Windows.
+    ///
+    /// Corrections des bugs remontés :
+    ///   • Affiche TOUTES les sources : Run HKCU + HKLM (64-bit) + HKLM WOW6432Node (32-bit)
+    ///     + dossiers Démarrage (utilisateur et commun).
+    ///   • État activé/désactivé lu depuis la clé <c>StartupApproved</c> (le flag binaire que
+    ///     Windows utilise réellement), et non plus déduit de la simple présence dans Run.
+    ///   • Le toggle écrit ce même flag StartupApproved (activé = 02…, désactivé = 03… + horodatage),
+    ///     donc parfaitement cohérent avec le Gestionnaire des tâches. Aucune entrée n'est déplacée.
+    ///
+    /// Note : modifier les entrées HKLM (machine) écrit dans HKLM\...\StartupApproved et nécessite
+    /// l'élévation ; sans admin, l'écriture échoue proprement (le toggle renvoie false).
     /// </summary>
     public static class StartupManagerService
     {
-        private const string RunPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-        private const string BackupHklm = @"SOFTWARE\Klyr\StartupBackup\HKLM";
-        private const string BackupHkcu = @"SOFTWARE\Klyr\StartupBackup\HKCU";
+        private const string RunPath     = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+        private const string RunPath32   = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run";
+        private const string ApprovedRun       = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run";
+        private const string ApprovedRun32     = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32";
+        private const string ApprovedFolder    = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder";
 
-        private static string StartupFolderUser =>
-            Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-        private static string StartupFolderCommon =>
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
-        private static string BackupFolder => Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            "Klyr", "StartupBackup");
+        private static string StartupFolderUser   => Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+        private static string StartupFolderCommon => Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
 
         public static List<StartupEntry> GetStartupEntries()
         {
             var list = new List<StartupEntry>();
 
-            // ── Registre : entrées actives ──
-            ReadRunKey(Registry.LocalMachine, RunPath, StartupSource.RegistryHKLM, "Registre (HKLM)", true, list);
-            ReadRunKey(Registry.CurrentUser,  RunPath, StartupSource.RegistryHKCU, "Registre (HKCU)", true, list);
+            ReadRunKey(Registry.CurrentUser,  RunPath,   StartupSource.RegistryHKCU,   "Registre (HKCU)",        list);
+            ReadRunKey(Registry.LocalMachine, RunPath,   StartupSource.RegistryHKLM,   "Registre (HKLM 64-bit)", list);
+            ReadRunKey(Registry.LocalMachine, RunPath32, StartupSource.RegistryHKLM32, "Registre (HKLM 32-bit)", list);
 
-            // ── Registre : entrées désactivées (backup) ──
-            ReadRunKey(Registry.LocalMachine, BackupHklm, StartupSource.RegistryHKLM, "Registre (HKLM)", false, list);
-            ReadRunKey(Registry.CurrentUser,  BackupHkcu, StartupSource.RegistryHKCU, "Registre (HKCU)", false, list);
-
-            // ── Dossiers Startup : .lnk actifs ──
-            ReadStartupFolder(StartupFolderUser,   "Dossier démarrage", true, list);
-            ReadStartupFolder(StartupFolderCommon, "Dossier démarrage (tous)", true, list);
-
-            // ── Dossier backup : .lnk désactivés ──
-            ReadStartupFolder(BackupFolder, "Dossier démarrage", false, list);
+            ReadStartupFolder(StartupFolderUser,   StartupSource.FolderUser,   "Dossier démarrage",        list);
+            ReadStartupFolder(StartupFolderCommon, StartupSource.FolderCommon, "Dossier démarrage (tous)", list);
 
             return list.OrderBy(e => e.Name, StringComparer.OrdinalIgnoreCase).ToList();
         }
 
-        private static void ReadRunKey(RegistryKey hive, string path, StartupSource source,
-            string label, bool enabled, List<StartupEntry> acc)
+        // ─────────────────────────── LECTURE ────────────────────────────
+        private static void ReadRunKey(RegistryKey hive, string path, StartupSource source, string label, List<StartupEntry> acc)
         {
             try
             {
@@ -60,33 +56,33 @@ namespace Klyr.Services
                     string cmd = key.GetValue(valName) as string ?? "";
                     acc.Add(new StartupEntry
                     {
-                        Name = valName,
-                        Command = cmd,
-                        Location = label,
-                        Source = source,
-                        RegistryKeyPath = path,
-                        IsEnabled = enabled
+                        Name      = valName,
+                        Command   = cmd,
+                        Location  = label,
+                        Source    = source,
+                        IsEnabled = IsApprovedEnabled(source, valName)
                     });
                 }
             }
             catch { /* clé inaccessible */ }
         }
 
-        private static void ReadStartupFolder(string folder, string label, bool enabled, List<StartupEntry> acc)
+        private static void ReadStartupFolder(string folder, StartupSource source, string label, List<StartupEntry> acc)
         {
             try
             {
                 if (!Directory.Exists(folder)) return;
                 foreach (var lnk in Directory.GetFiles(folder, "*.lnk"))
                 {
+                    string fileName = Path.GetFileName(lnk);
                     acc.Add(new StartupEntry
                     {
-                        Name = Path.GetFileNameWithoutExtension(lnk),
-                        Command = lnk,
-                        Location = label,
-                        Source = StartupSource.StartupFolder,
+                        Name         = Path.GetFileNameWithoutExtension(lnk),
+                        Command      = lnk,
+                        Location     = label,
+                        Source       = source,
                         ShortcutPath = lnk,
-                        IsEnabled = enabled
+                        IsEnabled    = IsApprovedEnabled(source, fileName)
                     });
                 }
             }
@@ -94,74 +90,97 @@ namespace Klyr.Services
         }
 
         /// <summary>
-        /// Active ou désactive une entrée. Retourne true si l'opération a réussi.
+        /// Lit l'état depuis StartupApproved : pas d'entrée = activé (défaut) ;
+        /// 1er octet pair (0x02/0x06) = activé, impair (0x03) = désactivé.
         /// </summary>
+        private static bool IsApprovedEnabled(StartupSource source, string valueName)
+        {
+            var (hive, approvedPath) = ApprovedLocation(source);
+            try
+            {
+                using var key = hive.OpenSubKey(approvedPath);
+                if (key?.GetValue(valueName) is byte[] data && data.Length > 0)
+                    return (data[0] & 1) == 0;
+            }
+            catch { }
+            return true; // pas de flag → activé
+        }
+
+        // ─────────────────────────── TOGGLE ────────────────────────────
+        /// <summary>Active/désactive une entrée via StartupApproved. true si succès.</summary>
         public static bool SetEnabled(StartupEntry entry, bool enable)
         {
             try
             {
-                if (entry.Source == StartupSource.StartupFolder)
-                    return ToggleFolder(entry, enable);
-                return ToggleRegistry(entry, enable);
+                var (hive, approvedPath) = ApprovedLocation(entry.Source);
+                string valueName = entry.Source is StartupSource.FolderUser or StartupSource.FolderCommon
+                    ? Path.GetFileName(entry.ShortcutPath)
+                    : entry.Name;
+
+                using var key = hive.CreateSubKey(approvedPath, writable: true);
+                if (key == null) return false;
+
+                byte[] data = new byte[12];
+                if (enable)
+                {
+                    data[0] = 0x02; // activé
+                }
+                else
+                {
+                    data[0] = 0x03; // désactivé
+                    long ts = DateTime.Now.ToFileTime();
+                    Array.Copy(BitConverter.GetBytes(ts), 0, data, 4, 8); // horodatage (comme le Gest. des tâches)
+                }
+
+                key.SetValue(valueName, data, RegistryValueKind.Binary);
+                entry.IsEnabled = enable;
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                LogService.Instance.Warn($"Modification démarrage refusée (admin requis) : {entry.Name}", "Système");
+                return false;
             }
             catch (Exception ex)
             {
-                LogService.Instance.Warn($"Startup toggle échoué ({entry.Name}) : {ex.Message}", "Système");
+                LogService.Instance.Warn($"Toggle démarrage échoué ({entry.Name}) : {ex.Message}", "Système");
                 return false;
             }
         }
 
-        private static bool ToggleRegistry(StartupEntry entry, bool enable)
+        // ─────────────────────────── AJOUT (v2.5.0) ────────────────────────────
+        /// <summary>
+        /// Ajoute un exécutable au démarrage de l'utilisateur (HKCU\...\Run). Sans admin.
+        /// Retourne true si l'entrée a été créée.
+        /// </summary>
+        public static bool AddUserStartup(string exePath)
         {
-            bool isHklm = entry.Source == StartupSource.RegistryHKLM;
-            RegistryKey hive = isHklm ? Registry.LocalMachine : Registry.CurrentUser;
-            string activePath = RunPath;
-            string backupPath = isHklm ? BackupHklm : BackupHkcu;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(exePath) || !File.Exists(exePath)) return false;
+                string name = Path.GetFileNameWithoutExtension(exePath);
 
-            string from = enable ? backupPath : activePath;
-            string to   = enable ? activePath : backupPath;
-
-            using var fromKey = hive.OpenSubKey(from, writable: true);
-            if (fromKey == null) return false;
-            object? val = fromKey.GetValue(entry.Name);
-            if (val == null) return false;
-
-            using var toKey = hive.CreateSubKey(to, writable: true);
-            if (toKey == null) return false;
-
-            toKey.SetValue(entry.Name, val, RegistryValueKind.String);
-            fromKey.DeleteValue(entry.Name, throwOnMissingValue: false);
-
-            entry.IsEnabled = enable;
-            return true;
+                using var key = Registry.CurrentUser.CreateSubKey(RunPath, writable: true);
+                if (key == null) return false;
+                key.SetValue(name, $"\"{exePath}\"", RegistryValueKind.String);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogService.Instance.Warn($"Ajout au démarrage échoué : {ex.Message}", "Système");
+                return false;
+            }
         }
 
-        private static bool ToggleFolder(StartupEntry entry, bool enable)
+        // ─────────────────────────── HELPERS ────────────────────────────
+        private static (RegistryKey hive, string path) ApprovedLocation(StartupSource source) => source switch
         {
-            Directory.CreateDirectory(BackupFolder);
-            string fileName = Path.GetFileName(entry.ShortcutPath);
-
-            if (enable)
-            {
-                // backup → dossier Startup utilisateur
-                string src = entry.ShortcutPath;
-                string dst = Path.Combine(StartupFolderUser, fileName);
-                if (!File.Exists(src)) return false;
-                File.Move(src, dst, overwrite: true);
-                entry.ShortcutPath = dst;
-            }
-            else
-            {
-                // Startup → backup
-                string src = entry.ShortcutPath;
-                string dst = Path.Combine(BackupFolder, fileName);
-                if (!File.Exists(src)) return false;
-                File.Move(src, dst, overwrite: true);
-                entry.ShortcutPath = dst;
-            }
-
-            entry.IsEnabled = enable;
-            return true;
-        }
+            StartupSource.RegistryHKCU   => (Registry.CurrentUser,  ApprovedRun),
+            StartupSource.RegistryHKLM   => (Registry.LocalMachine, ApprovedRun),
+            StartupSource.RegistryHKLM32 => (Registry.LocalMachine, ApprovedRun32),
+            StartupSource.FolderUser     => (Registry.CurrentUser,  ApprovedFolder),
+            StartupSource.FolderCommon   => (Registry.LocalMachine, ApprovedFolder),
+            _                            => (Registry.CurrentUser,  ApprovedRun)
+        };
     }
 }
