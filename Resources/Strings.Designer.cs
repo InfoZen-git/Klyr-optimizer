@@ -338,8 +338,10 @@ namespace Klyr.Resources
         public static string Result_FirewallReset        => Get(nameof(Result_FirewallReset));
         public static string Result_NoActiveAdapter      => Get(nameof(Result_NoActiveAdapter));
         public static string Result_DnsDomainJoined      => Get(nameof(Result_DnsDomainJoined));
+        public static string Result_DnsDomainCheckFailed => Get(nameof(Result_DnsDomainCheckFailed));
         public static string Result_DnsBackupFailed      => Get(nameof(Result_DnsBackupFailed));
         public static string Result_DnsNoBackup          => Get(nameof(Result_DnsNoBackup));
+        public static string Result_DnsRestoreIncomplete => Get(nameof(Result_DnsRestoreIncomplete));
 
         // ─────────── ABOUT ───────────
         public static string About_Title             => Get(nameof(About_Title));

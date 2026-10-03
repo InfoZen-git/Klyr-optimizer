@@ -375,8 +375,10 @@ Redémarrage requis pour appliquer les changements.</value></data>
   <data name="Result_FirewallReset" xml:space="preserve"><value>Pare-feu réinitialisé.</value></data>
   <data name="Result_NoActiveAdapter" xml:space="preserve"><value>Aucun adaptateur réseau actif détecté.</value></data>
   <data name="Result_DnsDomainJoined" xml:space="preserve"><value>Ce PC est joint à un domaine : le DNS d'entreprise est conservé, aucune modification effectuée.</value></data>
+  <data name="Result_DnsDomainCheckFailed" xml:space="preserve"><value>Impossible de vérifier l'appartenance à un domaine : aucune modification DNS effectuée.</value></data>
   <data name="Result_DnsBackupFailed" xml:space="preserve"><value>Sauvegarde de la configuration DNS impossible : aucune modification effectuée.</value></data>
   <data name="Result_DnsNoBackup" xml:space="preserve"><value>Aucune sauvegarde DNS à restaurer.</value></data>
+  <data name="Result_DnsRestoreIncomplete" xml:space="preserve"><value>Restauration DNS incomplète : un adaptateur sauvegardé est introuvable. Les sauvegardes sont conservées pour réessayer.</value></data>
 
   <!-- ─── ABOUT WINDOW ─── -->
   <data name="About_Title" xml:space="preserve"><value>À propos</value></data>

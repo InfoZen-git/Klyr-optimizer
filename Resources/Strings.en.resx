@@ -375,8 +375,10 @@ Reboot required to apply the changes.</value></data>
   <data name="Result_FirewallReset" xml:space="preserve"><value>Firewall reset.</value></data>
   <data name="Result_NoActiveAdapter" xml:space="preserve"><value>No active network adapter detected.</value></data>
   <data name="Result_DnsDomainJoined" xml:space="preserve"><value>This PC is joined to a domain: corporate DNS is preserved, no changes made.</value></data>
+  <data name="Result_DnsDomainCheckFailed" xml:space="preserve"><value>Could not verify domain membership: no DNS changes made.</value></data>
   <data name="Result_DnsBackupFailed" xml:space="preserve"><value>Could not back up the DNS configuration: no changes made.</value></data>
   <data name="Result_DnsNoBackup" xml:space="preserve"><value>No DNS backup to restore.</value></data>
+  <data name="Result_DnsRestoreIncomplete" xml:space="preserve"><value>DNS restoration incomplete: a saved adapter could not be found. Backups have been retained for another attempt.</value></data>
 
   <!-- ─── ABOUT WINDOW ─── -->
   <data name="About_Title" xml:space="preserve"><value>About</value></data>
