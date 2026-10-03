@@ -200,7 +200,7 @@ namespace Klyr.Services
 
                         // Étape 2 — confirmation avec preview de la liste (comme le module Gaming)
                         string preview = string.Join("\n",
-                            running.Select(p => $"  • {p.Name} ({p.Count} instance{(p.Count > 1 ? "s" : "")})"));
+                            running.Select(p => $"  • {p.Name} ({p.Count})"));
 
                         MessageBoxResult confirm = await Application.Current.Dispatcher.InvokeAsync(() =>
                             MessageBox.Show(

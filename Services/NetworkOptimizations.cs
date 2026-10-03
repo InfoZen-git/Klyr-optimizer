@@ -69,7 +69,23 @@ namespace Klyr.Services
                 Action = async ct =>
                 {
                     string script = @"
-                        if ((Get-CimInstance Win32_ComputerSystem).PartOfDomain) {
+                        $computerSystem = $null
+                        try {
+                            $computerSystem = Get-CimInstance -ClassName Win32_ComputerSystem -ErrorAction Stop
+                        } catch {
+                            Write-Output 'DOMAIN_CHECK_FAILED'
+                            exit 1
+                        }
+                        if ($null -eq $computerSystem) {
+                            Write-Output 'DOMAIN_CHECK_FAILED'
+                            exit 1
+                        }
+                        $partOfDomain = $computerSystem.PartOfDomain
+                        if ($partOfDomain -isnot [bool]) {
+                            Write-Output 'DOMAIN_CHECK_FAILED'
+                            exit 1
+                        }
+                        if ($partOfDomain) {
                             Write-Output 'DOMAIN_JOINED'
                             exit 1
                         }
@@ -140,6 +156,7 @@ namespace Klyr.Services
                         Write-Output ""DNS auto-optimisés : $($best.Name) [$($best.Servers -join ', ')] — latence DNS moyenne $($best.Avg) ms. Sauvegarde : $backupFile""
                     ";
                     var dnsResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    if (dnsResult.Output.Contains("DOMAIN_CHECK_FAILED")) return Strings.Result_DnsDomainCheckFailed;
                     if (dnsResult.Output.Contains("DOMAIN_JOINED")) return Strings.Result_DnsDomainJoined;
                     if (dnsResult.Output.Contains("BACKUP_FAILED")) return Strings.Result_DnsBackupFailed;
                     return dnsResult.Output.Contains("NO_ADAPTER")
@@ -167,9 +184,13 @@ namespace Klyr.Services
                         # La plus ancienne sauvegarde non restaurée = la configuration d'origine
                         $entries = @(Get-Content -Path $files[0].FullName -Raw -Encoding UTF8 | ConvertFrom-Json)
                         $restored = 0
+                        $missing = 0
                         foreach ($entry in $entries) {
                             $adapter = Get-NetAdapter | Where-Object { $_.InterfaceGuid -eq $entry.InterfaceGuid } | Select-Object -First 1
-                            if (-not $adapter) { continue }
+                            if (-not $adapter) {
+                                $missing++
+                                continue
+                            }
                             if ($entry.Static -and @($entry.ServerAddresses).Count -gt 0) {
                                 Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses @($entry.ServerAddresses) -ErrorAction Stop
                             } else {
@@ -178,10 +199,17 @@ namespace Klyr.Services
                             $restored++
                         }
 
+                        if ($missing -gt 0) {
+                            Write-Output 'RESTORE_INCOMPLETE'
+                            exit 1
+                        }
+
                         $files | ForEach-Object { Rename-Item -LiteralPath $_.FullName -NewName ($_.Name + '.restored') -Force -ErrorAction SilentlyContinue }
                         Write-Output ""DNS d'origine restaurés sur $restored adaptateur(s).""
                     ";
                     var restoreResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    if (restoreResult.Output.Contains("RESTORE_INCOMPLETE"))
+                        return Strings.Result_DnsRestoreIncomplete;
                     return restoreResult.Output.Contains("NO_BACKUP")
                         ? Strings.Result_DnsNoBackup
                         : restoreResult.DisplayMessage;
