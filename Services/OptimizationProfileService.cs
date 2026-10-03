@@ -47,6 +47,7 @@ namespace Klyr.Services
             ["net_tcpip"] = new(OptimizationPurpose.Troubleshooting, 35, IsAdvanced: true),
             ["net_reset"] = new(OptimizationPurpose.Troubleshooting, 60),
             ["net_dns_fast"] = new(OptimizationPurpose.Performance, 74, IsBenchmarkCandidate: true),
+            ["net_dns_restore"] = new(OptimizationPurpose.Troubleshooting, 60),
             ["net_ping"] = new(OptimizationPurpose.Troubleshooting, 30, IsAdvanced: true),
             ["net_telemetry_block"] = new(OptimizationPurpose.SecurityPrivacy, 20, IsAdvanced: true),
             ["net_flush_dns"] = new(OptimizationPurpose.Troubleshooting, 25),

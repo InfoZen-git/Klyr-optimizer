@@ -272,6 +272,7 @@ Quarantine them now?</value></data>
   <data name="Optim_net_tcpip_Name" xml:space="preserve"><value>TCP/IP Optimization</value></data>
   <data name="Optim_net_reset_Name" xml:space="preserve"><value>Network Reset</value></data>
   <data name="Optim_net_dns_fast_Name" xml:space="preserve"><value>Fast DNS (Cloudflare / Google)</value></data>
+  <data name="Optim_net_dns_restore_Name" xml:space="preserve"><value>Restore original DNS</value></data>
   <data name="Optim_net_ping_Name" xml:space="preserve"><value>Ping Optimization</value></data>
   <data name="Optim_net_telemetry_block_Name" xml:space="preserve"><value>Block Microsoft Telemetry</value></data>
   <data name="Optim_net_flush_dns_Name" xml:space="preserve"><value>Flush DNS</value></data>
@@ -314,7 +315,8 @@ Quarantine them now?</value></data>
 
   <data name="Optim_net_tcpip_Desc" xml:space="preserve"><value>Tunes the Windows network stack: autotuning, ECN, timestamps for better performance.</value></data>
   <data name="Optim_net_reset_Desc" xml:space="preserve"><value>Resets all network settings (netsh winsock reset + int ip reset). Reboot required.</value></data>
-  <data name="Optim_net_dns_fast_Desc" xml:space="preserve"><value>Benchmarks several DNS profiles then automatically applies the fastest one.</value></data>
+  <data name="Optim_net_dns_fast_Desc" xml:space="preserve"><value>Benchmarks several DNS profiles then automatically applies the fastest one on physical network adapters (skipped on domain-joined PCs). The previous configuration is backed up.</value></data>
+  <data name="Optim_net_dns_restore_Desc" xml:space="preserve"><value>Reverts to the DNS configuration saved before the fast DNS optimization was applied.</value></data>
   <data name="Optim_net_ping_Desc" xml:space="preserve"><value>Reduces network latency by tuning TCP timers and disabling ACK delays.</value></data>
   <data name="Optim_net_telemetry_block_Desc" xml:space="preserve"><value>Blocks connections to Microsoft tracking and telemetry servers via the hosts file.</value></data>
   <data name="Optim_net_flush_dns_Desc" xml:space="preserve"><value>Clears the local DNS cache (ipconfig /flushdns) to fix browsing issues.</value></data>
@@ -372,6 +374,9 @@ Hints: check that Windows Defender is active and that you have admin rights.</va
 Reboot required to apply the changes.</value></data>
   <data name="Result_FirewallReset" xml:space="preserve"><value>Firewall reset.</value></data>
   <data name="Result_NoActiveAdapter" xml:space="preserve"><value>No active network adapter detected.</value></data>
+  <data name="Result_DnsDomainJoined" xml:space="preserve"><value>This PC is joined to a domain: corporate DNS is preserved, no changes made.</value></data>
+  <data name="Result_DnsBackupFailed" xml:space="preserve"><value>Could not back up the DNS configuration: no changes made.</value></data>
+  <data name="Result_DnsNoBackup" xml:space="preserve"><value>No DNS backup to restore.</value></data>
 
   <!-- ─── ABOUT WINDOW ─── -->
   <data name="About_Title" xml:space="preserve"><value>About</value></data>

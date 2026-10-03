@@ -226,6 +226,7 @@ namespace Klyr.Resources
         public static string Optim_net_tcpip_Name          => Get(nameof(Optim_net_tcpip_Name));
         public static string Optim_net_reset_Name          => Get(nameof(Optim_net_reset_Name));
         public static string Optim_net_dns_fast_Name       => Get(nameof(Optim_net_dns_fast_Name));
+        public static string Optim_net_dns_restore_Name    => Get(nameof(Optim_net_dns_restore_Name));
         public static string Optim_net_ping_Name           => Get(nameof(Optim_net_ping_Name));
         public static string Optim_net_telemetry_block_Name => Get(nameof(Optim_net_telemetry_block_Name));
         public static string Optim_net_flush_dns_Name      => Get(nameof(Optim_net_flush_dns_Name));
@@ -286,6 +287,7 @@ namespace Klyr.Resources
         public static string Optim_net_tcpip_Desc           => Get(nameof(Optim_net_tcpip_Desc));
         public static string Optim_net_reset_Desc           => Get(nameof(Optim_net_reset_Desc));
         public static string Optim_net_dns_fast_Desc        => Get(nameof(Optim_net_dns_fast_Desc));
+        public static string Optim_net_dns_restore_Desc     => Get(nameof(Optim_net_dns_restore_Desc));
         public static string Optim_net_ping_Desc            => Get(nameof(Optim_net_ping_Desc));
         public static string Optim_net_telemetry_block_Desc => Get(nameof(Optim_net_telemetry_block_Desc));
         public static string Optim_net_flush_dns_Desc       => Get(nameof(Optim_net_flush_dns_Desc));
@@ -335,6 +337,9 @@ namespace Klyr.Resources
         public static string Result_NetReset             => Get(nameof(Result_NetReset));
         public static string Result_FirewallReset        => Get(nameof(Result_FirewallReset));
         public static string Result_NoActiveAdapter      => Get(nameof(Result_NoActiveAdapter));
+        public static string Result_DnsDomainJoined      => Get(nameof(Result_DnsDomainJoined));
+        public static string Result_DnsBackupFailed      => Get(nameof(Result_DnsBackupFailed));
+        public static string Result_DnsNoBackup          => Get(nameof(Result_DnsNoBackup));
 
         // ─────────── ABOUT ───────────
         public static string About_Title             => Get(nameof(About_Title));

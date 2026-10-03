@@ -103,7 +103,13 @@ namespace Klyr.Services
 
         /// <summary>
         /// Lance la désinstallation (préfère le mode silencieux si dispo) et attend la fin.
+        /// Retourne true uniquement si le désinstalleur s'est terminé avec un code de succès
+        /// (0, 1641 ou 3010 = succès MSI avec redémarrage) : sinon l'installation est encore
+        /// présente et ne doit surtout pas être proposée à la suppression.
         /// </summary>
+        // 0 = succès, 1641 = succès + redémarrage lancé, 3010 = succès + redémarrage requis
+        private static readonly int[] SuccessExitCodes = { 0, 1641, 3010 };
+
         public static async Task<bool> UninstallAsync(InstalledProgram prog, CancellationToken ct = default)
         {
             string cmd = !string.IsNullOrWhiteSpace(prog.QuietUninstallString)
@@ -125,7 +131,12 @@ namespace Klyr.Services
                 using var proc = Process.Start(psi);
                 if (proc == null) return false;
                 await proc.WaitForExitAsync(ct);
-                return true;
+
+                if (SuccessExitCodes.Contains(proc.ExitCode)) return true;
+
+                LogService.Instance.Warn(
+                    $"Désinstallation échouée ({prog.Name}) : code de sortie {proc.ExitCode}", "Système");
+                return false;
             }
             catch (Exception ex)
             {
