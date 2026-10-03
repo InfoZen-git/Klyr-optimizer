@@ -87,11 +87,25 @@ namespace Klyr.Services
             return entries.OrderByDescending(e => e.SizeBytes).ToList();
         }
 
+        private static readonly EnumerationOptions NoReparsePoints = new()
+        {
+            AttributesToSkip = FileAttributes.ReparsePoint,
+            IgnoreInaccessible = true
+        };
+
+        private static bool IsReparsePoint(string dir)
+        {
+            try { return new DirectoryInfo(dir).Attributes.HasFlag(FileAttributes.ReparsePoint); }
+            catch { return false; }
+        }
+
         private static long GetDirectorySize(string dir, CancellationToken ct)
         {
             long total = 0;
             try
             {
+                if (IsReparsePoint(dir)) return 0;
+
                 var stack = new Stack<string>();
                 stack.Push(dir);
                 while (stack.Count > 0)
@@ -105,7 +119,9 @@ namespace Klyr.Services
                         {
                             try { total += new FileInfo(f).Length; } catch { }
                         }
-                        foreach (var sub in Directory.EnumerateDirectories(current))
+                        // Les points de reparse (jonctions, liens symboliques) ne sont pas suivis :
+                        // ils peuvent former des cycles ou re-scanner d'autres volumes.
+                        foreach (var sub in Directory.EnumerateDirectories(current, "*", NoReparsePoints))
                             stack.Push(sub);
                     }
                     catch { /* accès refusé sur ce sous-dossier */ }

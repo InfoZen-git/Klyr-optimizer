@@ -33,36 +33,58 @@ namespace Klyr.Services
             return freed;
         }
 
+        /// <summary>
+        /// Âge minimal d'un élément de %TEMP% avant suppression : les fichiers plus récents peuvent
+        /// être utilisés par un installeur ou une application en cours d'exécution.
+        /// </summary>
+        private static readonly TimeSpan MinTempAge = TimeSpan.FromHours(24);
+
         private static long CleanTempFolder(string temp)
         {
-            long freed = 0;
             try
             {
                 if (!Directory.Exists(temp)) return 0;
-                foreach (var file in Directory.EnumerateFiles(temp))
-                {
-                    try { long s = new FileInfo(file).Length; File.Delete(file); freed += s; }
-                    catch { /* verrouillé */ }
-                }
-                foreach (var dir in Directory.EnumerateDirectories(temp))
-                {
-                    try
-                    {
-                        long s = DirSize(dir);
-                        Directory.Delete(dir, recursive: true);
-                        freed += s;
-                    }
-                    catch { }
-                }
+                return CleanDirectoryContents(new DirectoryInfo(temp), DateTime.UtcNow - MinTempAge);
             }
-            catch { }
-            return freed;
+            catch { return 0; }
         }
 
-        private static long DirSize(string dir)
+        /// <summary>
+        /// Supprime les fichiers dont la dernière modification/accès est antérieure à
+        /// <paramref name="cutoffUtc"/>, puis les sous-dossiers devenus vides. Les points de reparse
+        /// (jonctions, liens symboliques) ne sont jamais suivis ni supprimés.
+        /// </summary>
+        private static long CleanDirectoryContents(DirectoryInfo dir, DateTime cutoffUtc)
         {
-            try { return new DirectoryInfo(dir).EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length); }
-            catch { return 0; }
+            long freed = 0;
+
+            foreach (var file in dir.EnumerateFiles())
+            {
+                try
+                {
+                    if (file.Attributes.HasFlag(FileAttributes.ReparsePoint)) continue;
+                    if (file.LastWriteTimeUtc > cutoffUtc || file.LastAccessTimeUtc > cutoffUtc) continue;
+                    long s = file.Length;
+                    file.Delete();
+                    freed += s;
+                }
+                catch { /* verrouillé */ }
+            }
+
+            foreach (var sub in dir.EnumerateDirectories())
+            {
+                try
+                {
+                    if (sub.Attributes.HasFlag(FileAttributes.ReparsePoint)) continue;
+                    freed += CleanDirectoryContents(sub, cutoffUtc);
+
+                    if (sub.LastWriteTimeUtc <= cutoffUtc && !sub.EnumerateFileSystemInfos().Any())
+                        sub.Delete();
+                }
+                catch { /* verrouillé ou accès refusé */ }
+            }
+
+            return freed;
         }
     }
 }

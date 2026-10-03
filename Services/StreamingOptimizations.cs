@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 using Klyr.Models;
 using Klyr.Resources;
 
@@ -166,7 +167,6 @@ namespace Klyr.Services
                     Category    = "Streaming",
                     Action = async ct =>
                     {
-                        await Task.Yield();
                         string[] targets =
                         {
                             "AdobeUpdateService", "Adobe Update Manager", "Adobe Desktop Service",
@@ -179,10 +179,45 @@ namespace Klyr.Services
                             "OneDrive"
                         };
 
+                        // Étape 1 — scan sans tuer
+                        var running = new List<(string Name, int Count)>();
+                        foreach (var name in targets)
+                        {
+                            Process[] procs;
+                            try { procs = Process.GetProcessesByName(name); }
+                            catch { continue; }
+
+                            if (procs.Length > 0)
+                                running.Add((name, procs.Length));
+                            foreach (var p in procs) p.Dispose();
+                        }
+
+                        if (running.Count == 0)
+                        {
+                            await Task.Yield();
+                            return Strings.Result_NoParasites;
+                        }
+
+                        // Étape 2 — confirmation avec preview de la liste (comme le module Gaming)
+                        string preview = string.Join("\n",
+                            running.Select(p => $"  • {p.Name} ({p.Count} instance{(p.Count > 1 ? "s" : "")})"));
+
+                        MessageBoxResult confirm = await Application.Current.Dispatcher.InvokeAsync(() =>
+                            MessageBox.Show(
+                                string.Format(Strings.Result_KillDialogMessage, preview),
+                                Strings.Result_KillDialogTitle,
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Warning,
+                                MessageBoxResult.No));
+
+                        if (confirm != MessageBoxResult.Yes)
+                            return Strings.Result_KillCancelled;
+
+                        // Étape 3 — kill
                         int killed = 0;
                         var seen = new List<string>();
 
-                        foreach (var name in targets)
+                        foreach (var (name, _) in running)
                         {
                             Process[] procs;
                             try { procs = Process.GetProcessesByName(name); }
@@ -199,6 +234,10 @@ namespace Klyr.Services
                                 catch
                                 {
                                     // Permission denied ou déjà fermé
+                                }
+                                finally
+                                {
+                                    p.Dispose();
                                 }
                             }
                         }

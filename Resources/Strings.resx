@@ -272,6 +272,7 @@ Les mettre en quarantaine maintenant ?</value></data>
   <data name="Optim_net_tcpip_Name" xml:space="preserve"><value>Optimisation TCP/IP</value></data>
   <data name="Optim_net_reset_Name" xml:space="preserve"><value>Réinitialisation Réseau</value></data>
   <data name="Optim_net_dns_fast_Name" xml:space="preserve"><value>DNS Rapides (Cloudflare / Google)</value></data>
+  <data name="Optim_net_dns_restore_Name" xml:space="preserve"><value>Restaurer les DNS d'origine</value></data>
   <data name="Optim_net_ping_Name" xml:space="preserve"><value>Optimisation Ping</value></data>
   <data name="Optim_net_telemetry_block_Name" xml:space="preserve"><value>Blocage Télémétrie Microsoft</value></data>
   <data name="Optim_net_flush_dns_Name" xml:space="preserve"><value>Flush DNS</value></data>
@@ -314,7 +315,8 @@ Les mettre en quarantaine maintenant ?</value></data>
 
   <data name="Optim_net_tcpip_Desc" xml:space="preserve"><value>Ajuste les paramètres de la pile réseau Windows : autotuning, ECN, timestamps pour meilleures performances.</value></data>
   <data name="Optim_net_reset_Desc" xml:space="preserve"><value>Remet à zéro tous les paramètres réseau (netsh winsock reset + int ip reset). Redémarrage requis.</value></data>
-  <data name="Optim_net_dns_fast_Desc" xml:space="preserve"><value>Benchmarke plusieurs profils DNS puis applique automatiquement le plus rapide.</value></data>
+  <data name="Optim_net_dns_fast_Desc" xml:space="preserve"><value>Benchmarke plusieurs profils DNS puis applique automatiquement le plus rapide sur les cartes réseau physiques (ignoré sur un PC joint à un domaine). La configuration précédente est sauvegardée.</value></data>
+  <data name="Optim_net_dns_restore_Desc" xml:space="preserve"><value>Rétablit la configuration DNS sauvegardée avant l'application des DNS rapides.</value></data>
   <data name="Optim_net_ping_Desc" xml:space="preserve"><value>Réduit la latence réseau en ajustant les timers TCP et désactivant les délais d'ACK.</value></data>
   <data name="Optim_net_telemetry_block_Desc" xml:space="preserve"><value>Bloque les connexions aux serveurs de tracking et télémétrie Microsoft via le fichier hosts.</value></data>
   <data name="Optim_net_flush_dns_Desc" xml:space="preserve"><value>Vide le cache DNS local (ipconfig /flushdns) pour résoudre des problèmes de navigation.</value></data>
@@ -372,6 +374,9 @@ Conseils : vérifiez que Windows Defender est actif et que vous avez les droits 
 Redémarrage requis pour appliquer les changements.</value></data>
   <data name="Result_FirewallReset" xml:space="preserve"><value>Pare-feu réinitialisé.</value></data>
   <data name="Result_NoActiveAdapter" xml:space="preserve"><value>Aucun adaptateur réseau actif détecté.</value></data>
+  <data name="Result_DnsDomainJoined" xml:space="preserve"><value>Ce PC est joint à un domaine : le DNS d'entreprise est conservé, aucune modification effectuée.</value></data>
+  <data name="Result_DnsBackupFailed" xml:space="preserve"><value>Sauvegarde de la configuration DNS impossible : aucune modification effectuée.</value></data>
+  <data name="Result_DnsNoBackup" xml:space="preserve"><value>Aucune sauvegarde DNS à restaurer.</value></data>
 
   <!-- ─── ABOUT WINDOW ─── -->
   <data name="About_Title" xml:space="preserve"><value>À propos</value></data>

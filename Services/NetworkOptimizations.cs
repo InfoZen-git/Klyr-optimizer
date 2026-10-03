@@ -69,6 +69,11 @@ namespace Klyr.Services
                 Action = async ct =>
                 {
                     string script = @"
+                        if ((Get-CimInstance Win32_ComputerSystem).PartOfDomain) {
+                            Write-Output 'DOMAIN_JOINED'
+                            exit 1
+                        }
+
                         $profiles = @(
                             @{ Name = 'Cloudflare+Google'; Servers = @('1.1.1.1', '8.8.8.8') },
                             @{ Name = 'Google+Cloudflare'; Servers = @('8.8.8.8', '1.1.1.1') },
@@ -79,14 +84,16 @@ namespace Klyr.Services
 
                         foreach ($profile in $profiles) {
                             $samples = @()
-                            foreach ($d in $domains) {
-                                try {
-                                    $sw = [System.Diagnostics.Stopwatch]::StartNew()
-                                    Resolve-DnsName -Name $d -Server $profile.Servers[0] -DnsOnly -ErrorAction Stop | Out-Null
-                                    $sw.Stop()
-                                    $samples += $sw.Elapsed.TotalMilliseconds
-                                } catch {
-                                    $samples += 1000
+                            foreach ($server in $profile.Servers) {
+                                foreach ($d in $domains) {
+                                    try {
+                                        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+                                        Resolve-DnsName -Name $d -Server $server -DnsOnly -ErrorAction Stop | Out-Null
+                                        $sw.Stop()
+                                        $samples += $sw.Elapsed.TotalMilliseconds
+                                    } catch {
+                                        $samples += 1000
+                                    }
                                 }
                             }
                             $avg = [math]::Round(($samples | Measure-Object -Average).Average, 1)
@@ -99,21 +106,85 @@ namespace Klyr.Services
                             }
                         }
 
-                        $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
-                        if (-not $adapters) {
+                        # Cartes physiques uniquement : les adaptateurs VPN / virtuels gardent leur DNS
+                        $adapters = @(Get-NetAdapter -Physical | Where-Object { $_.Status -eq 'Up' })
+                        if ($adapters.Count -eq 0) {
                             Write-Output 'NO_ADAPTER'
+                            exit 1
+                        }
+
+                        # Sauvegarde de la configuration actuelle AVANT toute modification
+                        $backupDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'Klyr\Backups'
+                        $backupFile = Join-Path $backupDir ('dns_{0}.json' -f (Get-Date -Format 'yyyyMMdd_HHmmss'))
+                        try {
+                            New-Item -ItemType Directory -Path $backupDir -Force -ErrorAction Stop | Out-Null
+                            $snapshot = foreach ($adapter in $adapters) {
+                                $regPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{0}' -f $adapter.InterfaceGuid
+                                $nameServer = (Get-ItemProperty -Path $regPath -Name NameServer -ErrorAction SilentlyContinue).NameServer
+                                [PSCustomObject]@{
+                                    InterfaceGuid   = $adapter.InterfaceGuid
+                                    InterfaceAlias  = $adapter.Name
+                                    Static          = -not [string]::IsNullOrWhiteSpace($nameServer)
+                                    ServerAddresses = @((Get-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -AddressFamily IPv4 -ErrorAction Stop).ServerAddresses)
+                                }
+                            }
+                            ConvertTo-Json -InputObject @($snapshot) -Depth 4 | Set-Content -Path $backupFile -Encoding UTF8 -ErrorAction Stop
+                        } catch {
+                            Write-Output 'BACKUP_FAILED'
                             exit 1
                         }
 
                         foreach ($adapter in $adapters) {
                             Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses $best.Servers -ErrorAction Stop
                         }
-                        Write-Output ""DNS auto-optimisés : $($best.Name) [$($best.Servers -join ', ')] — latence DNS moyenne $($best.Avg) ms""
+                        Write-Output ""DNS auto-optimisés : $($best.Name) [$($best.Servers -join ', ')] — latence DNS moyenne $($best.Avg) ms. Sauvegarde : $backupFile""
                     ";
                     var dnsResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    if (dnsResult.Output.Contains("DOMAIN_JOINED")) return Strings.Result_DnsDomainJoined;
+                    if (dnsResult.Output.Contains("BACKUP_FAILED")) return Strings.Result_DnsBackupFailed;
                     return dnsResult.Output.Contains("NO_ADAPTER")
                         ? Strings.Result_NoActiveAdapter
                         : dnsResult.DisplayMessage;
+                }
+            },
+            new OptimizationItem
+            {
+                Id          = "net_dns_restore",
+                Name        = Strings.Optim_net_dns_restore_Name,
+                Description = Strings.Optim_net_dns_restore_Desc,
+                Category    = "Réseau",
+                RequiresAdmin = true,
+                Action = async ct =>
+                {
+                    string script = @"
+                        $backupDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'Klyr\Backups'
+                        $files = @(Get-ChildItem -Path $backupDir -Filter 'dns_*.json' -ErrorAction SilentlyContinue | Sort-Object LastWriteTime)
+                        if ($files.Count -eq 0) {
+                            Write-Output 'NO_BACKUP'
+                            exit 1
+                        }
+
+                        # La plus ancienne sauvegarde non restaurée = la configuration d'origine
+                        $entries = @(Get-Content -Path $files[0].FullName -Raw -Encoding UTF8 | ConvertFrom-Json)
+                        $restored = 0
+                        foreach ($entry in $entries) {
+                            $adapter = Get-NetAdapter | Where-Object { $_.InterfaceGuid -eq $entry.InterfaceGuid } | Select-Object -First 1
+                            if (-not $adapter) { continue }
+                            if ($entry.Static -and @($entry.ServerAddresses).Count -gt 0) {
+                                Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses @($entry.ServerAddresses) -ErrorAction Stop
+                            } else {
+                                Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses -ErrorAction Stop
+                            }
+                            $restored++
+                        }
+
+                        $files | ForEach-Object { Rename-Item -LiteralPath $_.FullName -NewName ($_.Name + '.restored') -Force -ErrorAction SilentlyContinue }
+                        Write-Output ""DNS d'origine restaurés sur $restored adaptateur(s).""
+                    ";
+                    var restoreResult = await SystemService.RunPowerShellAsync(script, asAdmin: true);
+                    return restoreResult.Output.Contains("NO_BACKUP")
+                        ? Strings.Result_DnsNoBackup
+                        : restoreResult.DisplayMessage;
                 }
             },
             new OptimizationItem

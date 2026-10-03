@@ -69,18 +69,24 @@ namespace Klyr.Services
                         $stamp = Get-Date -Format 'yyyyMMdd_HHmmss'
                         $exported = 0
                         $cleared = 0
+                        $skipped = 0
 
                         wevtutil el | ForEach-Object {
                             $safe = ($_ -replace '[\\/:*?""<>| ]', '_')
                             $target = Join-Path $backupDir (""{0}_{1}.evtx"" -f $safe, $stamp)
 
                             wevtutil epl ""$_"" ""$target"" 2>$null
-                            if ($LASTEXITCODE -eq 0) { $exported++ }
-
-                            wevtutil cl ""$_"" 2>$null
-                            if ($LASTEXITCODE -eq 0) { $cleared++ }
+                            if ($LASTEXITCODE -eq 0 -and (Test-Path -LiteralPath $target)) {
+                                $exported++
+                                wevtutil cl ""$_"" 2>$null
+                                if ($LASTEXITCODE -eq 0) { $cleared++ }
+                            } else {
+                                # Pas de sauvegarde exploitable : on n'efface pas ce journal
+                                Remove-Item -LiteralPath $target -Force -ErrorAction SilentlyContinue
+                                $skipped++
+                            }
                         }
-                        Write-Output ""$exported journaux exportés, $cleared journaux effacés. Backup: $backupDir""
+                        Write-Output ""$exported journaux exportés, $cleared journaux effacés, $skipped ignorés (sauvegarde impossible). Backup: $backupDir""
                     ";
                     return (await SystemService.RunPowerShellAsync(script, asAdmin: true)).DisplayMessage;
                 }

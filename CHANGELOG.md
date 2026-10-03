@@ -11,6 +11,15 @@ utilise un versionnement semantique [SemVer](https://semver.org/lang/fr/).
 
 Mise à jour orientée productivité : appliquer les optimisations plus vite (presets), nettoyer plus en profondeur (UWP, gros fichiers/doublons) et savoir quoi faire (rapport de santé).
 
+### Fixed — Sécurité des opérations destructrices
+- **Désinstalleur** : les restes ne sont proposés à la suppression que si le désinstalleur a réussi (code de sortie 0 / 1641 / 3010)
+- **Points de restauration** : « Supprimer tous les points » utilise l'API System Restore au lieu de `vssadmin delete shadows /all` (les autres clichés VSS sont conservés)
+- **Journaux d'événements** : un journal n'est effacé que si son export a réussi
+- **DNS rapides** : benchmark de tous les serveurs du profil, cartes physiques uniquement, ignoré sur un PC joint à un domaine, configuration d'origine sauvegardée + nouvelle optimisation « Restaurer les DNS d'origine »
+- **Killer processus Creator** : aperçu et confirmation avant fermeture, comme le module Gaming
+- **Nettoyage silencieux / rapide** : seuls les éléments de %TEMP% de plus de 24 h sont supprimés, les points de reparse sont ignorés
+- **Analyseur de disque** : les jonctions et liens symboliques ne sont plus suivis (plus de cycles infinis)
+
 ### Added — Profils 1-clic
 - Nouveaux presets qui appliquent un ensemble curé d'optimisations à travers les modules en un clic : **Gaming**, **Performance max**, **Vie privée**, **Équilibré**
 - Vue dédiée avec aperçu des optims du profil et statut en direct

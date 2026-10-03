@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Management;
+using System.Runtime.InteropServices;
 using Klyr.Models;
 
 namespace Klyr.Services
@@ -8,7 +9,7 @@ namespace Klyr.Services
     /// v2.4.0 — Gestionnaire de points de restauration système.
     /// Lecture via WMI (root\default → SystemRestore). Création déléguée à
     /// SystemService. La restauration ouvre l'assistant Windows (rstrui) — on ne
-    /// restaure jamais en silence. Suppression via vssadmin (libère de l'espace).
+    /// restaure jamais en silence. Suppression via l'API System Restore (libère de l'espace).
     /// </summary>
     public static class RestorePointService
     {
@@ -72,14 +73,44 @@ namespace Klyr.Services
             }
         }
 
+        [DllImport("srclient.dll")]
+        private static extern uint SRRemoveRestorePoint(uint dwRPNum);
+
         /// <summary>
-        /// Supprime TOUS les points de restauration du lecteur système (libère de l'espace).
-        /// Nécessite l'élévation. Best-effort.
+        /// Supprime tous les points de restauration système (libère de l'espace).
+        /// Utilise l'API System Restore (SRRemoveRestorePoint) point par point : les autres clichés
+        /// VSS du lecteur (versions précédentes, sauvegardes tierces) ne sont pas touchés.
+        /// Nécessite l'élévation. Retourne true si tous les points ont été supprimés.
         /// </summary>
         public static async Task<bool> DeleteAllAsync()
         {
-            var r = await SystemService.RunCmdAsync("vssadmin delete shadows /for=C: /all /quiet", asAdmin: true);
-            return r.Success;
+            return await Task.Run(() =>
+            {
+                var points = GetRestorePoints();
+                if (points.Count == 0) return false;
+
+                bool allRemoved = true;
+                foreach (var point in points)
+                {
+                    try
+                    {
+                        uint rc = SRRemoveRestorePoint(point.SequenceNumber);
+                        if (rc != 0)
+                        {
+                            allRemoved = false;
+                            LogService.Instance.Warn(
+                                $"Point de restauration #{point.SequenceNumber} non supprimé (code {rc})", "Système");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        allRemoved = false;
+                        LogService.Instance.Warn(
+                            $"Point de restauration #{point.SequenceNumber} non supprimé : {ex.Message}", "Système");
+                    }
+                }
+                return allRemoved;
+            });
         }
     }
 }
