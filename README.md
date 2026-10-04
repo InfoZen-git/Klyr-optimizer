@@ -314,6 +314,6 @@ Klyr/
 
 <div align="center">
 
-**Klyr** — Édité par **InfoZen · Yahya** — 2026
+**Klyr** — Édité par **[InfoZen](https://github.com/InfoZen-git) · [Yahya](https://github.com/Yahya-hacker)** — 2026
 
 </div>
